@@ -6,7 +6,7 @@
     "left_section": ["workspaces", "window_title"],
     "middle_section": ["date_time", "mpris"],
     "right_section": [
-      "recorder",
+      "dashboard",
       "hypr_sunset",
       "updates",
       "bluetooth",

@@ -26,3 +26,11 @@
   background-size: contain;
   margin: 3px 10px 3px 0px;
 }
+
+#dashboard-menu {
+  @include mixins.floating-widget;
+  @include mixins.spacing;
+  padding: 10px;
+  min-height: 400px;
+  min-width: 400px;
+}

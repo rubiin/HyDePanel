@@ -27,6 +27,7 @@ from widgets import (
     WindowTitleWidget,
     WorkSpacesWidget,
 )
+from widgets.dashboard import DashBoardWidget
 
 
 class StatusBar(WaylandWindow):
@@ -43,6 +44,7 @@ class StatusBar(WaylandWindow):
             "hypr_sunset": HyprSunsetWidget,
             "keyboard": KeyboardLayoutWidget,
             "language": LanguageWidget,
+            "dashboard": DashBoardWidget,
             "memory": MemoryWidget,
             "mpris": Mpris,
             "power": PowerButton,
