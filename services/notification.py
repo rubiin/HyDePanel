@@ -1,5 +1,4 @@
 import json
-import os
 from typing import List
 
 from fabric.core.service import Service
@@ -43,46 +42,48 @@ class NotificationCacheService(Service):
         self._dont_disturb = value
 
     def __init__(self):
-        self._count = 0
-        self._notifications = []
+        self.do_read_notifications()
         self._dont_disturb = False
 
     def do_read_notifications(self) -> List[Notification]:
         """Read the notifications from the notifications file."""
         try:
             with open(NOTIFICATION_CACHE_FILE, "r") as file:
-                self._notifications = json.load(file)
+                notifications = json.load(file)
+                self._notifications = [Notification.deserialize(data) for data in notifications]
+
+                print(self._notifications)
                 self._count = len(self._notifications)
         except FileNotFoundError:
             return []
 
-    def cache_notification(self, data):
+    def cache_notification(self, data: Notification):
         """Cache the notification."""
 
         # Append the new notification to the list
+
         self._notifications.append(data)
+
+
+        print("length is",len(self._notifications))
+
+        if len(self._notifications) > 4:
+            self._notifications = self._notifications[1:]
+
+        print(self._notifications)
 
         # Serialize the notifications
         serialized_data = [Notification.serialize(data) for data in self._notifications]
 
-        # Check if the cache file exists and read existing data
-        if os.path.exists(NOTIFICATION_CACHE_FILE):
-            with open(NOTIFICATION_CACHE_FILE, "r") as file:
-                try:
-                    # Load existing data if the file is not empty
-                    existing_data = json.load(file)
-                except (json.JSONDecodeError, KeyError, ValueError, IndexError) as e:
-                    logger.error(f"{Colors.INFO}[Notification]", e)
-                    existing_data = []  # If the file is empty or malformed
-        else:
-            existing_data = []
+        # self.do_read_notifications()
+
 
         # Combine existing and new notifications
-        existing_data.extend(serialized_data)
+        self._notifications.extend(serialized_data)
 
         # Write the updated data back to the cache file
         with open(NOTIFICATION_CACHE_FILE, "w") as f:
-            json.dump(existing_data, f, indent=2)
+            json.dump(serialized_data, f, indent=2)
 
         logger.info(f"{Colors.INFO}[Notification] Notification cached successfully.")
 
