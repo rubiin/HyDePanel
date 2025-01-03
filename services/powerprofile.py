@@ -1,9 +1,7 @@
-import gi
+import dbus
+from dbus.mainloop.glib import DBusGMainLoop
 from fabric import Service
-from gi.repository import Gio, GLib
-
-gi.require_version("Gio", "2.0")
-gi.require_version("GObject", "2.0")
+from loguru import logger
 
 
 class PowerProfiles(Service):
@@ -26,6 +24,9 @@ class PowerProfiles(Service):
             **kwargs,
         )
 
+        self.bus_name = "net.hadess.PowerProfiles"
+        self.object_path = "/net/hadess/PowerProfiles"
+
         self.power_profiles = {
             "performance": {
                 "name": "Performance",
@@ -41,30 +42,39 @@ class PowerProfiles(Service):
             },
         }
 
-        # Constants
-        bus_name = "net.hadess.PowerProfiles"
-        object_path = "/net/hadess/PowerProfiles"
+        # Set up the dbus main loop
+        DBusGMainLoop(set_as_default=True)
 
-        self.proxy = Gio.DBusProxy.new_sync(
-            Gio.bus_get_sync(Gio.BusType.SYSTEM, None),
-            Gio.DBusProxyFlags.NONE,
-            None,
-            bus_name,
-            object_path,
-            "net.hadess.PowerProfiles",
-            None,
-        )
-        self.proxy.connect(
-            "g-properties-changed",
-            lambda proxy, changed, invalidated: print(
-                "Properties changed:", changed["ActiveProfile"]
-            ),
+        self.bus = dbus.SystemBus()
+
+        self.power_profiles = self.bus.get_object(self.bus_name, self.object_path)
+
+        self.iface = dbus.Interface(
+            self.power_profiles, "org.freedesktop.DBus.Properties"
         )
 
-    def get_active_profile(self):
-        return self.power_profiles[self.proxy.get_cached_property("ActiveProfile")]
+        # Connect the 'g-properties-changed' signal to the handler
+        self.iface.connect_to_signal("PropertiesChanged", self.handle_property_change)
 
-    def set_active_profile(self, profile):
-        self.proxy.call_sync(
-            "SetProfile", GLib.Variant("s", profile), Gio.DBusCallFlags.NONE, -1, None
-        )
+    def get_current_profile(self):
+        try:
+            profile = self.iface.Get("net.hadess.PowerProfiles", "ActiveProfile")
+            return self.power_profiles.get(profile, self.power_profiles["balanced"])
+        except dbus.DBusException as e:
+            logger.error(f"[PowerProfile] Error retrieving current power profile: {e}")
+            return self.power_profiles["balanced"]
+
+    def set_power_profile(self, profile):
+        try:
+            self.iface.Set(self.bus_name, "ActiveProfile", dbus.String(profile))
+            logger.info(f"[PowerProfile] Power profile set to {profile}")
+        except dbus.DBusException as e:
+            logger.error(
+                f"[PowerProfile] Could not change power level to {profile}: {e}"
+            )
+
+    # Function to handle properties change signals
+    def handle_property_change(self, proxy, changed, invalidated):
+        # Print the changed ActiveProfile
+        if "ActiveProfile" in changed:
+            print("ActiveProfile changed:", changed["ActiveProfile"])
