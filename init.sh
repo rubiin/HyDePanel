@@ -49,8 +49,15 @@ install_packages() {
 	# Install packages using pacman
 	sudo pacman -S --noconfirm pipewire playerctl dart-sass networkmanager wl-clipboard brightnessctl python pacman-contrib gtk3 cairo gtk-layer-shell libgirepository gobject-introspection gobject-introspection-runtime python-pip python-gobject python-psutil python-cairo python-loguru python-setproctitle pkgconf wf-recorder kitty grimblast gnome-bluetooth
 
+
+    if command -v paru &> /dev/null; then
+		aur_helper="paru"
+	else
+		aur_helper="yay"
+	fi
+
 	# Install packages using yay (AUR helper)
-	yay -S --noconfirm gray-git python-fabric
+	$aur_helper -S --noconfirm gray-git python-fabric
 }
 
 # Check the argument passed to the script and call the appropriate function
