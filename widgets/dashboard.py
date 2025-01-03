@@ -1,9 +1,9 @@
 from fabric.widgets.box import Box
+from fabric.widgets.centerbox import CenterBox
 from fabric.widgets.eventbox import EventBox
 
-from shared.animated.scale import AnimatedScale
 from shared.popover import PopOverWindow
-from utils.functions import text_icon
+from utils.functions import create_scale, text_icon
 from utils.widget_config import BarConfig
 
 
@@ -11,18 +11,35 @@ class DashBoardMenu(Box):
     """A menu to display the weather information."""
 
     def __init__(self, **kwargs):
-        super().__init__(name="dashboard-menu", orientation="v", **kwargs)
+        super().__init__(name="dashboard-menu", orientation="v", all_visible=True, **kwargs)
 
-        self.children = AnimatedScale(
-            marks=None,
-            value=70,
-            min_value=0,
-            max_value=100,
-            increments=(1, 1),
-            orientation="h",
-            h_expand=True,
-            h_align="center",
+        box1 = CenterBox(
+            orientation="v",
+            start_children=Box(
+                children=(
+                    text_icon(
+                    "󰃠",
+                    props={
+                        "style_classes": "panel-text-icon overlay-icon",
+                    },
+                ),
+                create_scale()
+                )
+            ),
+             center_children=Box(
+                children=(
+                    text_icon(
+                    "󰃠",
+                    props={
+                        "style_classes": "panel-text-icon overlay-icon",
+                    },
+                ),
+                create_scale()
+                )
+            )
         )
+
+        self.add(box1)
 
 
 class DashBoardWidget(EventBox):

@@ -33,4 +33,6 @@
   padding: 10px;
   min-height: 400px;
   min-width: 400px;
+
+  @include mixins.slider($length: 200px, $slider-color: white);
 }

@@ -206,7 +206,7 @@ def create_scale(
     if marks is None:
         marks = (
             ScaleMark(value=i) for i in range(1, 100, 10)
-        )  # Default marks if none provided
+        )
 
     return AnimatedScale(
         marks=marks,

@@ -10,7 +10,8 @@
 @mixin slider(
   $radius: variable.$radius,
   $highlight-color: white,
-  $length: 145px
+  $length: 145px,
+  $slider-color: theme.$background-dark
 ) {
   slider {
     min-height: 8px;
@@ -28,7 +29,7 @@
     min-height: inherit;
     border-radius: $radius;
     border: none;
-    background: theme.$background-alt;
+    background: $slider-color;
   }
 
   highlight,
