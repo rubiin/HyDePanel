@@ -7,6 +7,7 @@ from fabric.utils import invoke_repeater
 from fabric.widgets.box import Box
 from fabric.widgets.button import Button
 from fabric.widgets.datetime import DateTime
+from fabric.widgets.revealer import Revealer
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 from fabric.widgets.scrolledwindow import ScrolledWindow
@@ -172,22 +173,31 @@ class DateTimeWidget(BoxWidget):
 
         self.config = widget_config["date_time"]
 
+        self.notof_indicator = Image(
+            icon_name=icons["notifications"]["noisy"],
+            icon_size=16,
+        )
+
+
         date_menu = DateNotificationMenu()
+
+        revealer = Revealer(
+            name="date-menu-revealer",
+            child=date_menu,
+            transition_duration=600,
+            transition_type="slide-down",
+        )
 
         popup = PopOverWindow(
             parent=bar,
             name="date-menu-popover",
-            child=date_menu,
+            child=Box(children=(revealer,), style="padding: 1px;"),
             visible=False,
             all_visible=False,
         )
 
         popup.set_pointing_to(self)
 
-        self.notof_indicator = Image(
-            icon_name=icons["notifications"]["noisy"],
-            icon_size=16,
-        )
 
         self.children = Box(
             spacing=10,
@@ -196,11 +206,20 @@ class DateTimeWidget(BoxWidget):
                 self.notof_indicator,
                 DateTime(
                     self.config["format"],
-                    on_clicked=lambda *_: popup.set_visible(not popup.get_visible()),
+                    on_clicked=lambda *_: (
+                         popup.set_visible(not popup.get_visible()),
+                         popup.get_visible() and revealer.set_reveal_child(True),
+                    ),
                 ),
             ),
         )
+        revealer.connect("notify::child-revealed" , lambda *_: revealer.set_visible(revealer.child_revealed))
+
+
+
         date_menu.dnd_switch.connect("notify::active", self.on_dnd_switch)
+
+
 
     def on_dnd_switch(self, switch, _):
         """Handle the do not disturb switch."""
