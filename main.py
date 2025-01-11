@@ -12,7 +12,6 @@ from utils.config import APP_CACHE_DIRECTORY, APPLICATION_NAME
 from utils.widget_config import widget_config
 from widgets.corners import ScreenCorners
 
-
 def process_and_apply_css(app: Application):
     if not helpers.executable_exists("sass"):
         raise helpers.ExecutableNotFoundError(
@@ -51,6 +50,7 @@ if __name__ == "__main__":
     helpers.ensure_dir_exists(APP_CACHE_DIRECTORY)
 
     helpers.copy_theme(widget_config["theme"]["name"])
+
 
     # Monitor styles folder for changes
     main_css_file = monitor_file(get_relative_path("styles"))

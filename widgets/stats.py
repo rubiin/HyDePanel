@@ -4,6 +4,7 @@ import utils.functions as helpers
 from shared.widget_container import BoxWidget
 from utils.icons import common_text_icons
 from utils.widget_config import BarConfig
+from fabric.hyprland.service import Hyprland as HyprlandService, HyprlandEvent
 
 
 class CpuWidget(BoxWidget):
@@ -199,5 +200,49 @@ class NetStatWidget(BoxWidget):
         if self.config["label"]:
             self.net_stat_label.show()
             self.net_stat_label.set_label(text)
+
+        return True
+
+
+class SubmapWidget(BoxWidget):
+    """A widget to display the current submap."""
+
+    def __init__(
+        self,
+        widget_config: BarConfig,
+        **kwargs,
+    ):
+        # Initialize the Box with specific name and style
+        super().__init__(
+            name="submap",
+            **kwargs,
+        )
+
+        self.config = widget_config["netstat"]
+
+        # Create a TextIcon with the specified icon and size
+        self.icon = helpers.text_icon(
+            icon=self.config["icon"],
+            size=self.config["icon_size"],
+            props={"style_classes": "panel-text-icon"},
+        )
+
+        self.submap_label = Label(label="0", style_classes="panel-text", visible=False)
+
+        self.children = (self.icon, self.submap_label)
+
+        HyprlandService.connect("submap::changed", self.update_ui)
+
+    def update_ui(self, _, event: HyprlandEvent):
+        # Update the label with the used storage if enabled
+        if self.config["label"]:
+            self.submap_label.set_label(event.data)
+            self.submap_label.show()
+
+        # Update the tooltip with the storage usage details if enabled
+        if self.config["tooltip"]:
+            self.set_tooltip_text(
+                "",
+            )
 
         return True
