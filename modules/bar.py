@@ -27,6 +27,7 @@ from widgets import (
     VolumeWidget,
     WeatherWidget,
     WindowTitleWidget,
+    NetStatWidget,
     WorkSpacesWidget,
 )
 
@@ -44,6 +45,7 @@ class StatusBar(WaylandWindow):
     def __init__(self, **kwargs):
         self.widgets_list = {
             "battery": Battery,
+            "netstat": NetStatWidget,
             "bluetooth": BlueToothWidget,
             "brightness": BrightnessWidget,
             "cpu": CpuWidget,

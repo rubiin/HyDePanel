@@ -105,6 +105,12 @@ DEFAULT_CONFIG = {
         "label": True,
         "tooltip": True,
     },
+    "netstat": {
+        "icon": "",
+        "icon_size": "14px",
+        "label": True,
+        "tooltip": True,
+    },
     "bluetooth": {
         "icon_size": 14,
         "label": True,

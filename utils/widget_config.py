@@ -106,6 +106,11 @@ Weather = TypedDict(
 # Keyboard configuration
 Keyboard = TypedDict("Keyboard", {**BaseConfig.__annotations__, "icon": str})
 
+
+# Netstat configuration
+Netstat = TypedDict("Netstat", {**BaseConfig.__annotations__, "icon": str})
+
+
 # DateTimeMenu configuration
 DateTimeMenu = TypedDict("DateTimeMenu", {"format": str})
 
@@ -147,6 +152,7 @@ class BarConfig(TypedDict):
     hypr_sunset: HyprSunset
     hypr_idle: HyprIdle
     keyboard: Keyboard
+    netstat: Netstat
     language: Language
     theme: Theme
     theme_switcher: ThemeSwitcher

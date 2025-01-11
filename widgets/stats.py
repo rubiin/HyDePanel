@@ -158,3 +158,46 @@ class StorageWidget(BoxWidget):
 
     def get_total(self):
         return helpers.convert_bytes(self.disk.total, "gb")
+
+
+class NetStatWidget(BoxWidget):
+    """A widget to display the current CPU usage."""
+
+    def __init__(
+        self,
+        widget_config: BarConfig,
+        **kwargs,
+    ):
+        # Initialize the Box with specific name and style
+        super().__init__(
+            name="netstat",
+            **kwargs,
+        )
+
+        self.config = widget_config["netstat"]
+
+        # Create a TextIcon with the specified icon and size
+        self.text_icon = helpers.text_icon(
+            icon=self.config["icon"],
+            size=self.config["icon_size"],
+            props={"style_classes": "panel-text-icon"},
+        )
+
+        self.net_stat_label = Label(
+            label="0%", style_classes="panel-text", visible=False
+        )
+
+        self.children = (self.text_icon, self.net_stat_label)
+
+        # Set up a fabricator to call the update_label method when the CPU usage changes
+        helpers.psutil_fabricator.connect("changed", self.update_ui)
+
+    def update_ui(self, fabricator, value):
+        # Update the label with the current CPU usage if enabled
+        netstat = value.get("nestat")
+        text = f" {helpers.convert_bytes(round(netstat.bytes_recv), to='mb', unit=False)} MB/s  {helpers.convert_bytes(round(netstat.bytes_sent), to='mb', unit=False)} MB/s"
+        if self.config["label"]:
+            self.net_stat_label.show()
+            self.net_stat_label.set_label(text)
+
+        return True

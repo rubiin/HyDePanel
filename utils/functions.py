@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+from pickle import TRUE
 import shutil
 import subprocess
 from time import sleep
@@ -41,6 +42,8 @@ def psutil_poll(fabricator):
             "memory": psutil.virtual_memory(),
             "disk": psutil.disk_usage("/"),
             "battery": psutil.sensors_battery(),
+            "nestat": psutil.net_io_counters(),
+            "net_address": psutil.net_if_addrs(),
         }
         sleep(2)
 
@@ -126,7 +129,9 @@ def format_time(secs: int):
 
 
 # Function to convert bytes to kilobytes, megabytes, or gigabytes
-def convert_bytes(bytes: int, to: Literal["kb", "mb", "gb"], format_spec=".1f"):
+def convert_bytes(
+    bytes: int, to: Literal["kb", "mb", "gb"], format_spec=".1f", unit=TRUE
+):
     multiplier = 1
 
     if to == "mb":
@@ -134,7 +139,9 @@ def convert_bytes(bytes: int, to: Literal["kb", "mb", "gb"], format_spec=".1f"):
     elif to == "gb":
         multiplier = 3
 
-    return f"{format(bytes / (1024**multiplier), format_spec)}{to.upper()}"
+    return (
+        f"{format(bytes / (1024**multiplier), format_spec)}{to.upper() if unit else ''}"
+    )
 
 
 # Function to get the system uptime
