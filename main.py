@@ -12,7 +12,6 @@ from utils.config import APP_CACHE_DIRECTORY, APPLICATION_NAME
 from utils.widget_config import widget_config
 from widgets.corners import ScreenCorners
 
-
 def process_and_apply_css(app: Application):
     if not helpers.executable_exists("sass"):
         raise helpers.ExecutableNotFoundError(
@@ -55,6 +54,3 @@ if __name__ == "__main__":
     main_css_file.connect("changed", lambda *_: process_and_apply_css(app))
 
     process_and_apply_css(app)
-
-    # Run the application
-    app.run()
