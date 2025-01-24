@@ -12,7 +12,7 @@ from fabric.utils import exec_shell_command, exec_shell_command_async, get_relat
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 from fabric.widgets.scale import ScaleMark
-from gi.repository import GLib, Gtk
+from gi.repository import Gdk, GLib, Gtk
 from loguru import logger
 
 from shared.animated.scale import AnimatedScale
@@ -32,6 +32,12 @@ class ExecutableNotFoundError(ImportError):
             f"{Colors.ERROR}Executable {Colors.UNDERLINE}{executable_name}{Colors.RESET} not found. Please install it using your package manager."  # noqa: E501
         )
 
+
+# Function to get the monitors
+def for_monitors(widget):
+    monitors_count = len(Gdk.Display.get_default().get_monitors())
+
+    return [widget for _ in range(monitors_count)]
 
 # Function to get the system stats using psutil
 def psutil_poll(fabricator):
