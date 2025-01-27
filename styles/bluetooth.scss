@@ -1,0 +1,21 @@
+@use "sass:color";
+@use "theme.scss";
+@use "common/mixins.scss";
+@use "common/functions.scss";
+@use "variable.scss";
+
+
+#bluetooth-box {
+
+    @include mixins.floating-widget;
+    
+    margin: 5px;
+
+    #bluetooth-header {
+
+
+        .panel-text {
+            margin-right: 7em;
+        }
+    }
+}
