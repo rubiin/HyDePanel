@@ -99,7 +99,7 @@
               "storage",
               "stop_watch",
               "system_tray",
-              "taskbar",
+              "task_bar",
               "updates",
               "volume",
               "weather",
@@ -135,7 +135,7 @@
               "storage",
               "stop_watch",
               "system_tray",
-              "taskbar",
+              "task_bar",
               "updates",
               "volume",
               "weather",
@@ -171,7 +171,7 @@
               "storage",
               "stop_watch",
               "system_tray",
-              "taskbar",
+              "task_bar",
               "updates",
               "volume",
               "weather",
@@ -427,6 +427,9 @@
         },
         "duration": {
           "type": "integer"
+        },
+        "show_percentage": {
+          "type": "boolean"
         }
       }
     },
