@@ -188,36 +188,35 @@ Updating to latest commit is fairly simple, just git pull the latest changes.
 
 <details>
 <summary>Click to expand modules</summary>
-Here is the list arranged in ascending order alphabetically:
-
-- battery
-- bluetooth
-- brightness
-- cava
-- clickcounter
-- cpu
-- date_menu
-- divider (utility)
-- hypr_idle
-- hypr_sunset
-- keyboard
-- language
-- media
-- microphone
-- power
-- ram
-- recorder
-- spacer (utility)
-- storage
-- stop_watch
-- system_tray
-- taskbar
-- updates
-- volume
-- weather
-- window_title
-- workspace
-- workspaces
+| **Item**            | **Description** |
+|---------------------|-----------------|
+| **battery**          | Displays battery status and usage information. |
+| **bluetooth**        | Manages Bluetooth connections and settings. |
+| **brightness**       | Controls the screen brightness level. |
+| **cava**             | An audio visualizer. |
+| **clickcounter**     | Tracks the number of mouse clicks. |
+| **cpu**              | Displays CPU usage and performance statistics. |
+| **date_menu**        | A menu displaying the current date and notifications. |
+| **divider (utility)**| Separates sections in a user interface for better organization. |
+| **hypr_idle**        | Tracks idle time or status of the system. |
+| **hypr_sunset**      | A utility that adjusts screen settings based on the time of sunset. |
+| **keyboard**         | Displays and manages the keyboard layout or settings. |
+| **language**         | Allows selection of the system's language or locale settings. |
+| **media**            | Controls media playback, volume, or other media-related settings. |
+| **microphone**       | Manages microphone settings and input levels. |
+| **power**            | Controls power-related settings, including sleep and shutdown. |
+| **ram**              | Displays information about system RAM usage and performance. |
+| **recorder**         | A tool for recording audio or video on the system. |
+| **spacer (utility)** | A simple utility for adding space in UI layouts. |
+| **storage**          | Displays storage usage and manages disk partitions or drives. |
+| **stop_watch**       | A utility for tracking elapsed time, like a timer or stopwatch. |
+| **system_tray**      | Displays system tray icons and manages notifications. |
+| **taskbar**          | A bar at the bottom of the screen for quick access to apps and notifications. |
+| **updates**          | Manages system updates, patches, and version upgrades. |
+| **volume**           | Controls the system’s audio volume. |
+| **weather**          | Displays current weather information or forecasts. |
+| **window_title**     | Shows the title of the current window or application. |
+| **workspaces**       | Refers to multiple virtual desktops or workspaces. |
 
 </details>
 

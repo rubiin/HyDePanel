@@ -7,7 +7,7 @@ from fabric.widgets.centerbox import CenterBox
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 
-from services import power_profile_service
+from services.power_profile import PowerProfiles
 from shared.pop_over import PopOverWindow
 from shared.widget_container import ButtonWidget
 from utils.functions import format_time
@@ -29,6 +29,9 @@ class PowerProfileItem(Button):
             **kwargs,
         )
         self.profile = profile
+
+        self.power_profile_service = PowerProfiles().get_initial()
+
         self.children = (
             Box(
                 children=(
@@ -46,7 +49,7 @@ class PowerProfileItem(Button):
 
         self.connect(
             "button-press-event",
-            lambda *_: power_profile_service.set_power_profile(key),
+            lambda *_: self.power_profile_service.set_power_profile(key),
         )
 
         self.add_style_class(
@@ -67,9 +70,11 @@ class BatteryMenu(Box):
             **kwargs,
         )
 
-        self.profiles = power_profile_service.power_profiles
+        self.power_profile_service = PowerProfiles().get_initial()
 
-        self.active = power_profile_service.get_current_profile()
+        self.profiles = self.power_profile_service.power_profiles
+
+        self.active = self.power_profile_service.get_current_profile()
 
         self.power_profiles = [
             PowerProfileItem(key=key, profile=profile, active=self.active)
@@ -92,7 +97,7 @@ class BatteryMenu(Box):
             )
         )
 
-        power_profile_service.connect(
+        self.power_profile_service.connect(
             "profile",
             self.on_profile_changed,
         )

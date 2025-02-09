@@ -10,7 +10,7 @@ from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 from gi.repository import Gtk
 
-from services import weather_service
+from services.weather import WeatherService
 from shared import LottieAnimation, LottieAnimationWidget, PopOverWindow
 from shared.separator import Separator
 from shared.widget_container import ButtonWidget
@@ -229,6 +229,8 @@ class WeatherWidget(ButtonWidget):
             **kwargs,
         )
 
+        self.weather_service = WeatherService().get_initial()
+
         self.config = widget_config["weather"]
 
         self.bar = bar
@@ -262,7 +264,9 @@ class WeatherWidget(ButtonWidget):
     def weather_poll(self, fabricator):
         while True:
             yield {
-                "weather": weather_service.simple_weather_info(self.config["location"])
+                "weather": self.weather_service.simple_weather_info(
+                    self.config["location"]
+                )
             }
             time.sleep(self.config["interval"] / 1000)
 

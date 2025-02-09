@@ -17,7 +17,7 @@ from loguru import logger
 
 import utils.constants as constants
 import utils.functions as helpers
-from services import cache_notification_service, notification_service
+from services import NotificationCacheService, notification_service
 from shared.custom_image import CustomImage
 from shared.pop_over import PopOverWindow
 from shared.separator import Separator
@@ -50,6 +50,8 @@ class DateMenuNotification(EventBox):
         self._notification = notification
 
         self._timeout_id = None
+
+        self.cache_notification_service = NotificationCacheService().get_initial()
 
         self.notification_box = Box(
             spacing=8,
@@ -164,7 +166,7 @@ class DateMenuNotification(EventBox):
         )
 
     def clear_notification(self, id):
-        cache_notification_service.remove_notification(id)
+        self.cache_notification_service.remove_notification(id)
         self.revealer.set_reveal_child(False)
         GLib.timeout_add(400, self.destroy)
 
@@ -183,13 +185,15 @@ class DateNotificationMenu(Box):
             **kwargs,
         )
 
+        self.cache_notification_service = NotificationCacheService().get_initial()
+
         self.clock_label = Label(
             label=time.strftime("%H:%M"),
             style_classes="clock",
         )
 
         self.notifications: List[Notification] = (
-            cache_notification_service.get_deserialized()
+            self.cache_notification_service.get_deserialized()
         )
 
         self.notifications_list = [
@@ -259,7 +263,8 @@ class DateNotificationMenu(Box):
         )
 
         clear_button.connect(
-            "clicked", lambda _: cache_notification_service.clear_all_notifications()
+            "clicked",
+            lambda _: self.cache_notification_service.clear_all_notifications(),
         )
 
         setup_cursor_hover(clear_button)
@@ -327,7 +332,9 @@ class DateNotificationMenu(Box):
 
         invoke_repeater(1000, self.update_labels, initial_call=True)
         notification_service.connect("notification-added", self.on_new_notification)
-        cache_notification_service.connect("clear_all", self.on_clear_all_notifications)
+        self.cache_notification_service.connect(
+            "clear_all", self.on_clear_all_notifications
+        )
 
     def on_clear_all_notifications(self, *_):
         self.notification_list_box.children = []
@@ -336,7 +343,7 @@ class DateNotificationMenu(Box):
         self.placeholder.set_visible(True)
 
     def on_new_notification(self, fabric_notif, id):
-        if cache_notification_service.dont_disturb:
+        if self.cache_notification_service.dont_disturb:
             return
 
         notification: Notification = fabric_notif.get_notification_from_id(id)
@@ -385,7 +392,7 @@ class DateTimeWidget(ButtonWidget):
         )
 
         count_label = Label(
-            label=str(cache_notification_service.count),
+            label=str(self.cache_notification_service.count),
             style_classes="notification-count",
             v_align="start",
             visible=self.config["notification_count"] and self.config["notification"],
@@ -411,7 +418,7 @@ class DateTimeWidget(ButtonWidget):
         date_menu.dnd_switch.connect("notify::active", self.on_dnd_switch)
 
         bulk_connect(
-            cache_notification_service,
+            self.cache_notification_service,
             {
                 "notification_count": lambda _, value, *args: count_label.set_text(
                     str(value)
@@ -425,10 +432,10 @@ class DateTimeWidget(ButtonWidget):
             self.notof_indicator.set_from_icon_name(
                 icons["notifications"]["silent"], icon_size=16
             )
-            cache_notification_service.dont_disturb = True
+            self.cache_notification_service.dont_disturb = True
 
         else:
             self.notof_indicator.set_from_icon_name(
                 icons["notifications"]["noisy"], icon_size=16
             )
-            cache_notification_service.dont_disturb = False
+            self.cache_notification_service.dont_disturb = False
