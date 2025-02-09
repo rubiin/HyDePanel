@@ -19,7 +19,7 @@ from loguru import logger
 
 from services.mpris import MprisPlayer, MprisPlayerManager
 from shared.animator import Animator
-from shared.cicrle_image import CircleImage
+from shared.circle_image import CircleImage
 from utils.constants import APP_CACHE_DIRECTORY
 from utils.functions import ensure_dir_exists
 

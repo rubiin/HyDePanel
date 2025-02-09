@@ -10,7 +10,7 @@ import utils.functions as helpers
 from services import audio_service, bluetooth_service, network_service
 from services.brightness import Brightness
 from services.mpris import MprisPlayerManager
-from shared.cicrle_image import CircleImage
+from shared.circle_image import CircleImage
 from shared.pop_over import PopOverWindow
 from shared.submenu import QuickSubToggle
 from shared.widget_container import ButtonWidget

@@ -237,19 +237,19 @@ class Ethernet(Service):
         self._client: NM.Client = client
         self._device: NM.DeviceEthernet = device
 
-        for pn in (
+        for names in (
             "active-connection",
             "icon-name",
             "internet",
             "speed",
             "state",
         ):
-            self._device.connect(f"notify::{pn}", lambda *_: self.notifier(pn))
+            self._device.connect(f"notify::{names}", lambda *_: self.notifier(names))
 
         self._device.connect("notify::speed", lambda *_: print(_))
 
-    def notifier(self, pn):
-        self.notify(pn)
+    def notifier(self, names):
+        self.notify(names)
         self.emit("changed")
 
 
