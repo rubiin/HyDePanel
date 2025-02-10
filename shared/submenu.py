@@ -7,6 +7,8 @@ from fabric.widgets.label import Label
 from fabric.widgets.revealer import Revealer
 from fabric.widgets.widget import Widget
 
+from shared.separator import Separator
+
 
 class QuickSubMenu(Box):
     """A widget to display a submenu for quick settings."""
@@ -48,7 +50,9 @@ class QuickSubMenu(Box):
         # self.revealer.set_reveal_child(True)
 
     def make_submenu_box(self) -> Box | None:
+        submenu_container_box = Box(orientation="v", spacing=4)
         submenu_box = Box(spacing=4, style="margin-bottom:15px;")
+
         if not self.title_icon and not self.title:
             return None
         if self.title_icon:
@@ -62,7 +66,10 @@ class QuickSubMenu(Box):
             False,
             0,
         )
-        return submenu_box
+        submenu_container_box.add(submenu_box)
+        submenu_container_box.add(Separator(orientation="horizontal",h_align="center",style="background-color: red;padding: 0 100px;"))
+
+        return submenu_container_box
 
     def do_reveal(self, visible: bool):
         self.set_visible(True)
