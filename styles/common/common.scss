@@ -427,7 +427,7 @@ scrollbar {
 #quicksettings-togglebutton.active button:active image,
 #quicksettings-togglebutton.active button:active label,
 #quicksettings-togglebutton.active button:active {
-  background-color: darken(theme.$accent-blue, 20%);
+  background-color: darken(theme.$background, 10%);
 }
 
 #quicksettings-togglebutton button image,
