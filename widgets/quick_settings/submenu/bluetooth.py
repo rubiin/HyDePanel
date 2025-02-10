@@ -13,7 +13,6 @@ class BluetoothDeviceBox(CenterBox):
     """A widget to display a Bluetooth device in a box."""
 
     def __init__(self, device: BluetoothDevice, **kwargs):
-        # TODO: FIX STYLING, make it look better
         super().__init__(
             spacing=2, style_classes="submenu-button", h_expand=True, **kwargs
         )
@@ -31,11 +30,10 @@ class BluetoothDeviceBox(CenterBox):
         self.add_start(
             Image(
                 icon_name=device.icon_name + "-symbolic",
-                icon_size=24,
-                style_classes="submenu-icon",
+                icon_size=18,
             )
         )
-        self.add_start(Label(label=device.name, style_classes="submenu-label1"))  # type: ignore
+        self.add_start(Label(label=device.name, style_classes="submenu-label"))  # type: ignore
         self.add_end(self.connect_button)
 
         self.on_device_connect()
