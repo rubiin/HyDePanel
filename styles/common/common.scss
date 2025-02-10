@@ -341,7 +341,8 @@ scrollbar {
 
 
 #submenu {
-  background-color: theme.$background-dark;
+  margin-top: 5px;
+  background-color: theme.$background-alt;
   border-radius: 20px;
   border-width: 5px;
   padding: 10px;
