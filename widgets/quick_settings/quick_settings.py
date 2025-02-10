@@ -38,12 +38,11 @@ class QuickSettingsButtonBox(Box):
             spacing=4,
             h_align="start",
             v_align="start",
-            h_expand=True,
             v_expand=True,
             **kwargs,
         )
         self.buttons = Box(
-            orientation="h", spacing=4, h_align="center", v_align="center"
+            orientation="h", spacing=10, h_align="center", v_align="center"
         )
         self.active_submenu = None
 
@@ -115,6 +114,7 @@ class QuickSettingsMenu(Box):
                 orientation="v",
                 spacing=10,
                 v_align="center",
+                style_classes="section-box",
                 children=(
                     Box(
                         style_classes="user-box",
@@ -127,7 +127,8 @@ class QuickSettingsMenu(Box):
                             ),
                             info_box,
                         ),
-                    )
+                    ),
+                    QuickSettingsButtonBox(),
                 ),
             ),
             center_children=Box(
@@ -137,7 +138,7 @@ class QuickSettingsMenu(Box):
                 children=(BrightnessSlider(), AudioSlider(), MicrophoneSlider()),
             ),
             end_children=(
-                PlayerBoxStack(MprisPlayerManager(), config=self.config["media"])
+                PlayerBoxStack(MprisPlayerManager(), config=self.config["media"]),
             ),
         )
 

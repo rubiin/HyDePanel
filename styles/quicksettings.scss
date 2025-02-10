@@ -6,11 +6,26 @@
   margin-bottom: 10px;
 }
 
+
+#quicksettings-box {
+    background-color: red;
+    border-radius: 20px;
+}
+
+#quicksettings-box>box>button {
+    margin: 10px -10px 10px 5px;
+}
+
+
 #quicksettings-menu {
   min-width: 410px;
 
-  .user-box {
+  .section-box{
+
     margin: 1rem;
+  }
+
+  .user-box {
 
     .info-box {
       padding: 8px 0;

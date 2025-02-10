@@ -13,6 +13,7 @@ class QuickSubMenu(Box):
 
     def __init__(
         self,
+        scan_button: Button,
         child: Widget | None,
         title: str | None = None,
         title_icon: str | None = None,
@@ -26,6 +27,9 @@ class QuickSubMenu(Box):
         self.revealer_child = Box(orientation="v", name="submenu")
 
         self.submenu_title_box = self.make_submenu_box()
+
+        self.scan_button = scan_button
+
         self.revealer_child.add(
             self.submenu_title_box
         ) if self.submenu_title_box else None
@@ -44,13 +48,20 @@ class QuickSubMenu(Box):
         # self.revealer.set_reveal_child(True)
 
     def make_submenu_box(self) -> Box | None:
+        submenu_box = Box(spacing=4, style="margin-bottom:15px;")
         if not self.title_icon and not self.title:
             return None
-        submenu_box = Box(spacing=4)
         if self.title_icon:
-            submenu_box.add(Image(icon_name=self.title_icon, icon_size=24))
+            submenu_box.add(Image(icon_name=self.title_icon, icon_size=18))
         if self.title:
-            submenu_box.add(Label(name="submenu-title-label", label=self.title))
+            submenu_box.add(Label(style_classes="submenu-label", label=self.title))
+
+        submenu_box.pack_end(
+            self.scan_button,
+            False,
+            False,
+            0,
+        )
         return submenu_box
 
     def do_reveal(self, visible: bool):
@@ -88,7 +99,7 @@ class QuickSubToggle(Box):
             lambda *args: self.animate_spin(submenu.revealer.get_reveal_child()),
         ) if submenu else None
 
-        self.button_image = Image(icon_name="pan-end-symbolic", size=20)
+        self.button_image = Image(icon_name="pan-end-symbolic", icon_size=20)
 
         self.reveal_button = Button(
             name="quicksettings-toggle-revealer",
@@ -108,6 +119,7 @@ class QuickSubToggle(Box):
             Box(
                 h_align="start",
                 v_align="center",
+                spacing=4,
                 children=[self.action_icon, self.action_label],
             )
         )

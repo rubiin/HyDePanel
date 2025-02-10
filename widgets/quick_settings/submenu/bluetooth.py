@@ -77,8 +77,10 @@ class BluetoothSubMenu(QuickSubMenu):
             children=Label("Available Devices", h_align="start"),
         )
 
-        self.scan_image = Image(icon_name="view-refresh-symbolic", icon_size=24)
-        self.scan_button = Button(image=self.scan_image, style_classes="submenu-button")
+        self.scan_button = Button(
+            image=Image(icon_name="view-refresh-symbolic", icon_size=18),
+            name="submenu-button",
+        )
         self.scan_button.connect("clicked", self.on_scan_toggle)
 
         self.child = ScrolledWindow(
@@ -98,9 +100,10 @@ class BluetoothSubMenu(QuickSubMenu):
         super().__init__(
             title="Bluetooth",
             title_icon="bluetooth-active-symbolic",
+            scan_button=self.scan_button,
             child=Box(
                 orientation="v",
-                children=[self.scan_button, self.child],
+                children=[ self.child],
             ),
             **kwargs,
         )
@@ -148,11 +151,11 @@ class BluetoothToggle(QuickSubToggle):
     def toggle_bluetooth(self, client: BluetoothClient, *_):
         if client.enabled:
             self.set_active_style(True)
-            self.action_icon.set_from_icon_name("bluetooth-active-symbolic", 20)
+            self.action_icon.set_from_icon_name("bluetooth-active-symbolic", 18)
             self.action_label.set_label("Not Connected")
         else:
             self.set_active_style(False)
-            self.action_icon.set_from_icon_name("bluetooth-disabled-symbolic", 20)
+            self.action_icon.set_from_icon_name("bluetooth-disabled-symbolic", 18)
             self.action_label.set_label("Disabled")
 
     def new_device(self, client: BluetoothClient, address):

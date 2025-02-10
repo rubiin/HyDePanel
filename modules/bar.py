@@ -1,4 +1,4 @@
-from fabric.utils import (  # noqa: I001
+from fabric.utils import (
     exec_shell_command_async,
     get_relative_path,
     invoke_repeater,

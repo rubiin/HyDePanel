@@ -373,6 +373,8 @@ class DateTimeWidget(ButtonWidget):
 
         self.config = widget_config["date_time"]
 
+        self.cache_notification_service = NotificationCacheService().get_initial()
+
         date_menu = DateNotificationMenu(config=self.config)
 
         popup = PopOverWindow(

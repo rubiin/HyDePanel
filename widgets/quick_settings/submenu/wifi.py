@@ -4,7 +4,7 @@ from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 from fabric.widgets.scrolledwindow import ScrolledWindow
 
-from services.wifi import NetworkClient, Wifi
+from services.network import NetworkClient, Wifi
 from shared.submenu import QuickSubMenu, QuickSubToggle
 
 
@@ -18,7 +18,10 @@ class WifiSubMenu(QuickSubMenu):
 
         self.available_networks_box = Box(orientation="v", spacing=4, h_expand=True)
 
-        self.scan_button = Button(label="Scan", name="submenu-button")
+        self.scan_button = Button(
+            image=Image(icon_name="view-refresh-symbolic", icon_size=18),
+            name="submenu-button",
+        )
         self.scan_button.connect("clicked", self.start_new_scan)
 
         self.child = ScrolledWindow(
@@ -32,7 +35,8 @@ class WifiSubMenu(QuickSubMenu):
         super().__init__(
             title="Network",
             title_icon="network-wireless-symbolic",
-            child=Box(orientation="v", children=[self.scan_button, self.child]),
+            scan_button=self.scan_button,
+            child=Box(orientation="v", children=[self.child]),
             **kwargs,
         )
 
@@ -58,8 +62,11 @@ class WifiSubMenu(QuickSubMenu):
         ap_button.add(
             Box(
                 children=[
-                    Image(icon_name=ap.get("icon-name"), icon_size=24),
-                    Label(label=ap.get("ssid")),
+                    Image(
+                        icon_name=ap.get("icon-name"),
+                        icon_size=18,
+                    ),
+                    Label(label=ap.get("ssid"), style_classes="submenu-label"),
                 ]
             )
         )
@@ -93,7 +100,7 @@ class WifiToggle(QuickSubToggle):
             )
 
             self.action_icon.set_from_icon_name(
-                wifi.get_property("icon-name") + "-symbolic", 24
+                wifi.get_property("icon-name") + "-symbolic", 18
             )
             wifi.bind_property("icon-name", self.action_icon, "icon-name")
 

@@ -6,10 +6,10 @@ from fabric.notifications import Notifications
 from .brightness import *
 from .cache_notification import *
 from .mpris import *
+from .network import NetworkClient
 from .power_profile import *
 from .screen_record import *
 from .weather import *
-from .wifi import NetworkClient
 
 # Fabric services
 audio_service = Audio()

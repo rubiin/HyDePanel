@@ -339,6 +339,15 @@ scrollbar {
   min-width: 5rem;
 }
 
+
+#submenu {
+  background-color: theme.$background-dark;
+  border-radius: 20px;
+  border-width: 5px;
+  padding: 10px;
+}
+
+
 .submenu-button {
   margin: 0px 2px 0px 2px;
   padding: 0px 5px 0px 5px;
@@ -381,6 +390,7 @@ scrollbar {
 
 .submenu-title-label {
   font-size: 17px;
+  margin-left: 10px;
 }
 
 .submenu-item {
@@ -394,7 +404,7 @@ scrollbar {
 
 #quicksettings-toggle-action {
   border-radius: 10px 0px 0px 10px;
-  min-width: 200px;
+  min-width: 150px;
   min-height: 35px;
 }
 
@@ -402,8 +412,8 @@ scrollbar {
 #quicksettings-togglebutton.active button label,
 #quicksettings-togglebutton.active button {
   font-weight: bold;
-  background-color: darken(theme.$accent-blue, 10%);
-  color: black;
+  background-color: theme.$background;
+  color: theme.$text-main;
   padding-left: 1px;
   padding-right: 4px;
 }
@@ -411,7 +421,7 @@ scrollbar {
 #quicksettings-togglebutton.active button:hover image,
 #quicksettings-togglebutton.active button:hover label,
 #quicksettings-togglebutton.active button:hover {
-  background-color: darken(theme.$accent-blue, 15%);
+  background-color: darken(theme.$background, 4%);
 }
 
 #quicksettings-togglebutton.active button:active image,
