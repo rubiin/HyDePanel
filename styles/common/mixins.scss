@@ -82,7 +82,7 @@
   $slider: false,
   $radius: variable.$radius,
   $slider-color: theme.$background-dark,
-  $min-length: false) {
+  $min-length: "") {
   trough {
     transition: 200ms;
     border-radius: $radius;
@@ -104,9 +104,9 @@
     }
   }
 
-  @if $min-length {
+  @if $min-length != "" {
     scale {
-      min-width: 150px;
+      min-width: $min-length;
     }
   }
 

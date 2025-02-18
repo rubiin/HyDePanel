@@ -270,7 +270,7 @@ class WeatherWidget(ButtonWidget):
             }
             time.sleep(self.config["interval"] / 1000)
 
-    def update_ui(self, fabricator, value):
+    def update_ui(self, _, value):
         # Update the label with the weather icon and temperature in the main thread
         res = value.get("weather")
         current_weather = res["current"]

@@ -34,7 +34,7 @@ class Battery(ButtonWidget):
         # Set up a repeater to call the update_battery_status method
         psutil_fabricator.connect("changed", self.update_ui)
 
-    def update_ui(self, fabricator, value):
+    def update_ui(self, _, value):
         """Update the battery status by fetching the current battery information
         and updating the widget accordingly.
         """

@@ -62,7 +62,7 @@ $slider-height: 12px;
     }
 
     .slider-box {
-      padding: 20px 15px;
+      padding: 20px 5px;
       border-radius: variable.$radius;
       background-color: theme.$background;
 
@@ -83,6 +83,7 @@ $slider-height: 12px;
         }
 
         @include mixins.slider($highlight-color: theme.$accent-blue,
+          $min-length: 350px,
           $slider: true);
       }
     }
@@ -137,7 +138,7 @@ $slider-height: 12px;
 
       #scan-button {
         &:active {
-            background-color: transparent;
+          background-color: transparent;
         }
       }
     }

@@ -29,7 +29,6 @@ class CavaWidget(ButtonWidget):
         self.box.children = Box(spacing=1, children=[cava_label]).build(
             lambda box, _: Fabricator(
                 poll_from=f"bash -c '{script_path} {self.config['bars']}'",
-                interval=0,
                 stream=True,
                 on_changed=lambda f, line: cava_label.set_label(line),
             )

@@ -294,7 +294,6 @@ class PlayerBox(Box):
         def position_poll(_):
             while True:
                 try:
-                    print("can go next?",self.player.can_go_next)
                     yield self.player.position
                     sleep(1)
                 except Exception:  # noqa: PERF203

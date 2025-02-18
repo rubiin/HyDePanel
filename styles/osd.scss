@@ -18,5 +18,5 @@
     padding-left: 5px;
   }
 
-  @include mixins.slider($slider: false, $min-length: true, $width: 9px);
+  @include mixins.slider($slider: false, $min-length: 150px, $width: 9px);
 }
