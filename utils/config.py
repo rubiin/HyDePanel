@@ -39,8 +39,14 @@ class HydeConfig:
             data = json.load(file)
         return data
 
+    # Function to read the configuration file
+    def read_i18n_config(self) -> dict:
+        config_file = get_relative_path("../assets/i18n/en.json")
+        with open(config_file) as file:
+            data = json.load(file)
+        return data
+
     def default_config(self) -> BarConfig:
-        # Read the configuration from the JSON file
         parsed_data = self.read_config()
 
         validate_widgets(parsed_data, DEFAULT_CONFIG)
@@ -61,7 +67,6 @@ class HydeConfig:
         logger.info("Applying css settings...")
 
         settings = ""
-        # for setting in self.config["css_settings"]:
         for setting in self.try_get_property("css_settings", [], True):
             settings += (
                 f"${setting}: {self.try_get_property(setting, 'css_settings')};\n"

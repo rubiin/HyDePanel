@@ -1,0 +1,17 @@
+{
+  "dnd": "Do not disturb",
+  "inboxEmpty": "Your inbox is empty",
+  "timeToFull": "Time to full",
+  "timeToEmpty": "Time to empty",
+  "enabled": "Enabled",
+  "disabled": "Disabled",
+  "Quiet": "Quiet",
+  "Noisy": "Noisy",
+  "micMuted": "Microphone is muted",
+  "micUnmuted": "Microphone is on",
+  "failedToConnect": "Failed to connect",
+  "connecting": "Connecting",
+  "connected": "Connected",
+  "disconnected": "Disconnected",
+  "language": "Language"
+}

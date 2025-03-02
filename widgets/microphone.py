@@ -46,7 +46,7 @@ class MicrophoneIndicatorWidget(ButtonWidget):
 
             # Update the label  if enabled
             if self.config["label"]:
-                self.mic_label.set_label("Off" if is_muted else "On")
+                self.mic_label.set_label("Disabled" if is_muted else "Enabled")
                 self.mic_label.show()
 
             if self.config["tooltip"]:
