@@ -177,6 +177,12 @@ DateTimeMenu = TypedDict(
 # ThemeSwitcher configuration
 ThemeSwitcher = TypedDict("ThemeSwitcher", {**BaseConfig.__annotations__, "icon": str})
 
+# Hyprpicker configuration
+HyprPicker = TypedDict("HyprPicker", {**BaseConfig.__annotations__, "icon": str})
+
+# OCR configuration
+OCR = TypedDict("OCR", {**BaseConfig.__annotations__, "icon": str})
+
 # Media configuration
 Media = TypedDict(
     "Media",
@@ -250,6 +256,7 @@ class BarConfig(TypedDict):
     divider: Divider
     hypr_idle: HyprIdle
     hypr_sunset: HyprSunset
+    hypr_picker: HyprPicker
     keyboard: Keyboard
     language: Language
     layout: Layout
@@ -259,6 +266,7 @@ class BarConfig(TypedDict):
     network_usage: NetworkUsage
     notification: Notification
     general: General
+    ocr: OCR
     osd: OSD
     overview: Overview
     power: PowerButton

@@ -231,14 +231,14 @@ class MprisPlayerManager(Service):
         bulk_connect(
             self._manager,
             {
-                "name-appeared": self.on_name_appeard,
+                "name-appeared": self.on_name_appeared,
                 "name-vanished": self.on_name_vanished,
             },
         )
         self.add_players()
         super().__init__(**kwargs)
 
-    def on_name_appeard(self, manager, player_name: Playerctl.PlayerName):
+    def on_name_appeared(self, manager, player_name: Playerctl.PlayerName):
         logger.info(f"[MprisPlayer] {player_name.name} appeared")
         new_player = Playerctl.Player.new_from_name(player_name)
         manager.manage_player(new_player)

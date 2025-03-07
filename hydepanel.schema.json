@@ -45,17 +45,19 @@
               "divider",
               "hypr_idle",
               "hypr_sunset",
+              "hypr_picker",
               "keyboard",
               "language",
               "media",
               "microphone",
+              "network_usage",
+              "ocr",
               "power",
               "ram",
               "recorder",
               "spacer",
               "storage",
               "submap",
-              "network_usage",
               "stop_watch",
               "system_tray",
               "task_bar",
@@ -388,6 +390,24 @@
       "properties": {
         "count": {
           "type": "integer"
+        }
+      }
+    },
+    "hypr_picker": {
+      "type": "object",
+      "properties": {
+        "$ref": "#/definitions/baseProperties",
+        "icon": {
+          "type": "string"
+        }
+      }
+    },
+    "ocr": {
+      "type": "object",
+      "properties": {
+        "$ref": "#/definitions/baseProperties",
+        "icon": {
+          "type": "string"
         }
       }
     },

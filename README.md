@@ -159,7 +159,7 @@ Run the following command to install the required system packages:
 Using `yay` to install the required AUR packages:
 
 ```sh
-yay -S --needed gray-git python-fabric gnome-bluetooth-3.0 python-rlottie-python slurp
+yay -S --needed gray-git python-fabric gnome-bluetooth-3.0 python-rlottie-python slurp imagemagick tesseract
 ```
 
 If you have something else besides `yay`, install with the respective aur helper.
@@ -197,36 +197,38 @@ Updating to latest commit is fairly simple, just git pull the latest changes.
 
 | **Item**              | **Description**                                                                |
 | --------------------- | ------------------------------------------------------------------------------ |
-| **battery**           | Displays battery status and usage information.                                 |
-| **bluetooth**         | Manages Bluetooth connections and settings.                                    |
-| **brightness**        | Controls the screen brightness level.                                          |
-| **cava**              | An audio visualizer.                                                           |
-| **clickcounter**      | Tracks the number of mouse clicks.                                             |
-| **cpu**               | Displays CPU usage and performance statistics.                                 |
-| **date_menu**         | A menu displaying the current date and notifications.                          |
-| **divider (utility)** | Separates sections in a user interface for better organization.                |
-| **hypr_idle**         | Tracks idle time or status of the system.                                      |
-| **hypr_sunset**       | A utility that adjusts screen settings based on the time of sunset.            |
-| **keyboard**          | Displays and manages the keyboard layout or settings.                          |
-| **language**          | Allows selection of the system's language or locale settings.                  |
-| **media**             | Controls media playback, volume, or other media-related settings.              |
-| **microphone**        | Manages microphone settings and input levels.                                  |
-| **power**             | Controls power-related settings, including sleep and shutdown.                 |
-| **ram**               | Displays information about system RAM usage and performance.                   |
-| **recorder**          | A tool for recording audio or video on the system.                             |
+| **battery**           | Widget that display battery status and usage information.                      |
+| **bluetooth**         | Widget manages Bluetooth connections and settings.                             |
+| **brightness**        | Widget controls the screen brightness level.                                   |
+| **cava**              | An audio visualizer widget.                                                    |
+| **clickcounter**      | Widget tracks the number of mouse clicks.                                      |
+| **cpu**               | Widget displays CPU usage and performance statistics.                          |
+| **date_time**         | A menu displaying the current date and notifications.                          |
+| **divider (utility)** | Widget separates sections in a user interface for better organization.         |
+| **hypr_idle**         | Widget that tracks idle time or status of the system.                          |
+| **hypr_picker**       | Widget that picks color from images.                                           |
+| **hypr_sunset**       | Widget that adjusts screen settings based on the time of sunset.               |
+| **keyboard**          | Widget that manages and manages the keyboard layout or settings.               |
+| **language**          | Widget allows selection of the system's language or locale settings.           |
+| **media**             | Widget controls media playback, volume, or other media-related settings.       |
+| **microphone**        | Widget manages microphone settings and input levels.                           |
+| **network_usage**     | Widget displays the upload/download speeds.                                    |
+| **ocr**               | Widget scans text from an image.                                               |
+| **power**             | Widget controls power-related settings, including sleep and shutdown.          |
+| **ram**               | Widget displays information about system RAM usage and performance.            |
+| **recorder**          | Widget for recording audio or video on the system.                             |
 | **spacer (utility)**  | A simple utility for adding space in UI layouts.                               |
-| **storage**           | Displays storage usage and manages disk partitions or drives.                  |
-| **submap**            | Displays active submap for hyprland.                                           |
-| **network_usage**     | Displays the upload/download speeds.                                           |
+| **storage**           | Widget that displays storage usage and manages disk partitions or drives.      |
+| **submap**            | Widget that displays active submap for hyprland.                               |
 | **stop_watch**        | A utility for tracking elapsed time, like a timer or stopwatch.                |
-| **system_tray**       | Displays system tray icons and manages notifications.                          |
+| **system_tray**       | Widget that displays system tray icons and manages notifications.              |
 | **taskbar**           | A bar at the bottom of the screen for quick access to apps and notifications.  |
-| **updates**           | Manages system updates, patches, and version upgrades.                         |
-| **quicksettings**     | Displays panel for quickly accessing some settings like brightness, sound etc. |
-| **volume**            | Controls the system’s audio volume.                                            |
-| **weather**           | Displays current weather information or forecasts.                             |
-| **window_title**      | Shows the title of the current window or application.                          |
-| **workspaces**        | Refers to multiple virtual desktops or workspaces.                             |
+| **updates**           | Widget that manages system updates, patches, and version upgrades.             |
+| **quick_settings**    | Displays panel for quickly accessing some settings like brightness, sound etc. |
+| **volume**            | Widget that controls the system’s audio volume.                                |
+| **weather**           | Widget that displays current weather information or forecasts.                 |
+| **window_title**      | Widget that shows the title of the current window or application.              |
+| **workspaces**        | Widget that displays virtual desktops or workspaces.                           |
 
 > [!WARNING]
 > This is still in early development and will include breaking changes
@@ -239,7 +241,7 @@ Be sure to kill any bars that you may be running. You can kill other bar with `p
 
 ### 2. **Cannot see notifications?**
 
-Be sure to kill other notifications daemon that you may be running. You can kill other daeemons with `pkill dunst; pkill mako;`
+Be sure to kill other notifications daemon that you may be running. You can kill other daemons with `pkill dunst; pkill mako;`
 
 ### 3. **Cannot see bar?**
 

@@ -6,11 +6,13 @@ from .cava import *
 from .click_counter import *
 from .datetime_menu import *
 from .hypr_idle import *
+from .hypr_picker import *
 from .hypr_sunset import *
 from .keyboard_layout import *
 from .language import *
 from .microphone import *
 from .mpris import *
+from .ocr import *
 from .overview import *
 from .power_button import *
 from .quick_settings.quick_settings import *

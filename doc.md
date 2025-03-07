@@ -19,7 +19,8 @@ The default configuration is stored in the `DEFAULT_CONFIG` dictionary. It inclu
         "auto_hide": false,
         "bar_style": "default",
         "location": "top",
-        "widget_style": "default"
+        "widget_style": "default",
+        "corner_size": 10,
     }
 
 ```
@@ -41,6 +42,9 @@ The default configuration is stored in the `DEFAULT_CONFIG` dictionary. It inclu
 
 - widget_style (string; enum: "default", "wave1", "wave2", "flat", "shadow"):
   Sets a visual style for the widgets on the panel. Each option represents a predefined look.
+
+- corner_size (number):
+  Sets the size of the rounded corners for the panel.
 
 ## Layout Configuration
 
@@ -201,6 +205,22 @@ Other components follow a similar structure, where each configuration defines th
 - label: Whether to show a label.
 - tooltip: Whether to show a tooltip.
 
+## Hyprpicker
+
+```json
+"hypr_picker": {
+    "icon": "",
+    "icon_size": "14px",
+    "label": true,
+    "tooltip": true,
+}
+```
+
+- icon: The icon used to display the module.
+- icon_size: Size of the icon in px.
+- label: Whether to show a label.
+- tooltip: Whether to show a tooltip
+
 ## Language
 
 ```json
@@ -239,6 +259,22 @@ Configures the media player information system (MPRIS) display settings.
 
 - truncation_size: The length of the MPRIS display.
 - format: The format of the MPRIS display.
+
+## OCR
+
+```json
+"ocr": {
+    "icon": "󰐳",
+    "icon_size": "14px",
+    "label": true,
+    "tooltip": true,
+}
+```
+
+- icon: The icon used to display the module.
+- icon_size: Size of the icon in px.
+- label: Whether to show a label.
+- tooltip: Whether to show a tooltip
 
 ## Power Button
 

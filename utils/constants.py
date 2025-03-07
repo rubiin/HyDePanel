@@ -86,6 +86,12 @@ DEFAULT_CONFIG = {
         "label": True,
         "tooltip": True,
     },
+    "hypr_picker": {
+        "icon": "",
+        "icon_size": "14px",
+        "tooltip": True,
+        "label": True,
+    },
     "hypr_sunset": {
         "temperature": "2800k",
         "enabled_icon": "󱩌",
@@ -129,12 +135,6 @@ DEFAULT_CONFIG = {
         "label": True,
         "tooltip": True,
     },
-    "submap": {
-        "icon": "󰌌",
-        "icon_size": "12px",
-        "label": True,
-        "tooltip": True,
-    },
     "network_usage": {
         "icon_size": "14px",
         "upload_icon": "",
@@ -169,6 +169,12 @@ DEFAULT_CONFIG = {
         "show_label": True,
         "show_percentage": True,
     },
+    "ocr": {
+        "icon": "󰐳",
+        "icon_size": "14px",
+        "tooltip": True,
+        "label": True,
+    },
     "general": {
         "screen_corners": False,
         "check_updates": False,
@@ -195,6 +201,12 @@ DEFAULT_CONFIG = {
         "label": True,
         "tooltip": True,
         "path": "/",
+    },
+    "submap": {
+        "icon": "󰌌",
+        "icon_size": "12px",
+        "label": True,
+        "tooltip": True,
     },
     "system_tray": {"icon_size": 16, "ignored": []},
     "task_bar": {"icon_size": 22},
