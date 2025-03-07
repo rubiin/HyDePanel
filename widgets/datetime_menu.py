@@ -489,6 +489,7 @@ class DateTimeWidget(ButtonWidget):
             v_align="center",
             children=(
                 self.notification_indicator_box,
+                Separator(),
                 DateTime(self.config["format"], name="date-time"),
             ),
         )

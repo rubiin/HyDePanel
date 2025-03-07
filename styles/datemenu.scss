@@ -9,6 +9,13 @@
     font-weight: 700;
     font-size: 11px;
   }
+
+  separator {
+    background-color: variable.$border-color;
+    border-radius: variable.$radius;
+    margin: 5px 0px;
+    min-width: 1.2px;
+  }
 }
 
 /************** DATE MENU **************/
@@ -74,7 +81,7 @@
   separator {
     background-color: color.adjust(
       variable.$popover-border-color,
-      $lightness: 10%
+      $lightness: 50%
     );
     border-radius: variable.$radius;
     margin-right: variable.$spacing;
