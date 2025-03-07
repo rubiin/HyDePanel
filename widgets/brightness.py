@@ -1,3 +1,4 @@
+from fabric.utils import cooldown
 from fabric.widgets.box import Box
 from fabric.widgets.circularprogressbar import CircularProgressBar
 from fabric.widgets.label import Label
@@ -70,6 +71,7 @@ class BrightnessWidget(EventBoxWidget):
         if self.config["label"]:
             self.brightness_label.show()
 
+    @cooldown(1)
     def on_scroll(self, _, event):
         # Adjust the brightness based on the scroll direction
 

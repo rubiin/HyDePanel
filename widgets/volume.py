@@ -1,3 +1,4 @@
+from fabric.utils import cooldown
 from fabric.widgets.box import Box
 from fabric.widgets.circularprogressbar import CircularProgressBar
 from fabric.widgets.label import Label
@@ -61,6 +62,7 @@ class VolumeWidget(EventBoxWidget):
         if self.config["label"]:
             self.volume_label.show()
 
+    @cooldown(1)
     def on_scroll(self, _, event):
         # Adjust the volume based on the scroll direction
 
