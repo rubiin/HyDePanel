@@ -1,14 +1,44 @@
 @use "sass:color";
 @use "theme.scss";
+@use "common/scale" as scale with (
+  $module-scale: (
+    "workspaces": (
+      "scale": 0.3,
+      "button_width": 0.2,
+      "roundness": 1,
+      "outer_pad": 2,
+      "gap": 2,
+      "active": (
+        "scale": null,
+        "button_width": 1.5,
+        "roundness": null,
+        "gap": null,
+      ),
+      "unoccupied": (
+        "scale": null,
+        "button_width": null,
+        "roundness": null,
+        "gap": null,
+      ),
+    ),
+    "quicksettings": (
+      "scale": 1,
+      "roundness": 0.4,
+    ),
+  )
+);
 
-$radius: 10px;
-$radius-large: 100px;
-$padding: 7pt;
-$spacing: 12pt;
+// Base measurements using the scale system
+$radius: scale.calculate-radius(scale.$base-unit);
+$radius-large: scale.calculate-radius(scale.$base-unit * 2);
+$padding: scale.$base-padding;
+$spacing: scale.$base-spacing;
 
-$quicksettings-width: 370px;
+// Component-specific measurements
+$quicksettings-width: scale.module-dimension("quicksettings", 370px);
 
-$border-width: 1px;
+// Borders
+$border-width: calc(1px * scale.$scale-factor);
 $border-color: theme.$surface-disabled;
 $border: $border-width solid $border-color;
 $active-gradient: linear-gradient(
@@ -17,14 +47,18 @@ $active-gradient: linear-gradient(
   color.adjust(theme.$background-dark, $lightness: -4%)
 );
 
-$text-shadow: 2pt 2pt 2pt theme.$shadow-color;
-$box-shadow: 2pt 2pt 2pt 0 theme.$shadow-color;
+// Shadows
+$text-shadow: calc(2pt * scale.$scale-factor) calc(2pt * scale.$scale-factor)
+  calc(2pt * scale.$scale-factor) theme.$shadow-color;
+$box-shadow: calc(2pt * scale.$scale-factor) calc(2pt * scale.$scale-factor)
+  calc(2pt * scale.$scale-factor) 0 theme.$shadow-color;
 
-$popover-padding: $padding * 1.6;
+// Popover
+$popover-padding: calc($padding * 1.6);
 $popover-radius: 0;
 
-@if $radius !=0 {
-  $popover-radius: $radius + $popover-padding;
+@if $radius != 0 {
+  $popover-radius: calc($radius + $popover-padding);
 }
 
 $popover-border-color: color.adjust($border-color, $alpha: -0.95);

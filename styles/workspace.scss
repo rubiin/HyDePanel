@@ -1,26 +1,57 @@
 @use "theme.scss";
 @use "common/functions.scss";
+@use "common/scale" as scale;
 @use "variable.scss";
 
 $workspace-transition:
   padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-  background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+  margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
 /** workspace switcher widget */
 
 #workspaces {
-  padding: 0.19em 1em;
+  $ws-padding: scale.module-dimension(
+    "workspaces",
+    scale.component("padding-md")
+  );
+  $base-scale: scale.module-scale("workspaces", "scale");
+
+  padding: scale.module-dimension("workspaces", scale.$spacing-sm, "outer_pad") *
+    0.5;
   font-weight: 700;
 
   & > button {
-    padding: functions.toEm(2) 0.5em;
+    $button-size: calc($ws-padding * 4); // Base size from padding
+
+    // Scale properties relative to the base scale
+    $button-width: calc(
+      scale.module-scale("workspaces", "button_width") / $base-scale
+    );
+    $base-roundness: calc(
+      scale.module-scale("workspaces", "roundness") / $base-scale * 0.5
+    );
+    $base-gap: scale.module-scale("workspaces", "gap");
+
+    padding: calc($ws-padding * 0.5) calc($ws-padding * (1 + $button-width));
+    margin: 0 calc($ws-padding * $base-gap * 0.5); // Half gap on each side
     transition: $workspace-transition;
-    border-radius: variable.$radius-large;
+    border-radius: calc($button-size * $base-roundness);
     background-color: theme.$background;
+    min-width: calc($button-size * $base-scale);
+
+    &:first-child {
+      margin-left: 0; // Remove left margin from first button
+    }
+
+    &:last-child {
+      margin-right: 0; // Remove right margin from last button
+    }
 
     label {
       color: theme.$text-main;
       transition: inherit;
+      margin: 0 functions.toEm(4);
     }
 
     &:hover {
@@ -32,12 +63,39 @@ $workspace-transition:
     }
 
     &.active {
+      // Scale active properties relative to base scale
+      $active-width: calc(
+        scale.module-scale("workspaces", "button_width", 1, "active") /
+          $base-scale
+      );
+      $active-scale: scale.module-scale(
+        "workspaces",
+        "scale",
+        $base-scale,
+        "active"
+      );
+      $active-roundness: calc(
+        scale.module-scale("workspaces", "roundness", $base-roundness, "active") /
+          $base-scale * 0.5
+      );
+      $active-gap: scale.module-scale("workspaces", "gap", $base-gap, "active");
+
       font-weight: 600;
-      padding-left: functions.toEm(14);
-      padding-right: functions.toEm(14);
+      padding-left: calc($ws-padding * (1 + $active-width));
+      padding-right: calc($ws-padding * (1 + $active-width));
+      margin: 0 calc($ws-padding * $active-gap * 0.5); // Half gap on each side
       background-color: theme.$ws-active;
-      min-width: 1.4rem;
+      min-width: calc($button-size * $active-scale);
+      border-radius: calc($button-size * $active-roundness);
       transition: $workspace-transition;
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
 
       & > label {
         color: theme.$background-dark;
@@ -45,7 +103,50 @@ $workspace-transition:
     }
 
     &.unoccupied {
+      // Scale unoccupied properties relative to base scale
+      $unoccupied-width: calc(
+        scale.module-scale(
+            "workspaces",
+            "button_width",
+            $button-width,
+            "unoccupied"
+          ) / $base-scale
+      );
+      $unoccupied-scale: scale.module-scale(
+        "workspaces",
+        "scale",
+        $base-scale,
+        "unoccupied"
+      );
+      $unoccupied-roundness: calc(
+        scale.module-scale(
+            "workspaces",
+            "roundness",
+            $base-roundness,
+            "unoccupied"
+          ) / $base-scale * 0.5
+      );
+      $unoccupied-gap: scale.module-scale(
+        "workspaces",
+        "gap",
+        $base-gap,
+        "unoccupied"
+      );
+
       opacity: 0.5;
+      padding-left: calc($ws-padding * (1 + $unoccupied-width));
+      padding-right: calc($ws-padding * (1 + $unoccupied-width));
+      margin: 0 calc($ws-padding * $unoccupied-gap * 0.5); // Half gap on each side
+      min-width: calc($button-size * $unoccupied-scale);
+      border-radius: calc($button-size * $unoccupied-roundness);
+
+      &:first-child {
+        margin-left: 0;
+      }
+
+      &:last-child {
+        margin-right: 0;
+      }
 
       &:hover {
         opacity: 1;
