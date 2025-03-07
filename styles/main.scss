@@ -21,3 +21,23 @@
   font-size: 16px;
   font-family: "JetBrainsMono Nerd Font Propo", monospace;
 }
+
+.desktop-clock-box {
+  margin: 0 2rem 2rem 2rem;
+}
+
+#clock > label {
+  font-size: 100px;
+  transition: color 0.5s ease;
+  color: lighten(theme.$text-main, 70%);
+  font-family: "Jost*", sans-serif;
+  font-weight: 600;
+}
+
+#date > label {
+  font-size: 20px;
+  transition: color 0.5s ease;
+  color: lighten(theme.$text-main, 70%);
+  font-family: "Jost*", sans-serif;
+  font-weight: 700;
+}

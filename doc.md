@@ -12,7 +12,15 @@ The default configuration is stored in the `DEFAULT_CONFIG` dictionary. It inclu
 
 ```json
     "general": {
-        "screen_corners": false,
+        "screen_corners": {
+            "enabled": false,
+            "size": 20,
+        },
+        "desktop_clock": {
+            "enabled": false,
+            "anchor": "center",
+            "date_format": "%A, %d %B %Y",
+        },
         "check_updates": false,
         "debug": false,
         "layer": "top",
@@ -20,31 +28,46 @@ The default configuration is stored in the `DEFAULT_CONFIG` dictionary. It inclu
         "bar_style": "default",
         "location": "top",
         "widget_style": "default",
-        "corner_size": 10,
+        "desktop_clock": true,
     }
 
 ```
 
-- screen_corners (boolean):
-  Enable or disable rounded screen corners for the panel.
-
-- debug (boolean):
+- **debug** (boolean):
   Enable or disable debug mode for the panel. When set to true, additional debugging output or features may be activated.
 
-- location (string; enum: "top", "bottom"):
+- **location** (string; enum: "top", "bottom"):
   Determines where the panel is positioned on the screen. It can either be at the top or the bottom.
 
-- bar_style (string; enum: "default", "floating"):
+- **bar_style** (string; enum: "default", "floating"):
   Selects the style of the panel bar. "default" provides a standard appearance, while "floating" gives it a floating look.
 
-- layer (string; enum: "background", "bottom", "top", "overlay"):
+- **layer** (string; enum: "background", "bottom", "top", "overlay"):
   Specifies the stacking order or z-index of the panel, determining which layer it should be rendered on.
 
-- widget_style (string; enum: "default", "wave1", "wave2", "flat", "shadow"):
+- **widget_style** (string; enum: "default", "wave1", "wave2", "flat", "shadow"):
   Sets a visual style for the widgets on the panel. Each option represents a predefined look.
 
-- corner_size (number):
-  Sets the size of the rounded corners for the panel.
+- **screen_corners.enabled** (boolean):
+  Determines whether the screen corner feature is enabled or disabled.
+
+- **screen_corners.size** (integer):
+  Defines the size of the screen corner feature when enabled.
+
+- **desktop_clock.enabled** (boolean):
+  Enables or disables the desktop clock.
+
+- **desktop_clock.anchor** (string; enum: "left", "center", "right"):
+  Sets the anchor position of the desktop clock on the screen.
+
+- **desktop_clock.date_format** (string):
+  Specifies the format of the date displayed on the desktop clock. Example: `%A, %d %B %Y`.
+
+- **check_updates** (boolean):
+  Determines whether the system should automatically check for updates.
+
+- **auto_hide** (boolean):
+  Defines whether the panel should automatically hide when not in use.
 
 ## Layout Configuration
 
@@ -65,9 +88,19 @@ The layout configuration defines the sections of the bar and the components disp
 }
 ```
 
-- left_section: Displays workspace and window title.
-- middle_section: Displays datetime.
-- right_section: Displays weather, updates, battery, bluetooth, system tray, and power.
+- **layout.left_section** (array of strings):
+  Specifies the elements to be displayed in the left section of the panel. The order in the array determines the sequence.
+
+  - `"workspaces"`: Displays workspace-related information.
+  - `"window_title"`: Shows the title of the currently focused window.
+
+- **layout.middle_section** (array of strings):
+  Specifies the elements to be displayed in the middle section of the panel. The order in the array determines the sequence.
+
+  - `"date_time"`: Displays the current date and time.
+
+- **layout.right_section** (array of strings):
+  Specifies the elements to be displayed in the right section of the panel. The order in the array determines the sequence.
 
 # Component Configurations
 
@@ -98,10 +131,17 @@ Other components follow a similar structure, where each configuration defines th
 }
 ```
 
-- hide_label_when_full: Hide battery level when battery is full.
-- label: Whether to show a label.
-- tooltip: Whether to show a tooltip.
-- full_battery_level: The battery level at which the battery is considered full.
+- **label** (boolean):
+  Determines whether a label should be displayed. When set to true, the label will be shown.
+
+- **tooltip** (boolean):
+  Enables or disables tooltips. When set to true, hovering over elements will display a tooltip with additional information.
+
+- **hide_label_when_full** (boolean):
+  Specifies whether the label should be hidden when the relevant item is at full capacity or status. When set to true, the label will be hidden if the item is full.
+
+- **full_battery_level** (integer):
+  Defines the battery level percentage at which the system is considered to be fully charged. The default is 100.
 
 ## Bluetooth
 
@@ -113,9 +153,14 @@ Other components follow a similar structure, where each configuration defines th
 }
 ```
 
-- icon_size: Size of the icon in number.
-- label: Whether to show a label.
-- tooltip: Whether to show a tooltip
+- **icon_size** (integer):
+  Specifies the size of the icons. The value is in pixels, and in this case, the icon size is set to 22 pixels.
+
+- **label** (boolean):
+  Determines whether a label should be displayed. When set to true, the label will be shown.
+
+- **tooltip** (boolean):
+  Enables or disables tooltips. When set to true, hovering over elements will display a tooltip with additional information.
 
 ## Brightness
 
@@ -129,11 +174,20 @@ Other components follow a similar structure, where each configuration defines th
 }
 ```
 
-- icon_size: Size of the icon in px.
-- label: Whether to show a label.
-- tooltip: Whether to show a tooltip
-- icon: The icon used to display the module.
-- step_size: The brightness step size.
+- **icon_size** (string):
+  Specifies the size of the icons. The value is defined in CSS units (e.g., pixels), and in this case, the icon size is set to `"14px"`.
+
+- **label** (boolean):
+  Determines whether a label should be displayed. When set to true, the label will be shown.
+
+- **tooltip** (boolean):
+  Enables or disables tooltips. When set to true, hovering over elements will display a tooltip with additional information.
+
+- **icon** (string):
+  Defines the icon to be displayed. In this case, the icon is represented by the Unicode character `"󰏨"`.
+
+- **step_size** (integer):
+  Specifies the step size for any actions that involve incrementing or changing values. In this case, the step size is set to `5`.
 
 ## cava
 
@@ -144,8 +198,11 @@ Other components follow a similar structure, where each configuration defines th
 }
 ```
 
-- bars: Number of bars to display.
-- color: The color of the bars.
+- **bars** (integer):
+  Specifies the number of bars to be displayed. In this case, the number of bars is set to `10`.
+
+- **color** (string):
+  Defines the color to be used. The color is represented in hexadecimal format, and in this case, the color is `"#89b4fa"`.
 
 ## CPU
 

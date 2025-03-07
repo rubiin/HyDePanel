@@ -60,11 +60,28 @@ StopWatch = TypedDict(
 )
 
 
+DesktopClock = TypedDict(
+    "DesktopClock",
+    {
+        "enabled": bool,
+        "anchor": str,
+        "date_format": str,
+    },
+)
+
+
+ScreenCorners = TypedDict(
+    "DesktopClock",
+    {"enabled": bool, "size": int},
+)
+
+
 # Bar configuration
 General = TypedDict(
     "General",
     {
-        "screen_corners": bool,
+        "screen_corners": ScreenCorners,
+        "desktop_clock": DesktopClock,
         "check_updates": bool,
         "debug": bool,
         "location": str,

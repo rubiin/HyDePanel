@@ -12,6 +12,7 @@ from utils.config import widget_config
 from utils.constants import APP_CACHE_DIRECTORY, APPLICATION_NAME
 from utils.exceptions import ExecutableNotFoundError
 from widgets.corners import ScreenCorners
+from widgets.desktop_clock import DesktopClock
 
 
 @helpers.run_in_thread
@@ -53,8 +54,19 @@ if __name__ == "__main__":
 
     windows = [notifications, bar]
 
-    if general_options["screen_corners"]:
-        windows.append(ScreenCorners(general_options["corner_size"]))
+    if (
+        general_options["screen_corners"]
+        and general_options["screen_corners"]["enabled"]
+    ):
+        windows.append(ScreenCorners(general_options["screen_corners"]["size"]))
+
+    if general_options["desktop_clock"] and general_options["desktop_clock"]["enabled"]:
+        windows.append(
+            DesktopClock(
+                general_options["desktop_clock"]["date_format"],
+                general_options["desktop_clock"]["anchor"],
+            )
+        )
 
     if widget_config["osd"]["enabled"]:
         windows.append(OSDContainer(widget_config))

@@ -59,6 +59,10 @@ label {
   box-shadow: darken($color: theme.$background-dark, $amount: 15%) 0 4px;
 }
 
+.bordered {
+  border: 1.5px solid theme.$surface-disabled;
+}
+
 .wave1 {
   border-bottom-left-radius: 1.3em;
   border-top-right-radius: 1.3em;
@@ -272,14 +276,14 @@ expander {
     min-width: 16px;
     min-height: 16px;
     -gtk-icon-source: -gtk-icontheme("pan-end-symbolic");
-    color: color.adjust(variable.$border-color, $lightness: 30%);
+    color: color.mix(variable.$border-color, transparent, 30%);
 
     &:dir(rtl) {
       -gtk-icon-source: -gtk-icontheme("pan-end-symbolic-rtl");
     }
 
     &:hover {
-      color: color.adjust($color: variable.$border-color, $lightness: 60%);
+      color: color.mix(variable.$border-color, transparent, 60%);
     }
 
     &:checked {

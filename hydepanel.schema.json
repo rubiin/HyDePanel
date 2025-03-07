@@ -133,7 +133,34 @@
       "type": "object",
       "properties": {
         "screen_corners": {
-          "type": "boolean"
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Determines whether screen corners are enabled."
+            },
+            "size": {
+              "type": "integer",
+              "description": "Specifies the size of the screen corners."
+            }
+          }
+        },
+        "desktop_clock": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Determines whether the desktop clock is enabled."
+            },
+            "anchor": {
+              "$ref": "#/definitions/anchor",
+              "description": "Specifies the anchor position of the desktop clock."
+            },
+            "date_format": {
+              "type": "string",
+              "description": "Specifies the format of the date displayed on the desktop clock."
+            }
+          }
         },
         "corner_size": {
           "type": "integer"
@@ -155,7 +182,7 @@
         },
         "widget_style": {
           "type": "string",
-          "enum": ["default", "wave1", "wave2", "flat", "shadow"]
+          "enum": ["default", "wave1", "wave2", "flat", "shadow", "bordered"]
         }
       }
     },
@@ -427,7 +454,10 @@
     "osd": {
       "type": "object",
       "properties": {
-        "$ref": "#/definitions/anchor",
+        "anchor": {
+          "$ref": "#/definitions/anchor",
+          "description": "Specifies the anchor position of the OSD"
+        },
         "enabled": {
           "type": "boolean"
         },

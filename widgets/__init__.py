@@ -5,6 +5,7 @@ from .brightness import *
 from .cava import *
 from .click_counter import *
 from .datetime_menu import *
+from .desktop_clock import *
 from .hypr_idle import *
 from .hypr_picker import *
 from .hypr_sunset import *

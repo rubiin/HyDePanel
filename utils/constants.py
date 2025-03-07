@@ -176,7 +176,15 @@ DEFAULT_CONFIG = {
         "label": True,
     },
     "general": {
-        "screen_corners": False,
+        "screen_corners": {
+            "enabled": False,
+            "size": 20,
+        },
+        "desktop_clock": {
+            "enabled": True,
+            "anchor": "center",
+            "date_format": "%A, %d %B %Y",
+        },
         "check_updates": False,
         "layer": "top",
         "auto_hide": False,
@@ -184,7 +192,6 @@ DEFAULT_CONFIG = {
         "bar_style": "default",
         "location": "top",
         "widget_style": "default",
-        "corner_size": 20,
     },
     "power": {"icon": "󰐥", "icon_size": "18px", "tooltip": True},
     "recorder": {
