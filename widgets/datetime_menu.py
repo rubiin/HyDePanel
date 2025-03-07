@@ -464,7 +464,7 @@ class DateTimeWidget(ButtonWidget):
 
         self.notification_indicator = Image(
             icon_name=icons["notifications"]["noisy"],
-            icon_size=16,
+            icon_size=15,
             visible=self.config["notification"],
         )
 
