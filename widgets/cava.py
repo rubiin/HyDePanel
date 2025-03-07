@@ -1,5 +1,5 @@
 from fabric import Fabricator
-from fabric.utils import exec_shell_command, get_relative_path
+from fabric.utils import exec_shell_command_async, get_relative_path
 from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 
@@ -46,4 +46,6 @@ class CavaWidget(ButtonWidget):
             )
         )
 
-        self.connect("clicked", lambda _: exec_shell_command(command))
+        self.connect(
+            "clicked", lambda _: exec_shell_command_async(command, lambda *_: None)
+        )

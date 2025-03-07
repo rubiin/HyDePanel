@@ -2,6 +2,8 @@ import datetime
 import os
 import re
 import shutil
+import time
+from functools import lru_cache
 from typing import Dict, List, Literal, Optional
 
 import gi
@@ -34,6 +36,20 @@ def parse_markup(text):
 def for_monitors(widget):
     n = Gdk.Display.get_default().get_n_monitors() if Gdk.Display.get_default() else 1
     return [widget(i) for i in range(n)]
+
+
+# Function to ttl lru cache
+def ttl_lru_cache(seconds_to_live: int, maxsize: int = 128):
+    def wrapper(func):
+        @lru_cache(maxsize)
+        def inner(__ttl, *args, **kwargs):
+            return func(*args, **kwargs)
+
+        return lambda *args, **kwargs: inner(
+            time.time() // seconds_to_live, *args, **kwargs
+        )
+
+    return wrapper
 
 
 @run_in_thread
