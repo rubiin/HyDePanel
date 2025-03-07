@@ -23,10 +23,8 @@ class OCRWidget(ButtonWidget):
         self.set_label(f"{self.config['icon']}")
 
         # Left click for OCR
-        self.connect(
-            "button-press-event",
-            self.on_button_press
-        )
+
+        self.connect("button-press-event", self.on_button_press)
 
         if self.config["tooltip"]:
             self.set_tooltip_text("Left click to OCR, right click to select language")
@@ -36,8 +34,8 @@ class OCRWidget(ButtonWidget):
             self.show_language_menu()
         else:  # Left click
             exec_shell_command_async(
-                f"{self.script_file} {self.current_lang}",
-                lambda *_: None
+
+                f"{self.script_file} {self.current_lang}", lambda *_: None
             )
 
     def show_language_menu(self):
@@ -65,7 +63,8 @@ class OCRWidget(ButtonWidget):
         try:
             result = subprocess.check_output(["tesseract", "--list-langs"], text=True)
             # Skip first line (header) and filter empty lines
-            return [lang.strip() for lang in result.split('\n')[1:] if lang.strip()]
+
+            return [lang.strip() for lang in result.split("\n")[1:] if lang.strip()]
         except subprocess.CalledProcessError:
             return ["eng"]  # fallback to English if command fails
 
