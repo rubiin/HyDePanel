@@ -19,6 +19,12 @@
   transition: border-color 400ms ease-in-out;
 }
 
+%desktop-widget {
+  transition: color 0.5s ease;
+  color: lighten(theme.$text-main, 70%);
+  font-family: "Jost*", sans-serif;
+}
+
 /* General Typography */
 %large_title {
   font-weight: 300;
