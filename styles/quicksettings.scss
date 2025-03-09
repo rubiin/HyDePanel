@@ -1,8 +1,8 @@
 @use "theme.scss";
+@use "common/functions.scss";
 @use "common/mixins.scss";
 @use "variable.scss";
 @use "sass:color";
-@use "common/functions.scss";
 
 $slider-height: 12px;
 
@@ -11,7 +11,7 @@ $slider-height: 12px;
     background-color: theme.$background-dark;
     border-radius: variable.$radius;
     padding: 1rem 2.5rem;
-    border: 1px solid blue;
+    border: 1px solid theme.$accent-blue;
   }
 
   &-title {

@@ -1,4 +1,7 @@
 <p align="center"><img src="./assets/hydepanel.png" align="centre" width="100" height="130"/></p>
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 <h1 align="center"><img src="https://raw.githubusercontent.com/JaKooLit/Telegram-Animated-Emojis/refs/heads/main/Activity/Sparkles.webp"/ height=50> HyDePanel</h1>
 <p align="center">
  <a href="https://github.com/rubiin/HyDePanel/blob/master/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/rubiin/HyDePanel"></a>
@@ -301,3 +304,34 @@ Thanks for making this project a little bit more awesome! 🚀
    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=rubiin/HyDePanel&type=Timeline" />
  </picture>
 </a>
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/PixelKhaos"><img src="https://avatars.githubusercontent.com/u/5213174?v=4?s=100" width="100px;" alt="Robin Seger"/><br /><sub><b>Robin Seger</b></sub></a><br /><a href="https://github.com/rubiin/HyDePanel/commits?author=PixelKhaos" title="Code">💻</a> <a href="#design-PixelKhaos" title="Design">🎨</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://zaap.bio/Axenide"><img src="https://avatars.githubusercontent.com/u/66109459?v=4?s=100" width="100px;" alt="Adriano Tisera"/><br /><sub><b>Adriano Tisera</b></sub></a><br /><a href="https://github.com/rubiin/HyDePanel/commits?author=Axenide" title="Code">💻</a> <a href="https://github.com/rubiin/HyDePanel/issues?q=author%3AAxenide" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Anshul-007"><img src="https://avatars.githubusercontent.com/u/81582218?v=4?s=100" width="100px;" alt="Anshul J."/><br /><sub><b>Anshul J.</b></sub></a><br /><a href="https://github.com/rubiin/HyDePanel/commits?author=Anshul-007" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/S4NKALP"><img src="https://avatars.githubusercontent.com/u/98226895?v=4?s=100" width="100px;" alt="Sankalp Tharu"/><br /><sub><b>Sankalp Tharu</b></sub></a><br /><a href="https://github.com/rubiin/HyDePanel/issues?q=author%3AS4NKALP" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/keepo-dot"><img src="https://avatars.githubusercontent.com/u/201014163?v=4?s=100" width="100px;" alt="Keepo"/><br /><sub><b>Keepo</b></sub></a><br /><a href="https://github.com/rubiin/HyDePanel/commits?author=keepo-dot" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://evrenos-dev.vercel.app/"><img src="https://avatars.githubusercontent.com/u/138004078?v=4?s=100" width="100px;" alt="Sayeed Mahmood Evrenos"/><br /><sub><b>Sayeed Mahmood Evrenos</b></sub></a><br /><a href="https://github.com/rubiin/HyDePanel/issues?q=author%3AEvren-os" title="Bug reports">🐛</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="http://xeyossr.github.io"><img src="https://avatars.githubusercontent.com/u/113219171?v=4?s=100" width="100px;" alt="xeyossr"/><br /><sub><b>xeyossr</b></sub></a><br /><a href="https://github.com/rubiin/HyDePanel/commits?author=xeyossr" title="Documentation">📖</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://dimflix-official.github.io/"><img src="https://avatars.githubusercontent.com/u/112165977?v=4?s=100" width="100px;" alt="DIMFLIX"/><br /><sub><b>DIMFLIX</b></sub></a><br /><a href="https://github.com/rubiin/HyDePanel/issues?q=author%3ADIMFLIX-OFFICIAL" title="Bug reports">🐛</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

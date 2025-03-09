@@ -29,6 +29,11 @@ label {
 .panel-box,
 .panel-button {
   background-color: theme.$background-dark;
+  border-radius: variable.$radius-large;
+}
+
+.default {
+  border-radius: variable.$radius-large;
 }
 
 .default {
@@ -36,6 +41,7 @@ label {
 }
 
 .panel-box {
+  border-radius: variable.$radius-large;
   padding: 0.1em 0.9em;
   color: theme.$text-main;
   font-weight: 700;
@@ -370,16 +376,16 @@ menu#ocr-menu {
 }
 
 .desktop-clock-box {
-  margin: 0 2rem 2rem 2rem;
+  margin: 0 15rem 15rem 15rem;
 }
 
 #clock > label {
-  font-size: 100px;
+  font-size: 9rem;
   font-weight: 600;
   @extend %desktop-widget;
 }
 
 #date > label {
-  @extend %title_3;
+  @extend %title_1;
   @extend %desktop-widget;
 }

@@ -1,0 +1,91 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "commitType": "docs",
+  "commitConvention": "angular",
+  "contributors": [
+    {
+      "login": "PixelKhaos",
+      "name": "Robin Seger",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5213174?v=4",
+      "profile": "https://github.com/PixelKhaos",
+      "contributions": [
+        "code",
+        "design"
+      ]
+    },
+    {
+      "login": "Axenide",
+      "name": "Adriano Tisera",
+      "avatar_url": "https://avatars.githubusercontent.com/u/66109459?v=4",
+      "profile": "https://zaap.bio/Axenide",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "Anshul-007",
+      "name": "Anshul J.",
+      "avatar_url": "https://avatars.githubusercontent.com/u/81582218?v=4",
+      "profile": "https://github.com/Anshul-007",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "S4NKALP",
+      "name": "Sankalp Tharu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/98226895?v=4",
+      "profile": "https://github.com/S4NKALP",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "keepo-dot",
+      "name": "Keepo",
+      "avatar_url": "https://avatars.githubusercontent.com/u/201014163?v=4",
+      "profile": "https://github.com/keepo-dot",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Evren-os",
+      "name": "Sayeed Mahmood Evrenos",
+      "avatar_url": "https://avatars.githubusercontent.com/u/138004078?v=4",
+      "profile": "https://evrenos-dev.vercel.app/",
+      "contributions": [
+        "bug"
+      ]
+    },
+    {
+      "login": "xeyossr",
+      "name": "xeyossr",
+      "avatar_url": "https://avatars.githubusercontent.com/u/113219171?v=4",
+      "profile": "http://xeyossr.github.io",
+      "contributions": [
+        "doc"
+      ]
+    },
+    {
+      "login": "DIMFLIX-OFFICIAL",
+      "name": "DIMFLIX",
+      "avatar_url": "https://avatars.githubusercontent.com/u/112165977?v=4",
+      "profile": "https://dimflix-official.github.io/",
+      "contributions": [
+        "bug"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "skipCi": true,
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "projectName": "HyDePanel",
+  "projectOwner": "rubiin"
+}
