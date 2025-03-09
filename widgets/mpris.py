@@ -1,4 +1,5 @@
-from fabric.utils import bulk_connect
+from fabric import Fabricator
+from fabric.utils import bulk_connect, get_relative_path
 from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 from fabric.widgets.revealer import Revealer
@@ -28,10 +29,17 @@ class Mpris(ButtonWidget):
 
         self.player = None
 
-        self.label = Label(label="Nothing playing", style_classes="panel-text")
         self.text_icon = Label(
             label=common_text_icons["playing"],
         )
+
+        self.label = Label(
+            v_align="center",
+            h_align="center",
+            style="color: #cdd6f4;margin-right: 10px",
+        )
+
+        script_path = get_relative_path("../assets/scripts/cava.sh")
 
         # Services
         self.mpris_manager = MprisPlayerManager()
@@ -50,18 +58,15 @@ class Mpris(ButtonWidget):
                 },
             )
 
-        self.revealer = Revealer(
-            name="mpris-revealer",
-            transition_type="slide-right",
-            transition_duration=400,
-            child=self.label,
-            child_revealed=True,
-        )
-
-        self.cover = Box(style_classes="cover")
 
         self.box = Box(
-            children=[self.text_icon],
+            children=[self.label,self.text_icon],
+        ).build(
+            lambda box, _: Fabricator(
+                poll_from=f"bash -c '{script_path} 8'",
+                stream=True,
+                on_changed=lambda f, line: self.label.set_label(line),
+            )
         )
 
         self.children = self.box
@@ -75,6 +80,7 @@ class Mpris(ButtonWidget):
         )
 
     def get_current(self, *_):
+        print("new song")
         bar_label = self.player.title
 
         truncated_info = (
@@ -83,35 +89,21 @@ class Mpris(ButtonWidget):
             else bar_label[:30]
         )
 
-        self.label.set_label(truncated_info)
-
-        art_url = self.player.metadata["mpris:artUrl"]
-
-        if art_url == "" or art_url is None:
-            art_url = "https://ladydanville.wordpress.com/wp-content/uploads/2012/03/blankart.png?w=297&h=278"
-
-        self.cover.set_style(
-            "background-image: url('" + art_url + "');background-size: cover;"
-        )
-
         if self.config["tooltip"]:
-            self.set_tooltip_text(bar_label)
+            self.set_tooltip_text(truncated_info)
 
     def get_playback_status(self, *_):
         # Get the current playback status and change the icon accordingly
 
         status = self.player.playback_status.lower()
         if status == "playing":
-            self.box.children = [self.cover, self.text_icon, self.revealer]
-            self.revealer.set_reveal_child(True)
+
             self.text_icon.set_label(common_text_icons["paused"])
         elif status == "paused":
-            self.box.children = [self.cover, self.text_icon, self.revealer]
-            self.revealer.set_reveal_child(True)
+
             self.text_icon.set_label(common_text_icons["playing"])
         else:
             self.box.children = [self.text_icon]
-            self.revealer.set_reveal_child(False)
 
     def play_pause(self, *_):
         # Toggle play/pause using playerctl
