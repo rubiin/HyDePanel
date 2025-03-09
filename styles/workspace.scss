@@ -1,155 +1,190 @@
 @use "theme.scss";
-@use "common/functions.scss";
-@use "common/scale" as scale;
-@use "variable.scss";
+@use "common/functions" as fn;
+@use "variable.scss" as var;
+@use "sass:map";
+@use "sass:list";
 
-$workspace-transition:
-  padding 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-  background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-  margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+@use "sass:math";
+
+$conf: map.get(var.$modules, "workspaces");
+$animation-speed: map.get($conf, "animation-speed");
+$animation-speed: if($animation-speed == 0, 0, calc(1 / $animation-speed));
+
+// Generate base transitions with delays
+$base-transitions: ();
+@each $property, $config in map.get(var.$animations, "workspaces") {
+  $duration: map.get($config, "duration");
+  $delay: map.get($config, "delay");
+
+  // Scale both duration and delay by animation speed
+  $scaled-duration: $animation-speed * $duration;
+  $scaled-delay: $animation-speed * $delay;
+
+  $base-transitions: list.append(
+    $base-transitions,
+    #{$property}
+      #{$scaled-duration}s
+      cubic-bezier(0.4, 0, 0.2, 1)
+      #{$scaled-delay}s,
+    comma
+  );
+}
+
+// Generate state transitions without delays
+$state-transitions: ();
+@each $property, $config in map.get(var.$animations, "workspaces") {
+  $duration: map.get($config, "duration");
+
+  // Only scale duration for states
+  $scaled-duration: $animation-speed * $duration;
+
+  $state-transitions: list.append(
+    $state-transitions,
+    #{$property} #{$scaled-duration}s cubic-bezier(0.4, 0, 0.2, 1),
+    comma
+  );
+}
 
 /** workspace switcher widget */
+#workspaces-box {
+  $config: map.get(var.$modules, "workspaces");
+  $ws-padding: fn.get-inherited-value($config, "padding", null);
+  $ws-roundness: fn.get-inherited-value($config, "roundness", null);
+  $ws-font-size: fn.get-inherited-value($config, "font-size", null);
 
-#workspaces {
-  $ws-padding: scale.module-dimension(
-    "workspaces",
-    scale.component("padding-md")
-  );
-  $base-scale: scale.module-scale("workspaces", "scale");
+  padding: fn.to-unit($ws-padding);
+  border-radius: fn.to-unit($ws-roundness);
+  font-size: fn.to-unit($ws-font-size);
 
-  padding: scale.module-dimension("workspaces", scale.$spacing-sm, "outer_pad") *
-    0.5;
-  font-weight: 700;
+  #workspaces {
+    $button-config: map.get($config, "buttons");
 
-  & > button {
-    $button-size: calc($ws-padding * 4); // Base size from padding
+    & > button {
+      $btn-padding: fn.get-inherited-value(
+        $button-config,
+        "padding",
+        $ws-padding
+      );
+      $btn-roundness: fn.get-inherited-value(
+        $button-config,
+        "roundness",
+        $ws-roundness
+      );
+      $btn-gap: fn.get-inherited-value($button-config, "gap", null);
+      $btn-font-size: fn.get-inherited-value(
+        $button-config,
+        "font-size",
+        $ws-font-size
+      );
 
-    // Scale properties relative to the base scale
-    $button-width: calc(
-      scale.module-scale("workspaces", "button_width") / $base-scale
-    );
-    $base-roundness: calc(
-      scale.module-scale("workspaces", "roundness") / $base-scale * 0.5
-    );
-    $base-gap: scale.module-scale("workspaces", "gap");
+      padding: fn.to-unit($btn-padding);
+      margin: 0 fn.to-unit($btn-gap);
+      transition: $base-transitions;
 
-    padding: calc($ws-padding * 0.5) calc($ws-padding * (1 + $button-width));
-    margin: 0 calc($ws-padding * $base-gap * 0.5); // Half gap on each side
-    transition: $workspace-transition;
-    border-radius: calc($button-size * $base-roundness);
-    background-color: theme.$background;
-    min-width: calc($button-size * $base-scale);
+      border-radius: fn.to-unit($btn-roundness);
+      background-color: theme.$background;
+      font-size: fn.to-unit($btn-font-size);
 
-    &:first-child {
-      margin-left: 0; // Remove left margin from first button
-    }
+      &:first-child {
+        margin-left: 0;
+      }
 
-    &:last-child {
-      margin-right: 0; // Remove right margin from last button
-    }
-
-    label {
-      color: theme.$text-main;
-      transition: inherit;
-      margin: 0 functions.toEm(4);
-    }
-
-    &:hover {
-      background-color: theme.$ws-hover;
+      &:last-child {
+        margin-right: 0;
+      }
 
       label {
-        color: theme.$background-dark;
-      }
-    }
-
-    &.active {
-      // Scale active properties relative to base scale
-      $active-width: calc(
-        scale.module-scale("workspaces", "button_width", 1, "active") /
-          $base-scale
-      );
-      $active-scale: scale.module-scale(
-        "workspaces",
-        "scale",
-        $base-scale,
-        "active"
-      );
-      $active-roundness: calc(
-        scale.module-scale("workspaces", "roundness", $base-roundness, "active") /
-          $base-scale * 0.5
-      );
-      $active-gap: scale.module-scale("workspaces", "gap", $base-gap, "active");
-
-      font-weight: 600;
-      padding-left: calc($ws-padding * (1 + $active-width));
-      padding-right: calc($ws-padding * (1 + $active-width));
-      margin: 0 calc($ws-padding * $active-gap * 0.5); // Half gap on each side
-      background-color: theme.$ws-active;
-      min-width: calc($button-size * $active-scale);
-      border-radius: calc($button-size * $active-roundness);
-      transition: $workspace-transition;
-
-      &:first-child {
-        margin-left: 0;
-      }
-
-      &:last-child {
-        margin-right: 0;
-      }
-
-      & > label {
-        color: theme.$background-dark;
-      }
-    }
-
-    &.unoccupied {
-      // Scale unoccupied properties relative to base scale
-      $unoccupied-width: calc(
-        scale.module-scale(
-            "workspaces",
-            "button_width",
-            $button-width,
-            "unoccupied"
-          ) / $base-scale
-      );
-      $unoccupied-scale: scale.module-scale(
-        "workspaces",
-        "scale",
-        $base-scale,
-        "unoccupied"
-      );
-      $unoccupied-roundness: calc(
-        scale.module-scale(
-            "workspaces",
-            "roundness",
-            $base-roundness,
-            "unoccupied"
-          ) / $base-scale * 0.5
-      );
-      $unoccupied-gap: scale.module-scale(
-        "workspaces",
-        "gap",
-        $base-gap,
-        "unoccupied"
-      );
-
-      opacity: 0.5;
-      padding-left: calc($ws-padding * (1 + $unoccupied-width));
-      padding-right: calc($ws-padding * (1 + $unoccupied-width));
-      margin: 0 calc($ws-padding * $unoccupied-gap * 0.5); // Half gap on each side
-      min-width: calc($button-size * $unoccupied-scale);
-      border-radius: calc($button-size * $unoccupied-roundness);
-
-      &:first-child {
-        margin-left: 0;
-      }
-
-      &:last-child {
-        margin-right: 0;
+        color: theme.$text-main;
+        margin: 0 fn.toEm(4);
+        transition: inherit;
+        font-size: inherit;
       }
 
       &:hover {
-        opacity: 1;
+        background-color: theme.$ws-hover;
+
+        label {
+          color: theme.$background-dark;
+        }
+      }
+
+      &.active {
+        $active-config: map.get($button-config, "active");
+        $act-padding: fn.get-inherited-value(
+          $active-config,
+          "padding",
+          $btn-padding
+        );
+        $act-roundness: fn.get-inherited-value(
+          $active-config,
+          "roundness",
+          $btn-roundness
+        );
+        $act-gap: fn.get-inherited-value($active-config, "gap", $btn-gap);
+        $act-font-size: fn.get-inherited-value(
+          $active-config,
+          "font-size",
+          $btn-font-size
+        );
+
+        font-weight: 600;
+        padding: fn.to-unit($act-padding);
+        margin: 0 fn.to-unit($act-gap);
+        background-color: theme.$ws-active;
+        border-radius: fn.to-unit($act-roundness);
+        transition: $state-transitions;
+        font-size: fn.to-unit($act-font-size);
+
+        &:first-child {
+          margin-left: 0;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        & > label {
+          color: theme.$background-dark;
+        }
+      }
+
+      &.unoccupied {
+        $unoccupied-config: map.get($button-config, "unoccupied");
+        $un-padding: fn.get-inherited-value(
+          $unoccupied-config,
+          "padding",
+          $btn-padding
+        );
+        $un-roundness: fn.get-inherited-value(
+          $unoccupied-config,
+          "roundness",
+          $btn-roundness
+        );
+        $un-gap: fn.get-inherited-value($unoccupied-config, "gap", $btn-gap);
+        $un-font-size: fn.get-inherited-value(
+          $unoccupied-config,
+          "font-size",
+          $btn-font-size
+        );
+
+        opacity: 0.5;
+        padding: fn.to-unit($un-padding);
+        margin: 0 fn.to-unit($un-gap);
+        border-radius: fn.to-unit($un-roundness);
+        transition: $state-transitions;
+        font-size: fn.to-unit($un-font-size);
+
+        &:first-child {
+          margin-left: 0;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        &:hover {
+          opacity: 1;
+        }
       }
     }
   }
