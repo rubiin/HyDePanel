@@ -259,6 +259,13 @@
 		"spacing": "12pt",
 		"border-opacity": 96,
 		"border-width": "1px",
+		"tooltip": {
+			"radius": "10px",
+			"font-size": "0.9rem",
+			"font-weight": 700,
+			"padding_x": "0.25",
+			"padding_y": " 0.125em"
+		},
 		"bar": {
 			"scaling": 100,
 			"opacity": 80,
