@@ -22,8 +22,8 @@ $active-gradient: linear-gradient(
 $popover-padding: settings.$padding * 1.6;
 $popover-radius: 0;
 
-@if $radius !=0 {
-  $popover-radius: $radius + $popover-padding;
+@if settings.$radius !=0 {
+  $popover-radius: settings.$radius + $popover-padding;
 }
 
 $popover-border-color: color.mix($border-color, transparent, 5%);
