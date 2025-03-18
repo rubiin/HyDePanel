@@ -261,34 +261,68 @@
 		"osd": {
 			"scaling": 100,
 			"opacity": 100,
-			"border-radius": "10px"
+			"border": {
+				"enabled": false,
+				"width": "1px",
+				"radius": "10px"
+			}
+		},
+		"notification": { // TODO: add notification theme
+			"scaling": 100,
+			"opacity": 100,
+			"border": {
+				"enabled": false,
+				"width": "1px",
+				"radius": "10px"
+			}
 		},
 		"bar": {
 			"scaling": 100,
 			"opacity": 70,
-			"border-radius": "10px",
 			"border": {
-				"width": "1px"
+				"enabled": false,
+				"width": "1px",
+				"radius": "10px"
 			},
 			"menus": {
 				"shadow": "0 0 0",
 				"opacity": 100,
+				"popover": {
+					"scaling": 100,
+					"opacity": 100,
+					"shadow": " 0 0 1px 0 rgba(0, 0, 0, 0.1)",
+					"border": {
+						"enabled": true,
+						"width": "1px",
+						"radius": "1.5em"
+					},
+					"font-weight": 700,
+					"padding_x": "1em",
+					"padding_y": "1em"
+				},
 				"tooltip": {
 					"scaling": 100,
 					"opacity": 100,
-					"border-radius": "10px",
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "1em"
+					},
 					"font-weight": 700,
-					"padding_x": "0.25",
+					"padding_x": "0.25em",
 					"padding_y": "0.125em"
 				}
 			},
 			"buttons": {
 				"scaling": 100,
 				"opacity": 100,
-				"border-radius": "1em",
-				"border-width": "1em",
 				"padding_x": "0",
-				"padding_y": "1.25em"
+				"padding_y": "1.25em",
+				"border": {
+					"enabled": false,
+					"width": "1px",
+					"radius": "1em"
+				}
 			}
 		}
 	},

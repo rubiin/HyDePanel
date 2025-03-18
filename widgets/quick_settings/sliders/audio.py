@@ -16,7 +16,7 @@ class AudioSlider(SettingSlider):
     def on_scale_move(self, _, __, moved_pos):
         self.client.speaker.volume = moved_pos
 
-    def on_speaker_change(self, *args):
+    def on_speaker_change(self, *_):
         self.scale.set_sensitive(not audio_service.speaker.muted)
         self.scale.set_value(audio_service.speaker.volume)
         self.scale.set_tooltip_text(f"{round(audio_service.speaker.volume)}%")

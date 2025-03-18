@@ -10,10 +10,12 @@ $hover-transition: background 0.15s ease-in-out;
 #notification-eventbox {
   #notification {
     padding: 0.9rem;
-    border-radius: 1rem;
-    background-color: theme.$background-alt;
+    opacity: variable.$notification-opacity * 0.01;
     color: theme.$text-main;
-    border: variable.$border;
+    border-radius: variable.$notification-border-radius;
+    background-color: theme.$background-alt;
+    border: if(variable.$notification-border-enabled, variable.$border, none);
+    border-width: variable.$notification-border-width;
     transition: border 100ms ease-in-out;
 
     .notification-header {

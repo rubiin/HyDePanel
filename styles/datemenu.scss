@@ -111,7 +111,6 @@
           transition: 200ms;
           border-radius: variable.$radius;
           color: theme.$text-main;
-          //  background-color: theme.$accent-blue;
         }
 
         &:hover {
@@ -129,7 +128,6 @@
           background-color: transparent;
           border: none;
           color: theme.$accent-blue;
-          //  &:backdrop { border-bottom-color: transparentize(black, 0.9); }
         }
 
         &.highlight {

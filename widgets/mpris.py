@@ -99,7 +99,6 @@ class Mpris(ButtonWidget):
 
     def get_playback_status(self, *_):
         # Get the current playback status and change the icon accordingly
-
         status = self.player.playback_status.lower()
         if status == "playing":
             self.box.children = [self.cover, self.text_icon, self.revealer]

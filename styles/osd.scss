@@ -10,6 +10,8 @@
   padding: common.toEm(12) common.toEm(20);
   margin-bottom: 100px;
   opacity: variable.$osd-opacity * 0.01;
+  border: if(variable.$osd-border-enabled, variable.$border, none);
+  border-width: variable.$osd-border-width;
 
   #osd-level {
     font-weight: 600;

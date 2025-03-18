@@ -10,22 +10,7 @@ $radius-large: 9999px;
 
 $radius: 10px;  // TODO: Change to settings.$radius
 
-$radius: 10px;  // TODO: Change to settings.$radius
-
 $border-color: theme.$surface-disabled;
 $border: settings.$border-width solid $border-color;
-
-$active-gradient: linear-gradient(
-  to right,
-  theme.$background-dark,
-  color.mix(theme.$background-dark, black, 4%)
-);
-
-$popover-padding: settings.$padding * 1.6;
-$popover-radius: 0;
-
-@if $radius !=0 {
-  $popover-radius: $radius + $popover-padding;
-}
 
 $popover-border-color: color.mix($border-color, transparent, 5%);

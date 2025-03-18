@@ -156,20 +156,20 @@
   }
 }
 
-@mixin floating-widget($radius: variable.$popover-radius) {
-  box-shadow: 0 0 1px 0 theme.$shadow-color;
+@mixin floating-widget($radius: variable.$bar-menus-popover-border-radius) {
+  box-shadow: variable.$bar-menus-popover-shadow;
   margin: max(variable.$spacing, 8px);
-  border: variable.$border-width solid variable.$popover-border-color;
+  border: if(variable.$bar-menus-popover-border-enabled,variable.$bar-menus-popover-border-width solid variable.$popover-border-color, none);
   background-color: theme.$background-dark;
   color: theme.$text-main;
   border-radius: $radius;
-  padding: variable.$popover-padding;
+  padding: variable.$bar-menus-popover-padding_x variable.$bar-menus-popover-padding_y;
 }
 
 @mixin switch {
   slider {
     background-color: theme.$background-dark;
-    border-radius: 9999px;
+    border-radius: variable.$radius-large;
     min-width: 24px;
     min-height: 24px;
   }

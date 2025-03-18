@@ -27,6 +27,7 @@ class HyprPickerWidget(ButtonWidget):
             self.set_tooltip_text("Pick a color")
 
     def on_button_press(self, button, event):
+
         # Mouse event handler
         if event.type == Gdk.EventType.BUTTON_PRESS:
             if event.button == 1:

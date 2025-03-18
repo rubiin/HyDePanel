@@ -12,6 +12,7 @@ class WorkSpacesWidget(BoxWidget):
         super().__init__(name="workspaces-box", **kwargs)
 
         self.config = widget_config["workspaces"]
+
         # Convert ignored workspace IDs to integers
         ignored_ws = [int(x) for x in unique_list(self.config["ignored"])]
         default_format = self.config.get("default_label_format", "{id}")
@@ -21,6 +22,7 @@ class WorkSpacesWidget(BoxWidget):
             str_id = str(ws_id)
             if str_id in self.config.get("icon_map", {}):
                 return self.config["icon_map"][str_id]
+
             # Otherwise use default format
             return default_format.format(id=ws_id)
 
@@ -34,6 +36,7 @@ class WorkSpacesWidget(BoxWidget):
                     button.remove_style_class("unoccupied")
 
             button.connect("notify::empty", update_empty_state)
+
             # Set initial state
             update_empty_state()
             return button
@@ -63,5 +66,6 @@ class WorkSpacesWidget(BoxWidget):
             invert_scroll=self.config["reverse_scroll"],
             empty_scroll=self.config["empty_scroll"],
         )
+
         # Add the HyperlandWorkspace widget as a child
         self.children = self.workspace

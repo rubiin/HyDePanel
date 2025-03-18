@@ -29,7 +29,6 @@ class BrightnessWidget(EventBoxWidget):
         )
 
         # Create a circular progress bar to display the brightness level
-
         self.progress_bar = CircularProgressBar(
             style_classes="overlay-progress-bar",
             pie=True,
@@ -59,6 +58,7 @@ class BrightnessWidget(EventBoxWidget):
                 self.brightness_label,
             ),
         )
+
         # Connect the audio service to update the progress bar on brightness change
         self.brightness_service.connect("screen", self.on_brightness_changed)
 
@@ -73,8 +73,8 @@ class BrightnessWidget(EventBoxWidget):
 
     @cooldown(1)
     def on_scroll(self, _, event):
-        # Adjust the brightness based on the scroll direction
 
+        # Adjust the brightness based on the scroll direction
         val_y = event.delta_y
 
         if val_y > 0:

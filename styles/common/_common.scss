@@ -51,6 +51,7 @@ label {
 .panel-button {
   padding: variable.$bar-buttons-padding-x variable.$bar-buttons-padding-y;
   opacity: variable.$bar-buttons-opacity * 0.01;
+  border: if(variable.$bar-buttons-border-enabled, variable.$border, none);
 
   label {
     color: theme.$text-main;
@@ -117,6 +118,8 @@ tooltip {
   border-radius: variable.$bar-menus-tooltip-border-radius;
   box-shadow: 0 0 3px 0 theme.$shadow-color;
   animation: tooltipShow 0.25s cubic-bezier(0.5, 0.25, 0, 1);
+
+  border: if(variable.$bar-menus-tooltip-border-enabled, variable.$border, none);
 
 
   label {

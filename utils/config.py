@@ -84,9 +84,14 @@ class HydeConfig:
         css_styles = flatten_dict(exclude_keys(self.config["theme"], ["name"]))
 
         settings = ""
-        # for setting in self.config["css_settings"]:
         for setting in css_styles:
-            settings += f"${setting}: {css_styles[setting]};\n"
+            # Convert python boolean to scss boolean
+            value = (
+                json.dumps(css_styles[setting])
+                if isinstance(css_styles[setting], bool)
+                else css_styles[setting]
+            )
+            settings += f"${setting}: {value};\n"
 
         with open(get_relative_path("../styles/_settings.scss"), "w") as f:
             f.write(settings)
