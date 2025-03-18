@@ -257,18 +257,15 @@
 		"border-radius": "10px",
 		"padding": "7pt",
 		"spacing": "12pt",
-		"border-opacity": 96,
 		"border-width": "1px",
-		"tooltip": {
+		"osd": {
 			"scaling": 100,
-			"border-radius": "10px",
-			"font-weight": 700,
-			"padding_x": "0.25",
-			"padding_y": "0.125em"
+			"opacity": 100,
+			"border-radius": "10px"
 		},
 		"bar": {
 			"scaling": 100,
-			"opacity": 80,
+			"opacity": 70,
 			"border-radius": "10px",
 			"border": {
 				"width": "1px"
@@ -278,6 +275,7 @@
 				"opacity": 100,
 				"tooltip": {
 					"scaling": 100,
+					"opacity": 100,
 					"border-radius": "10px",
 					"font-weight": 700,
 					"padding_x": "0.25",
@@ -286,12 +284,12 @@
 			},
 			"buttons": {
 				"scaling": 100,
-				"opacity": 100, // TODO
+				"opacity": 100,
 				"border-radius": "1em",
 				"border-width": "1em",
 				"padding_x": "0",
 				"padding_y": "1.25em"
-			},
+			}
 		}
 	},
 	"theme_switcher": {

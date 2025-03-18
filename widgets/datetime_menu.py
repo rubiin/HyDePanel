@@ -318,6 +318,7 @@ class DateNotificationMenu(Box):
                 ),
                 Box(
                     style_classes="calendar",
+                    v_expand=True,
                     children=(
                         Gtk.Calendar(
                             visible=True,

@@ -25,7 +25,7 @@
 
   #notification-column {
     min-width: 435px;
-    min-height: 400px;
+    min-height: 380px;
 
     .header {
       margin-bottom: variable.$spacing;
@@ -79,7 +79,7 @@
 
   separator {
     background-color: color.mix(
-      variable.$popover-border-color,white, 50%
+      variable.$popover-border-color,black, 60%
     );
     border-radius: variable.$radius;
     margin-right: variable.$spacing;

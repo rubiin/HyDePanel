@@ -13,7 +13,7 @@ $radius: 10px;  // TODO: Change to settings.$radius
 $radius: 10px;  // TODO: Change to settings.$radius
 
 $border-color: theme.$surface-disabled;
-$border: settings.$border;
+$border: settings.$border-width solid $border-color;
 
 $active-gradient: linear-gradient(
   to right,
