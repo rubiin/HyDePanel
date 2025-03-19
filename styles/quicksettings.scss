@@ -301,7 +301,7 @@ $slider-height: 12px;
         background-color: theme.$accent-blue;
 
         &:hover {
-          background-color: color.mix(theme.$accent-blue, black, 4%);
+          background-color: color.mix(theme.$accent-blue, black, 85%);
         }
 
         label {
@@ -326,13 +326,13 @@ $slider-height: 12px;
     #quicksettings-togglebutton.active button:hover image,
     #quicksettings-togglebutton.active button:hover label,
     #quicksettings-togglebutton.active button:hover {
-      background-color: color.mix(theme.$accent-blue, black, 4%);
+      background-color: color.mix(theme.$accent-blue, black, 90%);
     }
 
     #quicksettings-togglebutton.active button:active image,
     #quicksettings-togglebutton.active button:active label,
     #quicksettings-togglebutton.active button:active {
-      background-color: color.mix(theme.$accent-blue, black, 10%);
+      background-color: color.mix(theme.$accent-blue, black, 90%);
     }
 
     #quicksettings-togglebutton button image,
