@@ -55,7 +55,9 @@ class BatteryWidget(ButtonWidget):
         is_charging = battery_state == 1 if is_present else False
 
         temperature = self.client.get_property("Temperature")
-        capacity = self.client.get_property("Capacity")
+        energy = self.client.get_property("Energy")
+
+        print(f"Battery percentage: {self.client.get_property('Capacity')}")
 
         time_remaining = (
             self.client.get_property("TimeToFull")
@@ -83,7 +85,9 @@ class BatteryWidget(ButtonWidget):
 
         # Update the tooltip with the battery status details if enabled
         if self.config["tooltip"]:
-            tool_tip_text = f"󱐋 Capacity : {capacity}\n Temperature: {temperature}°C"
+            tool_tip_text = (
+                f"󱐋 Energy : {round(energy, 2)} Wh\n Temperature: {temperature}°C"
+            )
             if battery_percent == self.full_battery_level:
                 self.set_tooltip_text(f"Full\n{tool_tip_text}")
             elif is_charging and battery_percent < self.full_battery_level:
