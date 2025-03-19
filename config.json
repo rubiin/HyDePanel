@@ -102,8 +102,7 @@
 		{
 			"widgets": [
 				"quick_settings",
-				"cpu",
-				"network_usage"
+				"cpu"
 			],
 			"spacing": 0,
 			"style_classes": [
