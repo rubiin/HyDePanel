@@ -140,7 +140,6 @@ class SystemTrayWidget(ButtonWidget):
             visible=False,
             all_visible=False,
             pointing_to=self,
-            margin="0 0 0 0",
         )
 
         # Initialize watcher

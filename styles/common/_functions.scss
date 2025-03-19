@@ -7,7 +7,3 @@
   $emValue: calc($value / $base) + em;
   @return $emValue;
 }
-
-@function toBool($value) {
-  @return $value== True;
-}

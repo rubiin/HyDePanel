@@ -318,6 +318,7 @@ class DateNotificationMenu(Box):
                 ),
                 Box(
                     style_classes="calendar",
+                    v_expand=True,
                     children=(
                         Gtk.Calendar(
                             visible=True,
@@ -456,12 +457,10 @@ class DateTimeWidget(ButtonWidget):
 
         popup = PopOverWindow(
             parent=bar,
-            name="date-menu-popover",
             child=date_menu,
             visible=False,
             all_visible=False,
             pointing_to=self,
-            margin="-18px 0 0 0",
         )
 
         self.notification_indicator = Image(

@@ -6,13 +6,8 @@
 @use "../variable.scss";
 
 
-
 %debug {
   border: 1px solid red;
-}
-
-label {
-  font-size: 1rem;
 }
 
 #panel {
@@ -22,7 +17,7 @@ label {
       1 - $bar-opacity-ratio) * 100%;
     background-color: color.mix(theme.$bar-background, transparent, $transparency-value
     );
-  padding: 0.6em 0.8em 0.6em 0.8em;
+  padding: variable.$bar-padding_y variable.$bar-padding_x;
   border-radius: variable.$bar-border-radius;
 }
 }
@@ -52,6 +47,8 @@ label {
 .panel-button {
   padding: variable.$bar-buttons-padding-x variable.$bar-buttons-padding-y;
   opacity: variable.$bar-buttons-opacity * 0.01;
+  border: if(variable.$bar-buttons-border-enabled, variable.$border, none);
+  border-width: variable.$bar-buttons-border-width;
 
   label {
     color: theme.$text-main;
@@ -113,11 +110,12 @@ label {
 
 tooltip {
   @extend %unset;
-  opacity: variable.$bar-menus-opacity * 0.01;
+  opacity: variable.$bar-menus-tooltip-opacity * 0.01;
   background-color: theme.$background-dark;
   border-radius: variable.$bar-menus-tooltip-border-radius;
-  box-shadow: 0 0 3px 0 theme.$shadow-color;
+  box-shadow: if(variable.$bar-menus-tooltip-shadow-enabled, 0 0 3px 0 theme.$shadow-color, none);
   animation: tooltipShow 0.25s cubic-bezier(0.5, 0.25, 0, 1);
+  border: if(variable.$bar-menus-tooltip-border-enabled, variable.$border, none);
 
 
   label {
@@ -338,6 +336,8 @@ scrollbar {
   min-height: 20px;
 }
 
+
+
 #cava {
   color: theme.$text-main;
 }
@@ -395,4 +395,11 @@ menu#ocr-menu {
 #date>label {
   @extend %title_1;
   @extend %desktop-widget;
+}
+
+
+#cpu {
+  border-radius: variable.$bar-widgets-cpu-border-radius;
+  border: if(variable.$bar-widgets-cpu-border-enabled, variable.$border, none);
+  border-width: variable.$bar-widgets-cpu-border-width;
 }

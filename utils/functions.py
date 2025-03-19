@@ -82,6 +82,12 @@ def merge_defaults(data: dict, defaults: dict):
     return {**defaults, **data}
 
 
+## Function to execute a shell command asynchronously
+def kill_process(process_name: str):
+    exec_shell_command_async(f"pkill {process_name}", lambda *_: None)
+    return True
+
+
 # Function to flatten a dictionary
 def flatten_dict(d, parent_key="", sep="-"):
     """Flatten a nested dictionary into a single level."""
@@ -203,6 +209,7 @@ def check_icon_exists(icon_name: str, fallback_icon: str) -> str:
 @run_in_thread
 def play_sound(file: str):
     exec_shell_command_async(f"pw-play {file}", lambda *_: None)
+    return True
 
 
 def handle_power_action(
@@ -268,6 +275,7 @@ def send_notification(
 
     # Send the notification to the application
     application.send_notification(None, notification)
+    return True
 
 
 # Function to get the relative time

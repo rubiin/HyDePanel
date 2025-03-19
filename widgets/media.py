@@ -23,8 +23,6 @@ from utils import APP_CACHE_DIRECTORY
 from utils.functions import ensure_dir_exists
 from utils.widget_utils import setup_cursor_hover
 
-ensure_dir_exists(f"{APP_CACHE_DIRECTORY}/media")
-
 icon_size = 15
 
 micro_to_seconds = 1000000  # player position is in microseconds
@@ -35,6 +33,8 @@ class PlayerBoxStack(Box):
 
     def __init__(self, mpris_manager: MprisPlayerManager, config, **kwargs):
         self.config = config
+
+        ensure_dir_exists(f"{APP_CACHE_DIRECTORY}/media")
 
         # The player stack
         self.player_stack = Stack(

@@ -23,7 +23,6 @@ class VolumeWidget(EventBoxWidget):
 
         # Initialize the audio service
         self.audio = audio_service
-
         self.config = widget_config["volume"]
 
         # Create a circular progress bar to display the volume level
@@ -53,8 +52,10 @@ class VolumeWidget(EventBoxWidget):
                 self.volume_label,
             ),
         )
+
         # Connect the audio service to update the progress bar on volume change
         self.audio.connect("notify::speaker", self.on_speaker_changed)
+
         # Connect the event box to handle scroll events
         self.connect("scroll-event", self.on_scroll)
 
@@ -67,7 +68,6 @@ class VolumeWidget(EventBoxWidget):
     @cooldown(1)
     def on_scroll(self, _, event):
         # Adjust the volume based on the scroll direction
-
         val_y = event.delta_y
 
         if val_y > 0:

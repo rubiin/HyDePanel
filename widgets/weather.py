@@ -114,7 +114,6 @@ class WeatherMenu(Box):
         )
 
         # Create a grid to display the hourly forecast
-
         self.forecast_box = Gtk.Grid(
             row_spacing=10,
             column_spacing=20,
@@ -288,7 +287,6 @@ class WeatherWidget(ButtonWidget):
             visible=False,
             all_visible=False,
             pointing_to=self,
-            margin="-18px 0 0 0",
         )
 
         self.connect(

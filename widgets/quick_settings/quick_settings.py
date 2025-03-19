@@ -374,7 +374,6 @@ class QuickSettingsButtonWidget(ButtonWidget):
             visible=False,
             all_visible=False,
             pointing_to=self,
-            margin="-18px 0 0 0",
         )
 
         self.audio_icon = Image(style_classes="panel-icon")

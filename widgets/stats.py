@@ -286,8 +286,8 @@ class NetworkUsageWidget(ButtonWidget):
 
     def update_ui(self, fabricator, value):
         """Update the network usage label with the current network usage."""
-        # Get the current network usage
 
+        # Get the current network usage
         network_speed = self.client.get_network_speed()
 
         if self.config["tooltip"]:

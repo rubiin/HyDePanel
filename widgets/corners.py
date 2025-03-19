@@ -3,7 +3,7 @@ from fabric.widgets.shapes import Corner
 from fabric.widgets.wayland import WaylandWindow as Window
 
 
-class MyCorner(Box):
+class SideCorner(Box):
     """A container for a corner shape."""
 
     def __init__(self, corner, size):
@@ -47,9 +47,9 @@ class ScreenCorners(Window):
                     orientation="h",
                     h_align="fill",
                     children=[
-                        MyCorner("top-left", size),
+                        SideCorner("top-left", size),
                         Box(h_expand=True),
-                        MyCorner("top-right", size),
+                        SideCorner("top-right", size),
                     ],
                 ),
                 Box(v_expand=True),
@@ -58,9 +58,9 @@ class ScreenCorners(Window):
                     orientation="h",
                     h_align="fill",
                     children=[
-                        MyCorner("bottom-left", size),
+                        SideCorner("bottom-left", size),
                         Box(h_expand=True),
-                        MyCorner("bottom-right", size),
+                        SideCorner("bottom-right", size),
                     ],
                 ),
             ],
