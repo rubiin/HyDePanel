@@ -261,6 +261,7 @@
 		"osd": {
 			"scaling": 100,
 			"opacity": 100,
+			"shadow_enabled": true,
 			"border": {
 				"enabled": false,
 				"width": "1px",
@@ -270,6 +271,7 @@
 		"notification": {
 			"scaling": 100,
 			"opacity": 100,
+			"shadow_enabled": true,
 			"border": {
 				"enabled": false,
 				"width": "1px",
@@ -279,6 +281,7 @@
 		"bar": {
 			"scaling": 100,
 			"opacity": 70,
+			"shadow_enabled": true,
 			"border": {
 				"enabled": true,
 				"width": "4px",
@@ -322,6 +325,7 @@
 				"popover": {
 					"scaling": 100,
 					"opacity": 100,
+					"shadow_enabled": true,
 					"border": {
 						"enabled": true,
 						"width": "1px",
@@ -334,6 +338,7 @@
 				"tooltip": {
 					"scaling": 100,
 					"opacity": 100,
+					"shadow_enabled": true,
 					"border": {
 						"enabled": false,
 						"width": "1px",

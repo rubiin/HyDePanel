@@ -57,8 +57,6 @@ class BatteryWidget(ButtonWidget):
         temperature = self.client.get_property("Temperature")
         energy = self.client.get_property("Energy")
 
-        print(f"Battery percentage: {self.client.get_property('Capacity')}")
-
         time_remaining = (
             self.client.get_property("TimeToFull")
             if is_charging

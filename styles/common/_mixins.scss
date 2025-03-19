@@ -157,7 +157,7 @@
 }
 
 @mixin floating-widget($radius: variable.$bar-menus-popover-border-radius) {
-  box-shadow: 0 0 1px 0 theme.$shadow-color;
+  box-shadow: if(variable.$bar-menus-popover-shadow-enabled, 0 0 1px 0 theme.$shadow-color, none);
   margin: max(variable.$spacing, 8px);
   border: if(variable.$bar-menus-popover-border-enabled,variable.$bar-menus-popover-border-width solid variable.$popover-border-color, none);
   background-color: theme.$background-dark;

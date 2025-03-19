@@ -117,9 +117,8 @@ tooltip {
   opacity: variable.$bar-menus-tooltip-opacity * 0.01;
   background-color: theme.$background-dark;
   border-radius: variable.$bar-menus-tooltip-border-radius;
-  box-shadow: 0 0 3px 0 theme.$shadow-color;
+  box-shadow: if(variable.$bar-menus-tooltip-shadow-enabled, 0 0 3px 0 theme.$shadow-color, none);
   animation: tooltipShow 0.25s cubic-bezier(0.5, 0.25, 0, 1);
-
   border: if(variable.$bar-menus-tooltip-border-enabled, variable.$border, none);
 
 
@@ -408,4 +407,3 @@ menu#ocr-menu {
   border: if(variable.$bar-widgets-cpu-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-cpu-border-width;
 }
-
