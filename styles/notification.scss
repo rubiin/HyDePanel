@@ -9,7 +9,7 @@ $hover-transition: background 0.15s ease-in-out;
 
 #notification-eventbox {
   #notification {
-    padding: 0.9rem;
+    padding:variable.$notification-padding_y variable.$notification-padding_x;
     opacity: variable.$notification-opacity * 0.01;
     color: theme.$text-main;
     border-radius: variable.$notification-border-radius;

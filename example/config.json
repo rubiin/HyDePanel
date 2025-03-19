@@ -261,15 +261,25 @@
 		"osd": {
 			"scaling": 100,
 			"opacity": 100,
+			"shadow_enabled": true,
+			"padding_x": "0.8em",
+			"padding_y": "0.6em",
+			"margin_x": "0",
+			"margin_y": "1.25em",
 			"border": {
 				"enabled": false,
 				"width": "1px",
 				"radius": "10px"
 			}
 		},
-		"notification": { // TODO: add notification theme
+		"notification": {
 			"scaling": 100,
 			"opacity": 100,
+			"shadow_enabled": true,
+			"padding_x": "0.9em",
+			"padding_y": "0.9em",
+			"margin_x": "0",
+			"margin_y": "1.25em",
 			"border": {
 				"enabled": false,
 				"width": "1px",
@@ -279,10 +289,42 @@
 		"bar": {
 			"scaling": 100,
 			"opacity": 70,
+			"shadow_enabled": true,
+			"padding_x": "0.8em",
+			"padding_y": "0.6em",
+			"margin_x": "0",
+			"margin_y": "1.25em",
 			"border": {
-				"enabled": false,
-				"width": "1px",
+				"enabled": true,
+				"width": "4px",
 				"radius": "10px"
+			},
+			"buttons": {
+				"scaling": 100,
+				"opacity": 100,
+				"padding_x": "0",
+				"padding_y": "1.25em",
+				"border": {
+					"enabled": false,
+					"width": "1px",
+					"radius": "1em"
+				}
+			},
+			"widgets": {
+				"cpu": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"memory": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				}
 			},
 			"menus": {
 				"scaling": 100,
@@ -295,18 +337,22 @@
 				"popover": {
 					"scaling": 100,
 					"opacity": 100,
+					"shadow_enabled": true,
+					"margin_x": "0",
+					"margin_y": "1.25em",
+					"padding_x": "1em",
+					"padding_y": "1em",
 					"border": {
 						"enabled": true,
 						"width": "1px",
 						"radius": "1.5em"
 					},
 					"font-weight": 700,
-					"padding_x": "1em",
-					"padding_y": "1em"
 				},
 				"tooltip": {
 					"scaling": 100,
 					"opacity": 100,
+					"shadow_enabled": true,
 					"border": {
 						"enabled": false,
 						"width": "1px",
@@ -315,17 +361,6 @@
 					"font-weight": 700,
 					"padding_x": "0.25em",
 					"padding_y": "0.125em"
-				}
-			},
-			"buttons": {
-				"scaling": 100,
-				"opacity": 100,
-				"padding_x": "0",
-				"padding_y": "1.25em",
-				"border": {
-					"enabled": false,
-					"width": "1px",
-					"radius": "1em"
 				}
 			}
 		}
