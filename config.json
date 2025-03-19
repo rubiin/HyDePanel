@@ -269,7 +269,7 @@
 		},
 		"notification": {
 			"scaling": 100,
-			"opacity": 90,
+			"opacity": 100,
 			"border": {
 				"enabled": false,
 				"width": "1px",
