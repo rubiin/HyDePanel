@@ -267,7 +267,7 @@
 				"radius": "10px"
 			}
 		},
-		"notification": { // TODO: add notification theme
+		"notification": {
 			"scaling": 100,
 			"opacity": 90,
 			"border": {
