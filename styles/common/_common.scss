@@ -239,16 +239,16 @@ switch {
   transition: all 75ms cubic-bezier(0, 0, 0.2, 1);
   margin: functions.toEm(4) 0;
   border-radius: variable.$radius-large;
-  background-color: color.mix(theme.$background, white, 10%);
+  background-color: color.mix(theme.$background, white, 90%);
   background-clip: padding-box;
   font-size: 0;
   color: transparent;
 
   slider {
     transition: all 75ms cubic-bezier(0, 0, 0.2, 1);
-    min-width: 14px;
-    min-height: 14px;
-    margin: functions.toEm(2);
+    min-width: 12px;
+    min-height: 12px;
+    margin: functions.toEm(4);
     border-radius: variable.$radius-large;
     outline: none;
     background-color: theme.$text-main;
@@ -257,7 +257,7 @@ switch {
   }
 
   &:checked {
-    background-color: #06944d;
+    background-color: #06aa58;
   }
 
   &:disabled {
