@@ -74,9 +74,7 @@ class CommandSwitcher(ButtonWidget):
     def toggle(self, *_):
         is_app_running = helpers.is_app_running(self.command_without_args)
         if is_app_running:
-            exec_shell_command_async(
-                f"pkill {self.command_without_args}", lambda *_: None
-            )
+            helpers.kill_process(self.command_without_args)
         else:
             exec_shell_command_async(f"bash -c '{self.command}&'", lambda *_: None)
         self.update_ui(is_app_running)

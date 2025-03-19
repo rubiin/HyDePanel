@@ -51,7 +51,7 @@ class ScreenRecorder(Service):
         self.emit("recording", True)
 
     def screencast_stop(self):
-        exec_shell_command_async("killall -INT wf-recorder", lambda *_: None)
+        helpers.kill_process("wf-recorder")
         self.emit("recording", False)
         self.send_screencast_notification(self._current_screencast_path)
 
