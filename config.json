@@ -285,12 +285,16 @@
 				"radius": "10px"
 			},
 			"menus": {
-				"shadow": "0 0 0",
+				"scaling": 100,
 				"opacity": 100,
+				"border": {
+					"enabled": false,
+					"width": "1px",
+					"radius": "10px"
+				},
 				"popover": {
 					"scaling": 100,
 					"opacity": 100,
-					"shadow": " 0 0 1px 0 rgba(0, 0, 0, 0.1)",
 					"border": {
 						"enabled": true,
 						"width": "1px",
