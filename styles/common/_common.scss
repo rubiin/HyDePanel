@@ -10,11 +10,6 @@
   border: 1px solid red;
 }
 
-label {
-  font-size: 1rem;
-}
-
-
 #panel {
   &-inner {
     $bar-opacity-ratio: variable.$bar-opacity * 0.01;
