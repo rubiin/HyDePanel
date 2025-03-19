@@ -47,7 +47,7 @@ class ScreenRecorder(Service):
         command = (
             f"wf-recorder {audio} --file={file_path} --pixel-format yuv420p {area}"
         )
-        exec_shell_command_async(command)
+        exec_shell_command_async(command, lambda *_: None)
         self.emit("recording", True)
 
     def screencast_stop(self):

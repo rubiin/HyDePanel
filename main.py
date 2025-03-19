@@ -92,6 +92,5 @@ if __name__ == "__main__":
 
     helpers.ensure_dir_exists(APP_CACHE_DIRECTORY)
 
-
     # Run the application
     app.run()
