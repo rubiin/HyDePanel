@@ -286,7 +286,7 @@ class WeatherWidget(ButtonWidget):
             child=(WeatherMenu(data=res)),
             visible=False,
             all_visible=False,
-            pointing_to=self
+            pointing_to=self,
         )
 
         self.connect(

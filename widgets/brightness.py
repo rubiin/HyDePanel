@@ -73,7 +73,6 @@ class BrightnessWidget(EventBoxWidget):
 
     @cooldown(1)
     def on_scroll(self, _, event):
-
         # Adjust the brightness based on the scroll direction
         val_y = event.delta_y
 

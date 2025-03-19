@@ -18,6 +18,7 @@ class PopOverWindow(WaylandWindow):
         **kwargs,
     ):
         super().__init__(
+            name="popover",
             style_classes="popover",
             **kwargs,
         )
