@@ -280,9 +280,36 @@
 			"scaling": 100,
 			"opacity": 70,
 			"border": {
-				"enabled": false,
-				"width": "1px",
+				"enabled": true,
+				"width": "4px",
 				"radius": "10px"
+			},
+			"buttons": {
+				"scaling": 100,
+				"opacity": 100,
+				"padding_x": "0",
+				"padding_y": "1.25em",
+				"border": {
+					"enabled": false,
+					"width": "1px",
+					"radius": "1em"
+				}
+			},
+			"widgets": {
+				"cpu": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"memory": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				}
 			},
 			"menus": {
 				"scaling": 100,
@@ -315,17 +342,6 @@
 					"font-weight": 700,
 					"padding_x": "0.25em",
 					"padding_y": "0.125em"
-				}
-			},
-			"buttons": {
-				"scaling": 100,
-				"opacity": 100,
-				"padding_x": "0",
-				"padding_y": "1.25em",
-				"border": {
-					"enabled": false,
-					"width": "1px",
-					"radius": "1em"
 				}
 			}
 		}
