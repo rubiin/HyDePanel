@@ -269,7 +269,7 @@
 		},
 		"notification": { // TODO: add notification theme
 			"scaling": 100,
-			"opacity": 100,
+			"opacity": 90,
 			"border": {
 				"enabled": false,
 				"width": "1px",
