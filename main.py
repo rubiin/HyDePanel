@@ -88,10 +88,10 @@ if __name__ == "__main__":
         process_and_apply_css(app)
 
     setproctitle.setproctitle(APPLICATION_NAME)
+    helpers.copy_theme(widget_config["theme"]["name"])
 
     helpers.ensure_dir_exists(APP_CACHE_DIRECTORY)
 
-    helpers.copy_theme(widget_config["theme"]["name"])
 
     # Run the application
     app.run()

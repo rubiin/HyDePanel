@@ -149,7 +149,7 @@
 	},
 	"osd": {
 		"enabled": true,
-		"timeout": 1500,
+		"timeout": 2000,
 		"anchor": "bottom-center", // this is the position of the OSD, you can use top-center, top-left, top-right, bottom-center, bottom-left, bottom-right
 		"show_percentage": true,
 		"widget_style": "wave2"
@@ -247,7 +247,88 @@
 		"icon_size": 22
 	},
 	"theme": {
-		"name": "catpuccin-mocha"
+		"name": "catpuccin-mocha",
+		"font": {
+			"name": "JetBrainsMono Nerd Font Propo",
+			"size": "1rem",
+			"weight": 600,
+			"style": "normal"
+		},
+		"border-radius": "10px",
+		"padding": "7pt",
+		"spacing": "12pt",
+		"border-width": "1px",
+		"osd": {
+			"scaling": 100,
+			"opacity": 100,
+			"border": {
+				"enabled": false,
+				"width": "1px",
+				"radius": "10px"
+			}
+		},
+		"notification": { // TODO: add notification theme
+			"scaling": 100,
+			"opacity": 100,
+			"border": {
+				"enabled": false,
+				"width": "1px",
+				"radius": "10px"
+			}
+		},
+		"bar": {
+			"scaling": 100,
+			"opacity": 70,
+			"border": {
+				"enabled": false,
+				"width": "1px",
+				"radius": "10px"
+			},
+			"menus": {
+				"scaling": 100,
+				"opacity": 100,
+				"border": {
+					"enabled": false,
+					"width": "1px",
+					"radius": "10px"
+				},
+				"popover": {
+					"scaling": 100,
+					"opacity": 100,
+					"border": {
+						"enabled": true,
+						"width": "1px",
+						"radius": "1.5em"
+					},
+					"font-weight": 700,
+					"padding_x": "1em",
+					"padding_y": "1em"
+				},
+				"tooltip": {
+					"scaling": 100,
+					"opacity": 100,
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "1em"
+					},
+					"font-weight": 700,
+					"padding_x": "0.25em",
+					"padding_y": "0.125em"
+				}
+			},
+			"buttons": {
+				"scaling": 100,
+				"opacity": 100,
+				"padding_x": "0",
+				"padding_y": "1.25em",
+				"border": {
+					"enabled": false,
+					"width": "1px",
+					"radius": "1em"
+				}
+			}
+		}
 	},
 	"theme_switcher": {
 		"icon": "",
@@ -269,7 +350,7 @@
 		"step_size": 5
 	},
 	"weather": {
-		"location": "", // this is the location to show the weather, you can use city name or city id or leave it empty to use the default location
+		"location": "", // this is the location to show the weather, you can use city name or city id
 		"label": true,
 		"tooltip": true,
 		"interval": 3600000 // this is the interval in milliseconds to update the weather, 1 hour is 3600000 milliseconds
