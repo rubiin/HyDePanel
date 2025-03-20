@@ -102,8 +102,7 @@
 		{
 			"widgets": [
 				"quick_settings",
-				"cpu",
-				"network_usage"
+				"cpu"
 			],
 			"spacing": 0,
 			"style_classes": [
@@ -324,7 +323,217 @@
 						"width": "1px",
 						"radius": "10px"
 					}
-				}
+				},
+				"storage": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"network_usage": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"battery": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"bluetooth": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"brightness": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"cava": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"click_counter": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"datetime_menu": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"desktop_clock": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"hypr_idle": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"hypr_picker": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"hypr_sunset": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"keyboard_layout": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"language": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"microphone": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"mpris": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"ocr": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"overview": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"power_button": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"recorder": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"stop_watch": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"submap": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"systray": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"taskbar": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"theme": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"updates": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"volume": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"weather": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"window_title": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"workspaces": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
 			},
 			"menus": {
 				"scaling": 100,
@@ -347,7 +556,7 @@
 						"width": "1px",
 						"radius": "1.5em"
 					},
-					"font-weight": 700,
+					"font-weight": 700
 				},
 				"tooltip": {
 					"scaling": 100,
