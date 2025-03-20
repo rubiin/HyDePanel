@@ -111,14 +111,14 @@
     trough {
       border-radius: variable.$radius-large;
       min-height: 8px;
-      background-color: color.mix(theme.$background, black, 5%);
+      background-color: color.mix(theme.$background, black, 55%);
 
       highlight {
-        border-radius: 400px;
+        border-radius: variable.$radius-large;
       }
 
       &:hover {
-        background-color: color.mix(theme.$background, black, 7%);
+        background-color: color.mix(theme.$background, black, 45%);
       }
     }
   }

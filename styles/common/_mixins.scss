@@ -169,7 +169,7 @@
 @mixin switch {
   slider {
     background-color: theme.$background-dark;
-    border-radius: 9999px;
+    border-radius: variable.$radius-large;
     min-width: 24px;
     min-height: 24px;
   }

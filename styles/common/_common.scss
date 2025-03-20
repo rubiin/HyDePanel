@@ -64,7 +64,7 @@
 }
 
 .shadow {
-  border-radius: 4px;
+  @extend .flat;
   box-shadow: color.mix(theme.$background-dark, black, 15%) 0 4px;
 }
 
