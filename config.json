@@ -506,34 +506,34 @@
 						"radius": "10px"
 					}
 				},
-			},
-			"volume": {
-				"border": {
-					"enabled": false,
-					"width": "1px",
-					"radius": "10px"
-				}
-			},
-			"weather": {
-				"border": {
-					"enabled": false,
-					"width": "1px",
-					"radius": "10px"
-				}
-			},
-			"window_title": {
-				"border": {
-					"enabled": false,
-					"width": "1px",
-					"radius": "10px"
-				}
-			},
-			"workspaces": {
-				"border": {
-					"enabled": false,
-					"width": "1px",
-					"radius": "10px"
-				}
+				"volume": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"weather": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"window_title": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
+				"workspaces": {
+					"border": {
+						"enabled": false,
+						"width": "1px",
+						"radius": "10px"
+					}
+				},
 			},
 			"menus": {
 				"scaling": 100,
