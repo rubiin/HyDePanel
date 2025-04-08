@@ -1,4 +1,5 @@
 from fabric.utils import exec_shell_command_async
+from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 
 from shared import ButtonWidget
@@ -19,9 +20,9 @@ class CustomWidget(ButtonWidget):
             props={"style_classes": "panel-icon"},
         )
 
-        self.label = Label(label="0%", style_classes="panel-text", visible=False)
+        self.label = Label(label="0%", style_classes="panel-text", visible=True)
 
-        self.cpu_name = ""
+        self.box = Box()
 
         self.box.children = (self.text_icon, self.label)
 
@@ -30,6 +31,8 @@ class CustomWidget(ButtonWidget):
 
     def update_ui(self, fabricator, value):
         # Update the label with the current CPU usage if enabled
-        exec_shell_command_async()
+        exec_shell_command_async(
+            self.config["command"], lambda x: self.label.set_label(x)
+        )
 
         return True

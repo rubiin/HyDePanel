@@ -147,6 +147,9 @@ def validate_widgets(parsed_data, default_config):
                             f"Invalid widget '{group_widget}' found in "
                             f"module group {idx}. Please check the widget name."
                         )
+            elif widget.startswith("@custom/"):
+                continue
+
             elif widget not in default_config:
                 raise ValueError(
                     f"Invalid widget '{widget}' found in section {section}. "

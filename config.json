@@ -1,6 +1,6 @@
 {
 	"$schema": "./hydepanel.schema.json",
-	"custom/app": {
+	"@custom/app": {
 		"label": true,
 		"tooltip": true,
 		"command":"date"
@@ -78,7 +78,8 @@
 			"window_title"
 		], // this is the left section of the panel
 		"middle_section": [
-			"date_time"
+			"date_time",
+			"@custom/app",
 		], // this is the middle section of the panel
 		"right_section": [
 			"recorder",

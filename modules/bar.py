@@ -58,6 +58,7 @@ class StatusBar(WaylandWindow):
             "spacing": "widgets.SpacingWidget",
             "stop_watch": "widgets.StopWatchWidget",
             "divider": "widgets.DividerWidget",
+            "custom": "widgets.CustomWidget",
             "quick_settings": "widgets.QuickSettingsButtonWidget",
         }
 
@@ -111,8 +112,8 @@ class StatusBar(WaylandWindow):
 
         for key in layout:
             for widget_name in widget_config["layout"][key]:
+                # Handle module groups - using index-based lookup
                 if widget_name.startswith("@group:"):
-                    # Handle module groups - using index-based lookup
                     group_name = widget_name.replace("@group:", "", 1)
                     group_config = None
 
@@ -130,6 +131,10 @@ class StatusBar(WaylandWindow):
                             widget_config=widget_config,
                         )
                         layout[key].append(group)
+                elif widget_name.startswith("@custom/"):
+                    # Handle custom widgets
+                    custom_class = lazy_load_widget("custom", self.widgets_list)
+                    layout[key].append(custom_class(widget_config, bar=self))
                 else:
                     # Handle regular widgets
                     if widget_name in self.widgets_list:
