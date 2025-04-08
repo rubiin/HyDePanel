@@ -1,5 +1,10 @@
 {
 	"$schema": "./hydepanel.schema.json",
+	"custom/app": {
+		"label": true,
+		"tooltip": true,
+		"command":"date"
+	},
 	"battery": {
 		"full_battery_level": 100,
 		"hide_label_when_full": true,

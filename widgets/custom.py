@@ -1,5 +1,5 @@
-from fabric.widgets.label import Label
 from fabric.utils import exec_shell_command_async
+from fabric.widgets.label import Label
 
 from shared import ButtonWidget
 from utils import BarConfig
