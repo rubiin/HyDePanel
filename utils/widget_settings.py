@@ -318,6 +318,13 @@ OSD = TypedDict(
 )
 
 
+# Custom widget configuration
+CustomWidget = TypedDict(
+    "CustomWidget",
+    {**BaseConfig.__annotations__, "icon": str, "command": str},
+)
+
+
 class BarConfig(TypedDict):
     """Main configuration that includes all other configurations"""
 
@@ -360,3 +367,4 @@ class BarConfig(TypedDict):
     weather: Weather
     window_title: WindowTitle
     workspaces: Workspaces
+    custom_widget: CustomWidget
