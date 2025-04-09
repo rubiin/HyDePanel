@@ -5,7 +5,7 @@ from fabric.widgets.box import Box
 from fabric.widgets.centerbox import CenterBox
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
-from gi.repository import Gtk
+from gi.repository import GLib, Gtk
 
 import utils.functions as helpers
 from services import Brightness, MprisPlayerManager, audio_service, network_service
@@ -365,6 +365,8 @@ class QuickSettingsButtonWidget(ButtonWidget):
         self.panel_icon_size = 16
         self.audio = audio_service
 
+        self._timeout_id = None
+
         self.network = network_service
 
         self.brightness_service = Brightness.get_default()
@@ -402,8 +404,21 @@ class QuickSettingsButtonWidget(ButtonWidget):
 
         self.connect(
             "clicked",
-            lambda *_: popup.set_visible(not popup.get_visible()),
+            lambda *_: (
+                popup.set_visible(
+                    not popup.get_visible(),
+                )
+            ),
         )
+
+    def start_timeout(self):
+        self.stop_timeout()
+        self._timeout_id = GLib.timeout_add(2000, self.close_notification)
+
+    def stop_timeout(self):
+        if self._timeout_id is not None:
+            GLib.source_remove(self._timeout_id)
+            self._timeout_id = None
 
         def get_network_icon(*_):
             if self.network.primary_device == "wifi":

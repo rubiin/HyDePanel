@@ -205,22 +205,33 @@ class NotificationWidget(EventBox):
             ),
         )
 
-        actions_container = Box(
-            spacing=4,
-            orientation="h",
-            name="notification-action-box",
-            children=[
-                ActionButton(action, i, len(self._notification.actions))
-                for i, action in enumerate(self._notification.actions)
-            ],
-            h_expand=True,
+        actions_count = (
+            len(self._notification.actions)
+            if len(self._notification.actions) <= self.config["max_actions"]
+            else self.config["max_actions"]
+        )
+
+        self.actions_container = Revealer(
+            transition_duration=400,
+            transition_type="slide-down",
+            child_revealed=not self.config["display_actions_on_hover"],
+            child=Box(
+                spacing=4,
+                orientation="h",
+                name="notification-action-box",
+                children=[
+                    ActionButton(action, i, actions_count)
+                    for i, action in enumerate(self._notification.actions)
+                ],
+                h_expand=True,
+            ),
         )
 
         # Add the header, body, and actions to the notification box
         self.notification_box.children = (
             header_container,
             body_container,
-            actions_container,
+            self.actions_container,
         )
 
         # Add the notification box to the EventBox
@@ -272,10 +283,16 @@ class NotificationWidget(EventBox):
     def on_hover(self):
         self.pause_timeout()
         self.set_pointer_cursor(self, "hand2")
+        self.config[
+            "display_actions_on_hover"
+        ] and self.actions_container.set_reveal_child(True)
 
     def on_unhover(self):
         self.resume_timeout()
         self.set_pointer_cursor(self, "arrow")
+        self.config[
+            "display_actions_on_hover"
+        ] and self.actions_container.set_reveal_child(False)
 
     @staticmethod
     def set_pointer_cursor(widget, cursor_name):

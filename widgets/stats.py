@@ -1,5 +1,4 @@
 from fabric.utils import exec_shell_command_async
-from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 
 import utils.functions as helpers
@@ -20,15 +19,10 @@ class CpuWidget(ButtonWidget):
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config,
+            widget_config["cpu"],
             name="cpu",
             **kwargs,
         )
-
-        self.box = Box()
-        self.children = (self.box,)
-
-        self.config = widget_config["cpu"]
 
         # Create a TextIcon with the specified icon and size
         self.text_icon = text_icon(
@@ -103,15 +97,10 @@ class MemoryWidget(ButtonWidget):
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config,
+            widget_config["memory"],
             name="memory",
             **kwargs,
         )
-
-        self.config = widget_config["memory"]
-
-        self.box = Box()
-        self.children = (self.box,)
 
         # Create a TextIcon with the specified icon and size
         self.icon = text_icon(
@@ -167,14 +156,10 @@ class StorageWidget(ButtonWidget):
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config,
+            widget_config["storage"],
             name="storage",
             **kwargs,
         )
-        self.config = widget_config["storage"]
-
-        self.box = Box()
-        self.children = (self.box,)
 
         # Create a TextIcon with the specified icon and size
         self.icon = text_icon(
@@ -227,12 +212,10 @@ class NetworkUsageWidget(ButtonWidget):
         **kwargs,
     ):
         super().__init__(
-            widget_config,
+            widget_config["network_usage"],
             name="network_usage",
             **kwargs,
         )
-
-        self.config = widget_config["network_usage"]
 
         show_download = self.config["download"]
         show_upload = self.config["upload"]
@@ -262,10 +245,6 @@ class NetworkUsageWidget(ButtonWidget):
             style_classes="panel-text",
             visible=show_download,
         )
-
-        self.box = Box()
-
-        self.children = (self.box,)
 
         self.box.children = (
             self.upload_icon,

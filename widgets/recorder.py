@@ -1,5 +1,4 @@
 from fabric.utils import get_relative_path
-from fabric.widgets.box import Box
 from fabric.widgets.image import Image
 
 from services import ScreenRecorder
@@ -12,10 +11,9 @@ class RecorderWidget(ButtonWidget):
     """A widget to record the system"""
 
     def __init__(self, widget_config: BarConfig, bar, **kwargs):
-        super().__init__(widget_config, name="recorder", **kwargs)
+        super().__init__(widget_config["recorder"], name="recorder", **kwargs)
 
         self.is_recording = False
-        self.config = widget_config["recorder"]
 
         if not executable_exists("wf-recorder"):
             raise ExecutableNotFoundError("wf-recorder")
@@ -36,9 +34,9 @@ class RecorderWidget(ButtonWidget):
             h_align=True,
         )
 
-        self.box = Box(children=(self.recording_idle_image,))
-
-        self.add(self.box)
+        self.box.add(
+            self.recording_idle_image,
+        )
 
         if self.config["tooltip"]:
             self.set_tooltip_text("Recording stopped")

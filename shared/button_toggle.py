@@ -1,6 +1,5 @@
 import subprocess
 
-from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 
 import utils.functions as helpers
@@ -59,11 +58,7 @@ class CommandSwitcher(ButtonWidget):
             style_classes="panel-text",
         )
 
-        self.box = Box(
-            children=[self.icon, self.label_text],
-        )
-
-        self.add(self.box)
+        self.box.children = (self.icon, self.label_text)
 
         self.connect("clicked", self.toggle)
 

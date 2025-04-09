@@ -36,7 +36,7 @@ class EventBoxWidget(EventBox):
 
 
 class ButtonWidget(Button):
-    """A container for button widgets."""
+    """A container for button widgets. Only used for new widgets that are used on bar"""
 
     def __init__(self, config, **kwargs):
         super().__init__(
@@ -46,9 +46,13 @@ class ButtonWidget(Button):
 
         setup_cursor_hover(self)
 
+        self.box = Box()
+        self.children = (self.box,)
+        self.config = config
+
 
 class HoverButton(Button):
-    """A container for button widgets."""
+    """A container for button with hover effects."""
 
     def __init__(self, **kwargs):
         super().__init__(

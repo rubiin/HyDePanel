@@ -1,7 +1,6 @@
 import json
 
 from fabric.hyprland.widgets import get_hyprland_connection
-from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 from loguru import logger
 
@@ -14,12 +13,7 @@ class KeyboardLayoutWidget(ButtonWidget):
     """A widget to display the current keyboard layout."""
 
     def __init__(self, widget_config: BarConfig, bar, **kwargs):
-        super().__init__(widget_config, name="keyboard", **kwargs)
-
-        self.box = Box()
-        self.children = (self.box,)
-
-        self.config = widget_config["keyboard"]
+        super().__init__(widget_config["keyboard"], name="keyboard", **kwargs)
 
         # Create a TextIcon with the specified icon and size
         self.icon = text_icon(

@@ -1,5 +1,4 @@
 from fabric.bluetooth import BluetoothClient
-from fabric.widgets.box import Box
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 
@@ -12,12 +11,8 @@ class BlueToothWidget(ButtonWidget):
     """A widget to display the Bluetooth status."""
 
     def __init__(self, widget_config: BarConfig, bar, **kwargs):
-        super().__init__(widget_config, name="bluetooth", **kwargs)
+        super().__init__(widget_config["bluetooth"], name="bluetooth", **kwargs)
         self.bluetooth_client = BluetoothClient()
-
-        self.box = Box()
-
-        self.children = self.box
 
         self.icons = icons.icons["bluetooth"]
 

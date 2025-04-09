@@ -1,6 +1,5 @@
 import time
 
-from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 from gi.repository import GLib
 
@@ -17,17 +16,11 @@ class StopWatchWidget(ButtonWidget):
         widget_config: BarConfig,
         **kwargs,
     ):
-        super().__init__(widget_config, title="stop_watch", **kwargs)
+        super().__init__(widget_config["stop_watch"], title="stop_watch", **kwargs)
 
         self.start_time = 0
         self.running = False
         self.elapsed_time = 0
-
-        self.config = widget_config["stop_watch"]
-
-        self.box = Box()
-
-        self.children = (self.box,)
 
         self.icon = text_icon(
             icon=self.config["stopped_icon"],

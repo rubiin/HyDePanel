@@ -221,20 +221,14 @@ class WeatherWidget(ButtonWidget):
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config,
+            widget_config["weather"],
             name="weather",
             **kwargs,
         )
 
         self.weather_service = WeatherService().get_default()
 
-        self.config = widget_config["weather"]
-
         self.bar = bar
-
-        self.box = Box()
-
-        self.children = self.box
 
         self.weather_icon = text_icon(
             icon="",

@@ -1,5 +1,4 @@
 from fabric.hyprland.widgets import get_hyprland_connection
-from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 from loguru import logger
 
@@ -12,12 +11,7 @@ class SubMapWidget(ButtonWidget):
     """A widget to display the current submap."""
 
     def __init__(self, widget_config: BarConfig, bar, **kwargs):
-        super().__init__(widget_config, name="submap", **kwargs)
-
-        self.config = widget_config["submap"]
-
-        self.box = Box()
-        self.children = (self.box,)
+        super().__init__(widget_config["submap"], name="submap", **kwargs)
 
         # Create a TextIcon with the specified icon and size
         self.icon = text_icon(

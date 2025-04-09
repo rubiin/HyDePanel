@@ -159,6 +159,8 @@ DEFAULT_CONFIG = {
         "max_count": 200,
         "per_app_limits": {},
         "play_sound": False,
+        "max_actions": 5,
+        "display_actions_on_hover": True,
         "sound_file": "notification4",
     },
     "osd": {
@@ -268,7 +270,7 @@ DEFAULT_CONFIG = {
     "window_title": {
         "icon": True,
         "truncation": True,
-        "truncation_size": 50,
+        "truncation_size": 30,
         "title_map": [],
     },
     "workspaces": {
@@ -278,7 +280,7 @@ DEFAULT_CONFIG = {
         "reverse_scroll": False,
         "empty_scroll": False,
         "default_label_format": "{id}",
-        "icon_map": {"1": "1", "2": "2", "3": "3"},
+        "icon_map": {},
     },
 }
 

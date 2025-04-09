@@ -12,9 +12,8 @@ class CavaWidget(ButtonWidget):
     """A widget to display the Cava audio visualizer."""
 
     def __init__(self, widget_config: BarConfig, bar, **kwargs):
-        super().__init__(widget_config, name="cava", **kwargs)
+        super().__init__(widget_config["cava"], name="cava", **kwargs)
 
-        self.config = widget_config["cava"]
         cava_command = "cava"
 
         if not helpers.executable_exists(cava_command):
@@ -24,10 +23,6 @@ class CavaWidget(ButtonWidget):
             raise ValueError("Invalid color supplied for cava widget")
 
         command = f"kitty --title systemupdate sh -c '{cava_command}'"
-
-        self.box = Box()
-
-        self.children = self.box
 
         cava_label = Label(
             v_align="center",

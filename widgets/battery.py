@@ -1,5 +1,4 @@
 import gi
-from fabric.widgets.box import Box
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 from gi.repository import GdkPixbuf, Gtk
@@ -24,16 +23,11 @@ class BatteryWidget(ButtonWidget):
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config,
+            widget_config["battery"],
             name="battery",
             **kwargs,
         )
-        self.config = widget_config["battery"]
         self.full_battery_level = self.config["full_battery_level"]
-
-        self.box = Box()
-
-        self.children = (self.box,)
 
         self.client = battery_service
 

@@ -2,5 +2,5 @@
 from .bar import *
 from .corners import *
 from .dock import *
-from .notification_pop_up import *
+from .notification import *
 from .osd import *

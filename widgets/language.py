@@ -1,6 +1,5 @@
 from fabric.hyprland.widgets import Language
 from fabric.utils import FormattedString, truncate
-from fabric.widgets.box import Box
 
 from shared import ButtonWidget
 from utils import BarConfig
@@ -11,12 +10,7 @@ class LanguageWidget(ButtonWidget):
     """A widget to display the current language."""
 
     def __init__(self, widget_config: BarConfig, bar, **kwargs):
-        super().__init__(widget_config, name="language", **kwargs)
-
-        self.config = widget_config["language"]
-
-        self.box = Box()
-        self.children = (self.box,)
+        super().__init__(widget_config["language"], name="language", **kwargs)
 
         self.lang = Language(
             formatter=FormattedString(
