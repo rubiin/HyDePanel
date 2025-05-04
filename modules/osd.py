@@ -1,6 +1,7 @@
 import time
 from typing import Literal
 
+from evdev import InputDevice, ecodes, list_devices
 from fabric.utils import cooldown, invoke_repeater
 from fabric.widgets.box import Box
 from fabric.widgets.image import Image
@@ -42,6 +43,53 @@ class GenericOSDContainer(Box):
 
         if config["percentage"]:
             self.level.set_visible(True)
+
+
+class KeyboardOSDContainer(GenericOSDContainer):
+    """A widget to display the OSD for keyboard lock states."""
+
+    def find_keyboard_device(self):
+        for path in list_devices():
+            dev = InputDevice(path)
+            if "keyboard" in dev.name.lower() or ecodes.EV_LED in dev.capabilities():
+                return dev
+        return None
+
+    def get_lock_states(self,dev):
+        leds = dev.leds()
+        return {
+            'Num Lock': ecodes.LED_NUML in leds,
+            'Caps Lock': ecodes.LED_CAPSL in leds,
+            'Scroll Lock': ecodes.LED_SCROLLL in leds,
+        }
+
+
+    def __init__(self, config, **kwargs):
+        super().__init__(
+            config=config,
+            **kwargs,
+        )
+        self.keyboard_device = self.find_keyboard_device()
+
+        if self.keyboard_device:
+
+            prev_state = self.get_lock_states(self.keyboard_device)
+
+            for event in self.keyboard_device.read_loop():
+                if event.type == ecodes.EV_KEY and event.code in (
+                    ecodes.KEY_NUMLOCK,
+                    ecodes.KEY_CAPSLOCK,
+                    ecodes.KEY_SCROLLLOCK,
+                ):
+                    current_state = self.get_lock_states(self.keyboard_device)
+                    for key in current_state:
+                        if current_state[key] != prev_state[key]:
+                            print(f"{key}: {'ON' if current_state[key] else 'OFF'}")
+                    prev_state = current_state.copy()
+
+    def update_icon(self):
+        icon_name = "indicator-keyboard"
+        self.icon.set_from_icon_name(icon_name)
 
 
 class BrightnessOSDContainer(GenericOSDContainer):
@@ -136,6 +184,8 @@ class OSDContainer(Window):
 
         self.audio_container = AudioOSDContainer(config=self.config)
         self.brightness_container = BrightnessOSDContainer(config=self.config)
+
+        self.keyboard_container = KeyboardOSDContainer()
 
         self.timeout = self.config["timeout"]
 
