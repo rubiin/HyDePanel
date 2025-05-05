@@ -175,11 +175,13 @@ class WeatherMenu(Box):
 
         self.children = (self.scan_btn, self.title_box, expander)
 
+        self.update_widget(initial=True)
+
         # reusing the fabricator to call specified intervals
         util_fabricator.connect("changed", lambda *_: self.update_widget())
 
-    def update_widget(self):
-        if (datetime.now() - self.update_time).total_seconds() < 60:
+    def update_widget(self, initial=False):
+        if (datetime.now() - self.update_time).total_seconds() < 60 and not initial:
             # Check if the update time is more than 10 minutes ago
             return
 

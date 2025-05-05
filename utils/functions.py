@@ -177,7 +177,7 @@ def convert_bytes(bytes: int, to: Literal["kb", "mb", "gb"], format_spec=".1f"):
     # wttr.in time are in 300,400...2100 format , we need to convert it to 4:00...21:00
 
 
-def convert_to_12hr_format(self, time: str) -> str:
+def convert_to_12hr_format(time: str) -> str:
     time = int(time)
     hour = time // 100  # Get the hour (e.g., 1200 -> 12)
     minute = time % 100  # Get the minutes (e.g., 1200 -> 00)
