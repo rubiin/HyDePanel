@@ -18,7 +18,7 @@ class OCRWidget(ButtonWidget):
     """
 
     def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["ocr"], name="ocr", **kwargs)
+        super().__init__(widget_config["widgets"]["ocr"], name="ocr", **kwargs)
 
         self.current_lang = "eng"  # default
         self.script_file = get_relative_path("../assets/scripts/ocr.sh")

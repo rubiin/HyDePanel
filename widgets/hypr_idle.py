@@ -7,7 +7,7 @@ class HyprIdleWidget(CommandSwitcher):
 
     def __init__(self, widget_config: BarConfig, **kwargs):
         # Store the configuration for hypridle
-        self.config = widget_config["hypr_idle"]
+        self.config = widget_config["widgets"]["hypr_idle"]
 
         # Set the command to hypridle
         self.command = "hypridle"

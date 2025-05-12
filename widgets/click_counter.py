@@ -6,7 +6,9 @@ class ClickCounterWidget(ButtonWidget):
     """A widget to count the number of clicks."""
 
     def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["click_counter"], name="click_counter", **kwargs)
+        super().__init__(
+            widget_config["widgets"]["click_counter"], name="click_counter", **kwargs
+        )
 
         self.count = self.config["count"]
         self.set_label(f"{self.count}")

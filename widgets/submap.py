@@ -11,7 +11,7 @@ class SubMapWidget(ButtonWidget):
     """A widget to display the current submap."""
 
     def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["submap"], name="submap", **kwargs)
+        super().__init__(widget_config["widgets"]["submap"], name="submap", **kwargs)
 
         self.submap_label = Label(label="0", style_classes="panel-text")
 

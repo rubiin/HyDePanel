@@ -7,7 +7,7 @@ class HyprSunsetWidget(CommandSwitcher):
 
     def __init__(self, widget_config: BarConfig, **kwargs):
         # Store the configuration for hyprsunset
-        self.config = widget_config["hypr_sunset"]
+        self.config = widget_config["widgets"]["hypr_sunset"]
 
         # Set the command to adjust the screen temperature
         self.command = "hyprsunset"

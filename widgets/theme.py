@@ -13,7 +13,7 @@ class ThemeSwitcherWidget(ButtonWidget):
 
     def __init__(self, widget_config: BarConfig, **kwargs):
         super().__init__(
-            widget_config["theme_switcher"], name="theme_switcher", **kwargs
+            widget_config["widgets"]["theme_switcher"], name="theme_switcher", **kwargs
         )
 
         theme_files = os.listdir(get_relative_path("../styles/themes"))

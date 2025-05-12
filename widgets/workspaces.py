@@ -23,7 +23,7 @@ class WorkSpacesWidget(BoxWidget):
     def __init__(self, widget_config: BarConfig, **kwargs):
         super().__init__(name="workspaces", **kwargs)
 
-        self.config = widget_config["workspaces"]
+        self.config = widget_config["widgets"]["workspaces"]
 
         # Convert ignored workspace IDs to integers
         ignored_ws = [int(x) for x in unique_list(self.config["ignored"])]

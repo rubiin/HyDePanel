@@ -12,7 +12,9 @@ class HyprPickerWidget(ButtonWidget):
     """A widget to pick a color."""
 
     def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["hypr_picker"], name="hypr_picker", **kwargs)
+        super().__init__(
+            widget_config["widgets"]["hypr_picker"], name="hypr_picker", **kwargs
+        )
 
         if not executable_exists("hyprpicker"):
             raise ExecutableNotFoundError("hyprpicker")

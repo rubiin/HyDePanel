@@ -10,7 +10,9 @@ class ScreenShotWidget(ButtonWidget):
     """A widget to switch themes."""
 
     def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["screen_shot"], name="screen_shot", **kwargs)
+        super().__init__(
+            widget_config["widgets"]["screen_shot"], name="screen_shot", **kwargs
+        )
 
         if self.config["tooltip"]:
             self.set_tooltip_text("Screen Shot")

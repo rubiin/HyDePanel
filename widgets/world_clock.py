@@ -13,7 +13,9 @@ class WorldClockWidget(ButtonWidget):
     """a widget that displays the title of the active window."""
 
     def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["world_clock"], name="world_clock", **kwargs)
+        super().__init__(
+            widget_config["widgets"]["world_clock"], name="world_clock", **kwargs
+        )
 
         self.clocks = []
         valid_zones = available_timezones()

@@ -10,7 +10,9 @@ class LanguageWidget(ButtonWidget):
     """A widget to display the current language."""
 
     def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["language"], name="language", **kwargs)
+        super().__init__(
+            widget_config["widgets"]["language"], name="language", **kwargs
+        )
 
         self.lang = Language(
             formatter=FormattedString(

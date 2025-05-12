@@ -16,7 +16,7 @@ class BrightnessWidget(EventBoxWidget):
 
     def __init__(self, widget_config: BarConfig, **kwargs):
         super().__init__(
-            widget_config["brightness"],
+            widget_config["widgets"]["brightness"],
             name="brightness",
             events=["scroll", "smooth-scroll"],
             **kwargs,

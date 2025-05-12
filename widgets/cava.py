@@ -12,7 +12,7 @@ class CavaWidget(ButtonWidget):
     """A widget to display the Cava audio visualizer."""
 
     def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["cava"], name="cava", **kwargs)
+        super().__init__(widget_config["widgets"]["cava"], name="cava", **kwargs)
 
         cava_command = "cava"
 

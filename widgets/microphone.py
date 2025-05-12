@@ -12,7 +12,9 @@ class MicrophoneIndicatorWidget(ButtonWidget):
     """A widget to display the current microphone status."""
 
     def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["microphone"], name="microphone", **kwargs)
+        super().__init__(
+            widget_config["widgets"]["microphone"], name="microphone", **kwargs
+        )
 
         self.icon = text_icon(
             icon=MIC_OFF_ICON,

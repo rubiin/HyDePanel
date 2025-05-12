@@ -433,47 +433,55 @@ Recording = TypedDict(
 ScreenShot = TypedDict("ScreenShot", {"path": str, "icon_size": int, "tooltip": bool})
 
 
+Widgets = TypedDict(
+    "widgets",
+    {
+        "overview": Overview,
+        "power": PowerButton,
+        "quick_settings": QuickSettings,
+        "recorder": Recording,
+        "screen_shot": ScreenShot,
+        "spacing": Spacing,
+        "stop_watch": StopWatch,
+        "storage": Storage,
+        "system_tray": SystemTray,
+        "submap": Submap,
+        "task_bar": TaskBar,
+        "theme": Theme,
+        "theme_switcher": ThemeSwitcher,
+        "updates": Updates,
+        "volume": Volume,
+        "weather": Weather,
+        "window_title": WindowTitle,
+        "window_count": WindowCount,
+        "workspaces": Workspaces,
+        "world_clock": WorldClock,
+        "battery": Battery,
+        "bluetooth": BlueTooth,
+        "brightness": Brightness,
+        "cava": Cava,
+        "click_counter": ClickCounter,
+        "cpu": Cpu,
+        "date_time": DateTimeMenu,
+        "divider": Divider,
+        "hypr_idle": HyprIdle,
+        "hypr_sunset": HyprSunset,
+        "hypr_picker": HyprPicker,
+        "keyboard": Keyboard,
+        "language": Language,
+        "layout": Layout,
+        "memory": Memory,
+        "microphone": MicroPhone,
+        "mpris": Mpris,
+        "network_usage": NetworkUsage,
+        "ocr": OCR,
+    },
+)
+
+
 class BarConfig(TypedDict):
     """Main configuration that includes all other configurations"""
 
-    battery: Battery
-    bluetooth: BlueTooth
-    brightness: Brightness
-    cava: Cava
-    click_counter: ClickCounter
-    cpu: Cpu
-    date_time: DateTimeMenu
-    divider: Divider
-    hypr_idle: HyprIdle
-    hypr_sunset: HyprSunset
-    hypr_picker: HyprPicker
-    keyboard: Keyboard
-    language: Language
-    layout: Layout
-    memory: Memory
-    microphone: MicroPhone
-    mpris: Mpris
-    network_usage: NetworkUsage
+    widgets: Widgets
     general: General
-    ocr: OCR
     modules: Modules
-    overview: Overview
-    power: PowerButton
-    quick_settings: QuickSettings
-    recorder: Recording
-    screen_shot: ScreenShot
-    spacing: Spacing
-    stop_watch: StopWatch
-    storage: Storage
-    system_tray: SystemTray
-    submap: Submap
-    task_bar: TaskBar
-    theme: Theme
-    theme_switcher: ThemeSwitcher
-    updates: Updates
-    volume: Volume
-    weather: Weather
-    window_title: WindowTitle
-    window_count: WindowCount
-    workspaces: Workspaces
-    world_clock: WorldClock

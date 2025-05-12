@@ -26,7 +26,7 @@ class UpdatesWidget(ButtonWidget):
         **kwargs,
     ):
         # Initialize the EventBox with specific name and style
-        super().__init__(widget_config["updates"], name="updates", **kwargs)
+        super().__init__(widget_config["widgets"]["updates"], name="updates", **kwargs)
 
         self.update_time = datetime.now()
 
