@@ -129,7 +129,7 @@
 		], // this is the left section of the panel
 		"middle_section": [
 			"date_time",
-			"weather"
+			"cliphist"
 		], // this is the middle section of the panel
 		"right_section": [
 			"recorder",

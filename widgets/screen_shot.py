@@ -6,6 +6,7 @@ from utils import BarConfig
 from utils.widget_utils import text_icon
 
 
+# todo check children
 class ScreenShotWidget(ButtonWidget):
     """A widget to switch themes."""
 
@@ -17,7 +18,7 @@ class ScreenShotWidget(ButtonWidget):
 
         self.recorder_service = ScreenRecorder()
 
-        self.submap_label = Label(label="0", style_classes="panel-text")
+        self.screenshot_label = Label(label="0", style_classes="panel-text")
 
         self.children = text_icon(
             self.config["icon"],

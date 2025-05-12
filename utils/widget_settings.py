@@ -298,6 +298,9 @@ Cava = TypedDict("Cava", {"bars": int, "color": str})
 Overview = TypedDict("Overview", {})
 
 
+Cliphist = TypedDict("Cliphist", {})
+
+
 # DateTime configuration
 DateTimeNotification = TypedDict(
     "DateTimeNotification",
@@ -477,3 +480,4 @@ class BarConfig(TypedDict):
     window_count: WindowCount
     workspaces: Workspaces
     world_clock: WorldClock
+    cliphist: Cliphist

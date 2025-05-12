@@ -1,0 +1,129 @@
+@use "sass:color";
+@use "theme.scss";
+@use "common";
+@use "variable.scss";
+
+#clip-menu {
+  @include common.floating-widget;
+  @include common.spacing;
+
+}
+
+#search-entry {
+  font-weight: bold;
+  background-color: theme.$surface-disabled;
+  color: theme.$text-main;
+  border-radius: 16px;
+  padding: 10px;
+}
+
+#search-entry selection {
+  color: theme.$background-alt;
+  background-color: theme.$background;
+}
+
+#close-button,
+#clear-button {
+  background-color: theme.$surface-disabled;
+  border-radius: 16px;
+  padding: 8px;
+}
+
+#close-button:hover,
+#close-button:focus,
+#clear-button:hover,
+#clear-button:focus {
+  background-color: theme.$surface-highlight;
+}
+
+#close-button:active,
+#clear-button:active {
+  background-color: theme.$accent-red;
+}
+
+#close-label,
+#clear-label {
+  color: theme.$accent-red;
+  font-size: 16px;
+}
+
+#close-button:active #close-label,
+#clear-button:active #clear-label {
+  color: theme.$shadow-color;
+}
+
+#config-button:active,
+#new-session-button:active {
+  background-color: theme.$background;
+}
+
+
+
+#scrolled-window {
+  border-radius: 16px;
+}
+
+#scrolled-window scrollbar {
+  border-radius: 10px;
+  background-color: theme.$surface-disabled;
+  padding: 2px;
+  margin-left: 6px;
+}
+
+#scrolled-window slider {
+  border-radius: 8px;
+  min-width: 10px;
+  min-height: 40px;
+  background-color: theme.$background;
+}
+
+#slot-button {
+  border-radius: 16px;
+  padding: 16px;
+  transition: padding 0.1s ease;
+  animation: loadSlot 0.5s ease;
+}
+
+@keyframes loadSlot {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+#slot-button:hover,
+#slot-button:focus,
+#slot-button:selected,
+#slot-button.selected {
+  background-color: theme.$surface-highlight;
+  padding-left: 20px;
+}
+
+#slot-button:active {
+  background-color: theme.$background;
+}
+
+
+#slot-button:hover #app-label,
+#slot-button:focus #app-label,
+#slot-button:selected #app-label,
+#slot-button.selected #app-label {
+  color: theme.$background;
+}
+
+#slot-button:active #app-label {
+  color: theme.$shadow-color;
+}
+
+#clip-icon {
+  font-size: 20px;
+  color: theme.$background;
+}
+
+
+#clip-label {
+  font-weight: bold;
+}
