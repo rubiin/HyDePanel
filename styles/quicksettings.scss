@@ -5,12 +5,6 @@
 
 $slider-height: 12px;
 
-#hyprsunset-sub-menu {
-  @include common.slider($highlight-color: theme.$accent-blue,
-    $slider: variable.$bar-widgets-quick_settings-sliders-slider,
-    $min-length: 320px,
-    $height: variable.$bar-widgets-quick_settings-sliders-height );
-}
 
 #list-box-row {
   margin-bottom: 10px;
@@ -368,4 +362,12 @@ $slider-height: 12px;
       background-color: theme.$background-alt;
     }
   }
+}
+
+#hyprsunset-sub-menu {
+
+  @include common.slider($highlight-color: theme.$accent-blue,
+    $slider: variable.$bar-widgets-quick_settings-sliders-slider,
+    $min-length: 320px,
+    $height: variable.$bar-widgets-quick_settings-sliders-height );
 }
