@@ -26,6 +26,10 @@ from utils.widget_utils import (
     get_brightness_icon_name,
     util_fabricator,
 )
+from widgets.quick_settings.submenu.hyprsunset import (
+    HyprSunsetSubMenu,
+    HyprSunsetToggle,
+)
 
 from ..media import PlayerBoxStack
 from .shortcuts import ShortcutsContainer
@@ -42,7 +46,6 @@ from .submenu import (
 from .submenu.mic import MicroPhoneSubMenu
 from .togglers import (
     HyprIdleQuickSetting,
-    HyprSunsetQuickSetting,
     NotificationQuickSetting,
 )
 
@@ -82,8 +85,8 @@ class QuickSettingsButtonBox(Box):
 
         self.power_pfl = PowerProfileToggle(submenu=PowerProfileSubMenu())
 
+        self.hypr_sunset = HyprSunsetToggle(submenu=HyprSunsetSubMenu())
         self.hypr_idle = HyprIdleQuickSetting()
-        self.hypr_sunset = HyprSunsetQuickSetting()
         self.notification_btn = NotificationQuickSetting()
 
         self.grid.attach(self.wifi_toggle, 1, 1, 1, 1)
@@ -111,11 +114,13 @@ class QuickSettingsButtonBox(Box):
         self.wifi_toggle.connect("reveal-clicked", self.set_active_submenu)
         self.bluetooth_toggle.connect("reveal-clicked", self.set_active_submenu)
         self.power_pfl.connect("reveal-clicked", self.set_active_submenu)
+        self.hypr_sunset.connect("reveal-clicked", self.set_active_submenu)
 
         self.add(self.grid)
         self.add(self.wifi_toggle.submenu)
         self.add(self.bluetooth_toggle.submenu)
         self.add(self.power_pfl.submenu)
+        self.add(self.hypr_sunset.submenu)
 
     def set_active_submenu(self, btn: QSChevronButton):
         if btn.submenu != self.active_submenu and self.active_submenu is not None:

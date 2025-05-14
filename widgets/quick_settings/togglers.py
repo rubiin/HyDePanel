@@ -37,19 +37,6 @@ class HyprIdleQuickSetting(QuickSettingToggler):
         )
 
 
-class HyprSunsetQuickSetting(QuickSettingToggler):
-    """A button to toggle the hyper idle mode."""
-
-    def __init__(self, **kwargs):
-        super().__init__(
-            command="hyprsunset",
-            args="-t 2800k",
-            enabled_icon="󱩌",
-            disabled_icon="󰛨",
-            name="quicksettings-togglebutton",
-        )
-
-
 class NotificationQuickSetting(HoverButton):
     """A button to toggle the notification."""
 

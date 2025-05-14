@@ -5,6 +5,13 @@
 
 $slider-height: 12px;
 
+#hyprsunset-sub-menu {
+  @include common.slider($highlight-color: theme.$accent-blue,
+    $slider: variable.$bar-widgets-quick_settings-sliders-slider,
+    $min-length: 320px,
+    $height: variable.$bar-widgets-quick_settings-sliders-height );
+}
+
 #list-box-row {
   margin-bottom: 10px;
 }
@@ -67,7 +74,7 @@ $slider-height: 12px;
 
   .power-profile {
     .active {
-      color: color.mix( theme.$accent-purple, black, 80%);
+      color: color.mix(theme.$accent-purple, black, 80%);
     }
 
     .power-profile-button {
@@ -87,7 +94,7 @@ $slider-height: 12px;
 
         button {
           margin: 0 5px;
-          background-color: color.mix(theme.$background,white, 90%);
+          background-color: color.mix(theme.$background, white, 90%);
           border-radius: variable.$radius-large;
           padding: common.toEm(4);
 
@@ -107,8 +114,7 @@ $slider-height: 12px;
 
       .uptime {
         font-size: 0.92rem;
-        border: variable.$border-width solid
-          color.mix( theme.$surface-disabled, white, 10%);
+        border: variable.$border-width solid color.mix(theme.$surface-disabled, white, 10%);
         padding: common.toEm(3) common.toEm(10);
         font-weight: 600;
         border-radius: 1rem;
@@ -181,12 +187,10 @@ $slider-height: 12px;
       @extend %slider-box-base;
 
       #setting-slider {
-        @include common.slider(
-          $highlight-color: theme.$accent-blue,
+        @include common.slider($highlight-color: theme.$accent-blue,
           $slider: variable.$bar-widgets-quick_settings-sliders-slider,
           $min-length: 320px,
-          $height: variable.$bar-widgets-quick_settings-sliders-height
-        );
+          $height: variable.$bar-widgets-quick_settings-sliders-height );
       }
     }
 
@@ -194,12 +198,10 @@ $slider-height: 12px;
       @extend %slider-box-base;
 
       #setting-slider {
-        @include common.slider(
-          $highlight-color: theme.$accent-blue,
+        @include common.slider($highlight-color: theme.$accent-blue,
           $slider: variable.$bar-widgets-quick_settings-sliders-slider,
           $min-length: 230px,
-          $height: variable.$bar-widgets-quick_settings-sliders-height
-        );
+          $height: variable.$bar-widgets-quick_settings-sliders-height );
       }
     }
 
@@ -207,12 +209,10 @@ $slider-height: 12px;
       @extend %slider-box-base;
 
       #setting-slider {
-        @include common.slider(
-          $highlight-color: theme.$accent-blue,
+        @include common.slider($highlight-color: theme.$accent-blue,
           $slider: variable.$bar-widgets-quick_settings-sliders-slider,
           $min-length: 140px,
-          $height: variable.$bar-widgets-quick_settings-sliders-height
-        );
+          $height: variable.$bar-widgets-quick_settings-sliders-height );
       }
     }
 
@@ -258,7 +258,7 @@ $slider-height: 12px;
         &:active {
           background-color: theme.$text-main;
 
-          & > * {
+          &>* {
             color: theme.$background-dark;
           }
         }
@@ -332,7 +332,7 @@ $slider-height: 12px;
     #quicksettings-togglebutton.active button label,
     #quicksettings-togglebutton.active button {
       background-color: theme.$accent-blue;
-      color: color.mix( #000000, white, 8%);
+      color: color.mix(#000000, white, 8%);
       padding-left: common.toEm(1);
       padding-right: common.toEm(4);
     }
