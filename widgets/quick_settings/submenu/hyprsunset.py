@@ -2,7 +2,7 @@ from fabric.utils import exec_shell_command_async
 
 from shared.buttons import QSChevronButton, ScanButton
 from shared.submenu import QuickSubMenu
-from utils.functions import is_app_running
+from utils.functions import is_app_running, toggle_command
 from utils.widget_utils import (
     create_scale,
     util_fabricator,
@@ -70,11 +70,11 @@ class HyprSunsetToggle(QSChevronButton):
 
     def on_action(self, *_):
         """Handle the action button click event."""
-
-        if self.is_running:
-            exec_shell_command_async("pkill hyprsunset", lambda *_: None)
-        else:
-            exec_shell_command_async("hyprsunset -t 2800k&", lambda *_: None)
+        toggle_command(
+            "hyprsunset",
+            full_command="hyprsunset -t 3500",
+        )
+        return True
 
     def update_action_button(self, *_):
         self.is_running = is_app_running("hyprsunset")
