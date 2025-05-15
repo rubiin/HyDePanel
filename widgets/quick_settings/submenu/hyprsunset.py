@@ -68,11 +68,15 @@ class HyprSunsetToggle(QSChevronButton):
         # reusing the fabricator to call specified intervals
         util_fabricator.connect("changed", self.update_action_button)
 
+    def redlight_temperature(self):
+        """Get the redlight temperature from the scale."""
+        return int(self.submenu.scale.get_value())
+
     def on_action(self, *_):
         """Handle the action button click event."""
         toggle_command(
             "hyprsunset",
-            full_command="hyprsunset -t 3500",
+            full_command=f"hyprsunset -t {self.redlight_temperature()}",
         )
         return True
 
