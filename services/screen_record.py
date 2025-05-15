@@ -13,15 +13,15 @@ from utils.icons import icons
 class ScreenRecorder(Service):
     """Service to handle screen recording"""
 
+    @Signal
+    def recording(self, value: bool) -> None: ...
+
     _instance = None
 
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(ScreenRecorder, cls).__new__(cls)
         return cls._instance
-
-    @Signal
-    def recording(self, value: bool) -> None: ...
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

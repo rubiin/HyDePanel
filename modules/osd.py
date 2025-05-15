@@ -7,6 +7,7 @@ from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 from fabric.widgets.revealer import Revealer
 from fabric.widgets.wayland import WaylandWindow as Window
+from loguru import logger
 
 import utils.functions as helpers
 import utils.icons as icons
@@ -175,19 +176,19 @@ class OSDContainer(Window):
         invoke_repeater(100, self.check_inactivity, initial_call=True)
 
     def show_audio(self, *_):
+        logger.debug("Audio changed,showing audio OSD")
         self.show_box(box_to_show="audio")
-        self.reset_inactivity_timer()
 
     def show_brightness(self, *_):
+        logger.debug("Brightness changed,showing brightness OSD")
         self.show_box(box_to_show="brightness")
-        self.reset_inactivity_timer()
 
     def show_box(self, box_to_show: Literal["audio", "brightness"]):
-        self.set_visible(True)
         if box_to_show == "audio":
             self.revealer.children = self.audio_container
         elif box_to_show == "brightness":
             self.revealer.children = self.brightness_container
+        self.set_visible(True)
         self.revealer.set_reveal_child(True)
         self.reset_inactivity_timer()
 

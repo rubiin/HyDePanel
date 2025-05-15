@@ -298,6 +298,11 @@
 					"enum": ["celsius", "fahrenheit"],
 					"description": "Specifies the temperature unit to use."
 				},
+				"wind_speed_unit": {
+					"type": "string",
+					"enum": ["kmh", "mph"],
+					"description": "Specifies the wind speed unit to use."
+				},
 				"label": {
 					"type": "boolean",
 					"description": "Determines whether the widget has a label."
@@ -402,10 +407,10 @@
 					"type": "string",
 					"description": "Icon name from icon theme"
 				},
-				"unit": {
+				"temperature_unit": {
 					"type": "string",
 					"enum": ["celsius", "fahrenheit"],
-					"description": "Unit to display temperature in"
+					"description": "Specifies the temperature unit to use."
 				},
 				"round": {
 					"type": "boolean",

@@ -37,6 +37,12 @@ class BaseWeatherWidget:
         self.sunset_time = data["astronomy"]["sunset"]
         return True
 
+    def get_wind_speed(self):
+        if self.config["wind_speed_unit"] == "kmh":
+            return self.current_weather["windspeedKmph"] + " Km/h"
+
+        return self.current_weather["windspeedMiles"] + " Mph"
+
     def get_temperature(self):
         """Get the current temperature in the specified unit."""
 
@@ -202,7 +208,7 @@ class WeatherMenu(Box, BaseWeatherWidget):
             Label(
                 style_classes="stats",
                 h_align="center",
-                label=f" {self.current_weather['windspeedKmph']} mph",
+                label=f" {self.get_wind_speed()}",
             ),
             3,
             2,

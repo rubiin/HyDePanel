@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import subprocess
 import time
 from datetime import datetime
 from functools import lru_cache
@@ -87,6 +88,20 @@ def merge_defaults(data, defaults):
         else:
             merged[key] = user_value
     return merged
+
+
+# Function to toggle a shell command
+def toggle_command(command: str, full_command: str):
+    if is_app_running(command):
+        kill_process(command)
+    else:
+        subprocess.Popen(
+            full_command.split(" "),
+            stdin=subprocess.DEVNULL,  # No input stream
+            stdout=subprocess.DEVNULL,  # Optionally discard the output
+            stderr=subprocess.DEVNULL,  # Optionally discard the error output
+            start_new_session=True,  # This prevents the process from being killed
+        )
 
 
 ## Function to execute a shell command asynchronously

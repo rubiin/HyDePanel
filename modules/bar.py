@@ -104,6 +104,13 @@ class StatusBar(Window):
         if options["check_updates"]:
             self.check_for_bar_updates()
 
+    def toggle(self):
+        """Toggle the visibility of the bar."""
+        if self.is_visible():
+            self.hide()
+        else:
+            self.show()
+
     def make_layout(self, widget_config):
         """assigns the three sections their respective widgets"""
 

@@ -35,7 +35,7 @@
 		"icon": "",
 		"mode": "graph",
 		"tooltip": true,
-		"unit": "celsius",
+		"temperature_unit": "celsius",
 		"round": true,
 		"show_unit": true,
 		"sensor": "acpitz",
@@ -128,8 +128,7 @@
 			"window_title"
 		], // this is the left section of the panel
 		"middle_section": [
-			"date_time",
-			"weather"
+			"date_time"
 		], // this is the middle section of the panel
 		"right_section": [
 			"recorder",
@@ -357,6 +356,7 @@
 		"label": true,
 		"tooltip": true,
 		"temperature_unit": "celsius",
+		"wind_speed_unit": "kmh",
 		"expanded": true, // this is to show the expanded weather widget
 		"interval": 3600 // this is the interval in seconds to update the weather, 1 hour is 3600 seconds
 	},

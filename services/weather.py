@@ -2,8 +2,7 @@ import json
 import os
 import ssl
 import time
-import urllib.request
-from urllib.error import HTTPError
+from urllib import error, parse, request
 
 from fabric.core.service import Service
 from loguru import logger
@@ -27,7 +26,7 @@ class WeatherService(Service):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.request = urllib.request.build_opener()
+        self.request = request.build_opener()
         self.request.addheaders = [
             (
                 "User-Agent",
@@ -37,7 +36,8 @@ class WeatherService(Service):
 
     def simple_weather_info(self, location: str):
         try:
-            url = f"https://wttr.in/{location.title().replace(' ', '_')}?format=j1"
+            url = f"https://wttr.in/{parse.quote_plus(location.title())}?format=j1"
+
             logger.info(f"[WeatherService] Fetching weather information from {url}")
 
             # Open the URL and read the contents
@@ -58,7 +58,7 @@ class WeatherService(Service):
                 "astronomy": weather["astronomy"][0],  # the sunrise and sunset times
             }
 
-        except HTTPError as e:
+        except error.HTTPError as e:
             if e.code == 404:
                 logger.error(
                     f"{Colors.ERROR}[WeatherService] Error: City not found. Try a different city."  # noqa: E501

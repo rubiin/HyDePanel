@@ -126,7 +126,6 @@ install_packages() {
 		python-rlottie-python
 		python-pytomlpp
 		python-pyjson5
-		fabric-cli-git
 		slurp
 		imagemagick
 		tesseract

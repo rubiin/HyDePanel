@@ -75,7 +75,7 @@ DEFAULT_CONFIG = {
         "icon": "",
         "tooltip": True,
         "round": True,
-        "unit": "celsius",
+        "temperature_unit": "celsius",
         "show_unit": True,
         "sensor": "",
         "mode": "circular",
@@ -306,6 +306,7 @@ DEFAULT_CONFIG = {
         "tooltip": True,
         "expanded": True,
         "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
         "interval": HIGH_POLL_INTERVAL,
     },
     "window_title": {

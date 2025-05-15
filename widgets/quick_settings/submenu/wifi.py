@@ -95,6 +95,8 @@ class WifiToggle(QSChevronButton):
     def update_action_button(self, client: NetworkClient):
         wifi = client.wifi_device
 
+        print("wifi", wifi)
+
         if wifi:
             wifi.connect(
                 "notify::enabled",

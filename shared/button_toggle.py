@@ -1,5 +1,3 @@
-import subprocess
-
 from fabric.widgets.label import Label
 
 import utils.functions as helpers
@@ -68,19 +66,10 @@ class CommandSwitcher(ButtonWidget):
 
     # toggle the command on click
     def handle_click(self, *_):
-        is_app_running = helpers.is_app_running(self.command)
-
-        if is_app_running:
-            helpers.kill_process(self.command)
-        else:
-            subprocess.Popen(
-                self.full_command.split(" "),
-                stdin=subprocess.DEVNULL,  # No input stream
-                stdout=subprocess.DEVNULL,  # Optionally discard the output
-                stderr=subprocess.DEVNULL,  # Optionally discard the error output
-                start_new_session=True,  # This prevents the process from being killed
-            )
-
+        helpers.toggle_command(
+            self.command,
+            full_command=self.full_command,
+        )
         self.update_ui()
         return True
 

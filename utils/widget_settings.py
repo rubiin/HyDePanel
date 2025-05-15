@@ -1,6 +1,6 @@
 from typing import Dict, List, Literal, TypedDict
 
-from .types import Anchor, Layer, Temperature_Unit
+from .types import Anchor, Layer, Temperature_Unit, Wind_Speed_Unit
 
 # Common configuration fields that will be reused
 BaseConfig = TypedDict("BaseConfig", {"label": bool, "tooltip": bool})
@@ -183,7 +183,7 @@ Cpu = TypedDict(
         "tooltip": bool,
         "show_icon": bool,
         "sensor": str,
-        "unit": Temperature_Unit,
+        "temperature_unit": Temperature_Unit,
         "show_unit": bool,
         "round": bool,
         "graph_length": int,
@@ -282,6 +282,7 @@ Weather = TypedDict(
         "label": bool,
         "expanded": bool,
         "temperature_unit": Temperature_Unit,
+        "wind_speed_unit": Wind_Speed_Unit,
     },
 )
 
