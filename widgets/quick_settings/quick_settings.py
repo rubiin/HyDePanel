@@ -42,7 +42,6 @@ from .submenu import (
     WifiSubMenu,
     WifiToggle,
 )
-from .submenu.mic import MicroPhoneSubMenu
 from .togglers import (
     HyprIdleQuickSetting,
     NotificationQuickSetting,
@@ -267,7 +266,6 @@ class QuickSettingsMenu(Box):
 
         # Add audio submenu
         self.audio_submenu = AudioSubMenu()
-        self.mic_submenu = MicroPhoneSubMenu()
 
         # TODO: check gtk_adjustment_set_value: assertion 'GTK_IS_ADJUSTMENT, microphone
 
@@ -297,7 +295,7 @@ class QuickSettingsMenu(Box):
             orientation="v",
             spacing=10,
             style_classes=[slider_class],
-            children=(sliders_grid, self.audio_submenu, self.mic_submenu),
+            children=(sliders_grid, self.audio_submenu),
             h_expand=True,
         )
 
