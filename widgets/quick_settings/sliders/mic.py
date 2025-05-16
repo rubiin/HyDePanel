@@ -17,8 +17,8 @@ class MicrophoneSlider(SettingSlider):
         self.pixel_size = 16
 
         super().__init__(
+            name="mic-slider",
             icon_name=icons["audio"]["mic"]["medium"],
-            start_value=0,
             pixel_size=self.pixel_size,
         )
 

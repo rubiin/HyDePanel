@@ -1,6 +1,7 @@
 from fabric.widgets.box import Box
 from fabric.widgets.image import Image
 from fabric.widgets.scale import Scale
+from gi.repository import Gtk
 
 from utils.icons import icons
 
@@ -12,6 +13,7 @@ class SettingSlider(Box):
 
     def __init__(
         self,
+        name,
         min: float = 0,
         max: float = 100,
         start_value: float = 50,
@@ -20,7 +22,8 @@ class SettingSlider(Box):
         **kwargs,
     ):
         super().__init__(
-            name="setting-slider",
+            name=name,
+            class_name="setting-slider",
             **kwargs,
         )
         self.pixel_size = pixel_size
@@ -33,10 +36,21 @@ class SettingSlider(Box):
             marks=None,
             min_value=min,
             max_value=max,
-            name="setting-slider-scale",
             value=start_value,
             increments=(1, 1),
             tooltip_text=str(start_value),
         )
+
+        adj = self.scale.get_adjustment()
+        if isinstance(adj, Gtk.Adjustment):  # Ensure it's a valid adjustment
+            adj.set_value(50.0)
+        else:
+            print("Invalid adjustment! set value", self.get_name())
+
+        if isinstance(adj, Gtk.Adjustment):
+            lower = adj.get_lower()
+            print("Lower bound:", lower, self.get_name())
+        else:
+            print("Warning: Invalid adjustment object lower", self.get_name())
 
         self.children = (self.icon_button, self.scale)

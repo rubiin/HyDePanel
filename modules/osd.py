@@ -37,7 +37,9 @@ class GenericOSDContainer(Box):
         self.icon = Image(
             icon_name=icons.icons["brightness"]["screen"], icon_size=config["icon_size"]
         )
-        self.scale = create_scale()
+        self.scale = create_scale(
+            name="osd-scale",
+        )
 
         self.children = (self.icon, self.scale, self.level)
 

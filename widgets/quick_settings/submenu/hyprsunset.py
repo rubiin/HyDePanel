@@ -17,9 +17,10 @@ class HyprSunsetSubMenu(QuickSubMenu):
         self.scan_button = ScanButton(visible=False)
 
         self.scale = create_scale(
+            name="hyprsunset-scale",
             min_value=1000,
             max_value=9000,
-            value=6500,
+            value=3500,
             increments=(100, 100),
         )
 

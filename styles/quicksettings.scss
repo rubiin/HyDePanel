@@ -159,7 +159,7 @@ $slider-height: 12px;
       border-radius: variable.$radius;
       background-color: theme.$background;
 
-      #setting-slider {
+      .setting-slider {
         &-scale {
           margin-left: 10px;
           margin-right: 20px;
@@ -180,7 +180,7 @@ $slider-height: 12px;
     .slider-box-long {
       @extend %slider-box-base;
 
-      #setting-slider {
+      .setting-slider {
         @include common.slider($highlight-color: theme.$accent-blue,
           $slider: variable.$bar-widgets-quick_settings-sliders-slider,
           $min-length: 320px,
@@ -191,7 +191,7 @@ $slider-height: 12px;
     .slider-box-short {
       @extend %slider-box-base;
 
-      #setting-slider {
+      .setting-slider {
         @include common.slider($highlight-color: theme.$accent-blue,
           $slider: variable.$bar-widgets-quick_settings-sliders-slider,
           $min-length: 230px,
@@ -202,7 +202,7 @@ $slider-height: 12px;
     .slider-box-shorter {
       @extend %slider-box-base;
 
-      #setting-slider {
+      .setting-slider {
         @include common.slider($highlight-color: theme.$accent-blue,
           $slider: variable.$bar-widgets-quick_settings-sliders-slider,
           $min-length: 140px,

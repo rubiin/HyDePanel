@@ -11,11 +11,9 @@ class BrightnessSlider(SettingSlider):
     ):
         self.client = Brightness()
         super().__init__(
+            name="brightness-slider",
             pixel_size=20,
             icon_name=icons["brightness"]["screen"],
-            min=0,
-            max=self.client.max_screen,  # Use actual max brightness
-            start_value=self.client.screen_brightness,
         )
 
         if self.client.screen_brightness == -1:

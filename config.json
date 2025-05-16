@@ -272,14 +272,13 @@
 		},
 		"controls": {
 			"sliders": [
-				"brightness",
 				"volume"
 			]
 		},
 		"auto_hide": false,
 		"auto_hide_timeout": 2000,
 		"media": {
-			"enabled": true,
+			"enabled": false,
 			"ignore": [
 				"vlc"
 			],

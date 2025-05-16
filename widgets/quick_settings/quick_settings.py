@@ -33,7 +33,6 @@ from widgets.quick_settings.submenu.hyprsunset import (
 
 from ..media import PlayerBoxStack
 from .shortcuts import ShortcutsContainer
-from .sliders import AudioSlider, BrightnessSlider, MicrophoneSlider
 from .submenu import (
     AudioSubMenu,
     BluetoothSubMenu,
@@ -301,32 +300,6 @@ class QuickSettingsMenu(Box):
             children=(sliders_grid, self.audio_submenu, self.mic_submenu),
             h_expand=True,
         )
-
-        for index, slider in enumerate(self.config["controls"]["sliders"]):
-            if slider == "brightness":
-                sliders_grid.attach(
-                    BrightnessSlider(),
-                    0,
-                    index,
-                    1,
-                    1,
-                )
-            elif slider == "volume":
-                sliders_grid.attach(
-                    AudioSlider(),
-                    0,
-                    index,
-                    1,
-                    1,
-                )
-            else:
-                sliders_grid.attach(
-                    MicrophoneSlider(),
-                    0,
-                    index,
-                    1,
-                    1,
-                )
 
         if self.config.get("shortcuts")["enabled"]:
             shortcuts_box = Box(

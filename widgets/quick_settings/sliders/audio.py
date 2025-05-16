@@ -28,8 +28,8 @@ class AudioSlider(SettingSlider):
         # Initialize with default values first
         super().__init__(
             icon_name=icons["audio"]["volume"]["high"],
-            start_value=0,
             pixel_size=self.pixel_size,
+            name="audio-slider",
         )
 
         if show_chevron:
