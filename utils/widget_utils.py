@@ -168,21 +168,24 @@ def get_brightness_icon_name(level: int) -> dict[Literal["icon_text", "icon"], s
 
 # Create a scale widget
 def create_scale(
+    name,
     marks=None,
-    value=70,
-    min_value=0,
-    max_value=100,
+    value=0,
+    min_value: float = 0,
+    max_value: float = 100,
     increments=(1, 1),
     orientation="h",
     h_expand=True,
     h_align="center",
     style_classes="",
     duration=0.8,
+    **kwargs,
 ) -> AnimatedScale:
     if marks is None:
         marks = (ScaleMark(value=i) for i in range(1, 100, 10))
 
     return AnimatedScale(
+        name=name,
         marks=marks,
         value=value,
         min_value=min_value,
@@ -193,6 +196,7 @@ def create_scale(
         h_align=h_align,
         duration=duration,
         style_classes=style_classes,
+        **kwargs,
     )
 
 

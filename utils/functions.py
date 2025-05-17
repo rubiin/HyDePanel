@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import subprocess
 import time
 from datetime import datetime
 from functools import lru_cache
@@ -75,8 +76,32 @@ def celsius_to_fahrenheit(celsius):
 
 
 # Merge the parsed data with the default configuration
-def merge_defaults(data: dict, defaults: dict):
-    return {**defaults, **data}
+def merge_defaults(data, defaults):
+    merged = defaults.copy()
+    for key, user_value in data.items():
+        if (
+            key in merged
+            and isinstance(merged[key], dict)
+            and isinstance(user_value, dict)
+        ):
+            merged[key] = merge_defaults(user_value, merged[key])
+        else:
+            merged[key] = user_value
+    return merged
+
+
+# Function to toggle a shell command
+def toggle_command(command: str, full_command: str):
+    if is_app_running(command):
+        kill_process(command)
+    else:
+        subprocess.Popen(
+            full_command.split(" "),
+            stdin=subprocess.DEVNULL,  # No input stream
+            stdout=subprocess.DEVNULL,  # Optionally discard the output
+            stderr=subprocess.DEVNULL,  # Optionally discard the error output
+            start_new_session=True,  # This prevents the process from being killed
+        )
 
 
 ## Function to execute a shell command asynchronously
@@ -121,10 +146,10 @@ def validate_widgets(parsed_data, default_config):
                         f"'{group_idx}' in section {section}. Must be a number."
                     )
                 idx = int(group_idx)
-                groups = parsed_data.get("module_groups", [])
+                groups = parsed_data.get("widget_groups", [])
                 if not isinstance(groups, list):
                     raise ValueError(
-                        "module_groups must be an array when using @group references"
+                        "widget_groups must be an array when using @group references"
                     )
                 if not (0 <= idx < len(groups)):
                     raise ValueError(
@@ -314,6 +339,8 @@ def get_relative_time(mins: int) -> str:
 def convert_to_percent(
     current: int | float, max: int | float, is_int=True
 ) -> int | float:
+    if max == 0:
+        return 0
     if is_int:
         return int((current / max) * 100)
     else:

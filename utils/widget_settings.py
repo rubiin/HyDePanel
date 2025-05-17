@@ -1,6 +1,6 @@
 from typing import Dict, List, Literal, TypedDict
 
-from .types import Anchor, Layer, Temperature_Unit
+from .types import Anchor, Layer, Temperature_Unit, Wind_Speed_Unit
 
 # Common configuration fields that will be reused
 BaseConfig = TypedDict("BaseConfig", {"label": bool, "tooltip": bool})
@@ -101,6 +101,26 @@ StopWatch = TypedDict(
 )
 
 
+# Notification configuration
+Notification = TypedDict(
+    "Notification",
+    {
+        "enabled": bool,
+        "ignored": List[str],
+        "timeout": int,
+        "anchor": Anchor,
+        "auto_dismiss": bool,
+        "play_sound": bool,
+        "sound_file": str,
+        "max_count": int,
+        "dismiss_on_hover": bool,
+        "max_actions": int,
+        "display_actions_on_hover": bool,
+        "per_app_limits": Dict[str, int],
+    },
+)
+
+# DesktopClock configuration
 DesktopClock = TypedDict(
     "DesktopClock",
     {
@@ -111,13 +131,26 @@ DesktopClock = TypedDict(
     },
 )
 
-
+# ScreenCorners configuration
 ScreenCorners = TypedDict(
     "ScreenCorners",
     {"enabled": bool, "size": int},
 )
 
+# OSD configuration
+OSD = TypedDict(
+    "Osd",
+    {
+        "enabled": bool,
+        "timeout": int,
+        "anchor": Anchor,
+        "percentage": bool,
+        "icon_size": int,
+    },
+)
 
+
+# Dock configuration
 Dock = TypedDict(
     "Dock",
     {
@@ -131,13 +164,34 @@ Dock = TypedDict(
 )
 
 
-# Bar configuration
-General = TypedDict(
-    "General",
+# Dock configuration
+AppLauncher = TypedDict(
+    "AppLauncher",
+    {
+        "enabled": bool,
+        "icon_size": int,
+        "ignored_apps": List[str],
+    },
+)
+
+# Modules configuration
+Modules = TypedDict(
+    "Modules",
     {
         "screen_corners": ScreenCorners,
         "dock": Dock,
         "desktop_clock": DesktopClock,
+        "notification": Notification,
+        "osd": OSD,
+        "app_launcher": AppLauncher,
+    },
+)
+
+
+# Bar configuration
+General = TypedDict(
+    "General",
+    {
         "check_updates": bool,
         "debug": bool,
         "location": str,
@@ -153,7 +207,7 @@ Cpu = TypedDict(
         "tooltip": bool,
         "show_icon": bool,
         "sensor": str,
-        "unit": Temperature_Unit,
+        "temperature_unit": Temperature_Unit,
         "show_unit": bool,
         "round": bool,
         "graph_length": int,
@@ -252,6 +306,7 @@ Weather = TypedDict(
         "label": bool,
         "expanded": bool,
         "temperature_unit": Temperature_Unit,
+        "wind_speed_unit": Wind_Speed_Unit,
     },
 )
 
@@ -268,6 +323,7 @@ Cava = TypedDict("Cava", {"bars": int, "color": str})
 Overview = TypedDict("Overview", {})
 
 
+# DateTime configuration
 DateTimeNotification = TypedDict(
     "DateTimeNotification",
     {
@@ -292,7 +348,7 @@ DateTimeMenu = TypedDict(
     },
 )
 
-
+# World clock configuration
 WorldClock = TypedDict(
     "WorldClock",
     {
@@ -310,6 +366,7 @@ HyprPicker = TypedDict("HyprPicker", {**BaseConfig.__annotations__, "icon": str}
 
 # OCR configuration
 OCR = TypedDict("OCR", {**BaseConfig.__annotations__, "icon": str})
+
 
 # Media configuration
 Media = TypedDict(
@@ -380,44 +437,13 @@ Volume = TypedDict("Volume", {**BaseConfig.__annotations__, "step_size": int})
 Brightness = TypedDict("Brightness", {**BaseConfig.__annotations__, "step_size": int})
 
 
-# Notification configuration
-Notification = TypedDict(
-    "Notification",
-    {
-        "enabled": bool,
-        "ignored": List[str],
-        "timeout": int,
-        "anchor": Anchor,
-        "auto_dismiss": bool,
-        "play_sound": bool,
-        "sound_file": str,
-        "max_count": int,
-        "dismiss_on_hover": bool,
-        "max_actions": int,
-        "display_actions_on_hover": bool,
-        "per_app_limits": Dict[str, int],
-    },
-)
-
 # Recording configuration
 Recording = TypedDict(
     "Recording", {"path": str, "icon_size": int, "tooltip": bool, "audio": bool}
 )
 
+# ScreenShot configuration
 ScreenShot = TypedDict("ScreenShot", {"path": str, "icon_size": int, "tooltip": bool})
-
-
-# OSD configuration
-OSD = TypedDict(
-    "Osd",
-    {
-        "enabled": bool,
-        "timeout": int,
-        "anchor": Anchor,
-        "percentage": bool,
-        "icon_size": int,
-    },
-)
 
 
 class BarConfig(TypedDict):
@@ -441,10 +467,9 @@ class BarConfig(TypedDict):
     microphone: MicroPhone
     mpris: Mpris
     network_usage: NetworkUsage
-    notification: Notification
     general: General
     ocr: OCR
-    osd: OSD
+    modules: Modules
     overview: Overview
     power: PowerButton
     quick_settings: QuickSettings

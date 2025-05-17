@@ -24,7 +24,7 @@ class BatteryService(Service):
     def changed(self) -> None:
         """Signal emitted when battery changes."""
 
-    _instance = None  # Class-level private instance variable
+    _instance = None
 
     def __new__(cls):
         if cls._instance is None:

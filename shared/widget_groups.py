@@ -3,7 +3,7 @@ from utils.widget_utils import lazy_load_widget
 from .widget_container import BoxWidget
 
 
-class ModuleGroup(BoxWidget):
+class WidgetGroup(BoxWidget):
     """A group of widgets that can be managed and styled together."""
 
     def __init__(self, children=None, spacing=4, style_classes=None, **kwargs):

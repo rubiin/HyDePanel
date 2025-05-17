@@ -119,20 +119,20 @@ class CpuWidget(ButtonWidget):
 
             temp = round(temp) if self.config["round"] else temp
 
+            is_celsius = self.config["temperature_unit"] == "celsius"
+
             temp = (
-                temp
-                if self.config["unit"] == "celsius"
-                else helpers.celsius_to_fahrenheit(temp)
+                f"{temp} °C"
+                if is_celsius
+                else f"{helpers.celsius_to_fahrenheit(temp)} °F"
             )
 
-            tooltip_text = f"{self.cpu_name}\n"
-            tooltip_text += (
-                f" Temperature: {temp}°C"
-                if self.config["unit"] == "celsius"
-                else f"{temp}°F"
+            tooltip_text = (
+                f"{self.cpu_name}\n"
+                f" Temperature: {temp}\n"
+                f"󰾆 Utilization: {usage}\n"
+                f" Clock Speed: {round(frequency[0], 2)} MHz"
             )
-            tooltip_text += f"\n󰾆 Utilization: {usage}"
-            tooltip_text += f"\n Clock Speed: {round(frequency[0], 2)} MHz"
 
             self.set_tooltip_text(tooltip_text)
 

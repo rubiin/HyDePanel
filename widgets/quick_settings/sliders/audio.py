@@ -76,9 +76,13 @@ class AudioSlider(SettingSlider):
         if not self.audio_stream:
             return
 
+        volume = int(self.audio_stream.volume)
+
         self.scale.set_sensitive(not self.audio_stream.muted)
-        self.scale.set_value(self.audio_stream.volume)
-        self.scale.set_tooltip_text(f"{round(self.audio_stream.volume)}%")
+
+        print("value", volume)
+        self.scale.set_value(volume)
+        self.scale.set_tooltip_text(f"{round(volume)}%")
         self.icon.set_from_icon_name(self._get_icon_name(), self.pixel_size)
 
     def on_scale_move(self, _, __, moved_pos):

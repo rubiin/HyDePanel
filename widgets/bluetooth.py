@@ -21,7 +21,7 @@ class BlueToothWidget(ButtonWidget):
             icon_size=self.config["icon_size"],
         )
 
-        self.bt_label = Label(label="", visible=False, style_classes="panel-text")
+        self.bt_label = Label(label="On", visible=False, style_classes="panel-text")
 
         self.bluetooth_client.connect("changed", self.update_bluetooth_status)
 

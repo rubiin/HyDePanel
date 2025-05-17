@@ -7,11 +7,12 @@ from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 from fabric.widgets.revealer import Revealer
 from fabric.widgets.wayland import WaylandWindow as Window
+from loguru import logger
 
 import utils.functions as helpers
 import utils.icons as icons
 from services import Brightness, audio_service
-from utils import BarConfig, HyprlandWithMonitors
+from utils import HyprlandWithMonitors
 from utils.types import Keyboard_Mode
 from utils.widget_utils import (
     create_scale,
@@ -36,7 +37,9 @@ class GenericOSDContainer(Box):
         self.icon = Image(
             icon_name=icons.icons["brightness"]["screen"], icon_size=config["icon_size"]
         )
-        self.scale = create_scale()
+        self.scale = create_scale(
+            name="osd-scale",
+        )
 
         self.children = (self.icon, self.scale, self.level)
 
@@ -127,12 +130,12 @@ class OSDContainer(Window):
 
     def __init__(
         self,
-        widget_config: BarConfig,
+        config,
         transition_duration=200,
         keyboard_mode: Keyboard_Mode = "none",
         **kwargs,
     ):
-        self.config = widget_config["osd"]
+        self.config = config["modules"]["osd"]
 
         self.audio_container = AudioOSDContainer(config=self.config)
         self.brightness_container = BrightnessOSDContainer(config=self.config)
@@ -175,19 +178,19 @@ class OSDContainer(Window):
         invoke_repeater(100, self.check_inactivity, initial_call=True)
 
     def show_audio(self, *_):
+        logger.debug("Audio changed,showing audio OSD")
         self.show_box(box_to_show="audio")
-        self.reset_inactivity_timer()
 
     def show_brightness(self, *_):
+        logger.debug("Brightness changed,showing brightness OSD")
         self.show_box(box_to_show="brightness")
-        self.reset_inactivity_timer()
 
     def show_box(self, box_to_show: Literal["audio", "brightness"]):
-        self.set_visible(True)
         if box_to_show == "audio":
             self.revealer.children = self.audio_container
         elif box_to_show == "brightness":
             self.revealer.children = self.brightness_container
+        self.set_visible(True)
         self.revealer.set_reveal_child(True)
         self.reset_inactivity_timer()
 

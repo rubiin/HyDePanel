@@ -15,7 +15,7 @@ ICON_CACHE_FILE = APP_CACHE_DIRECTORY + "/icons.json"
 class IconResolver:
     """A class to resolve icons for applications."""
 
-    _instance = None  # Class-level private instance variable
+    _instance = None
 
     def __new__(cls):
         if cls._instance is None:

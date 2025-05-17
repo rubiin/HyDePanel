@@ -31,7 +31,7 @@ class NotificationPopup(Window):
 
         self.widget_config = widget_config
 
-        self.config = widget_config["notification"]
+        self.config = widget_config["modules"]["notification"]
 
         self.hyprland_monitor = HyprlandWithMonitors()
 

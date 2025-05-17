@@ -35,7 +35,7 @@
 		"icon": "",
 		"mode": "graph",
 		"tooltip": true,
-		"unit": "celsius",
+		"temperature_unit": "celsius",
 		"round": true,
 		"show_unit": true,
 		"sensor": "acpitz",
@@ -86,53 +86,6 @@
 		"icon": "",
 		"show_icon": false
 	},
-	"layout": {
-		"left_section": [
-			"@group:0",
-			"window_title"
-		], // this is the left section of the panel
-		"middle_section": [
-			"date_time","weather"
-		], // this is the middle section of the panel
-		"right_section": [
-			"recorder",
-			"@group:2",
-			"@group:1",
-			"system_tray"
-		] // this is the right section of the panel
-	},
-	"module_groups": [ // module groups are used to group multiple modules together, you can create multiple groups and access as @group:0, @group:1, etc
-		{
-			"widgets": [
-				"workspaces",
-				"window_count"
-			],
-			"spacing": 1,
-			"style_classes": [
-				"compact"
-			]
-		},
-		{
-			"widgets": [
-				"updates",
-				"ocr",
-				"battery"
-			],
-			"spacing": 4,
-			"style_classes": [
-				"compact"
-			]
-		},
-		{
-			"widgets": [
-				"quick_settings"
-			],
-			"spacing": 0,
-			"style_classes": [
-				"compact"
-			]
-		}
-	],
 	"memory": {
 		"show_icon": true,
 		"icon": "",
@@ -169,29 +122,80 @@
 			"Asia/Tokyo"
 		]
 	},
-	"notification": {
-		"enabled": true,
-		"anchor": "top-right",
-		"auto_dismiss": true,
-		"ignored": [],
-		"timeout": 3000,
-		"transition_type": "slide-left",
-		"transition_duration": 350,
-		"play_sound": true,
-		"sound_file": "notification4",
-		"max_count": 200,
-		"max_actions": 3,
-		"display_actions_on_hover": false, // this is to display the actions on hover
-		"dismiss_on_hover": true // this is to dismiss the notification on hover
+	"layout": {
+		"left_section": [
+			"@group:0",
+			"window_title"
+		], // this is the left section of the panel
+		"middle_section": [
+			"date_time"
+		], // this is the middle section of the panel
+		"right_section": [
+			"recorder",
+			"@group:2",
+			"@group:1",
+			"system_tray"
+		] // this is the right section of the panel
 	},
-	"osd": {
-		"enabled": true,
-		"timeout": 2000,
-		"icon_size": 28,
-		"anchor": "bottom-center", // this is the position of the OSD, you can use top-center, top-left, top-right, bottom-center, bottom-left, bottom-right
-		"percentage": true
-	},
-	"general": {
+	"widget_groups": [ // module groups are used to group multiple modules together, you can create multiple groups and access as @group:0, @group:1, etc
+		{
+			"widgets": [
+				"workspaces",
+				"window_count"
+			],
+			"spacing": 1,
+			"style_classes": [
+				"compact"
+			]
+		},
+		{
+			"widgets": [
+				"updates",
+				"ocr",
+				"battery"
+			],
+			"spacing": 4,
+			"style_classes": [
+				"compact"
+			]
+		},
+		{
+			"widgets": [
+				"quick_settings"
+			],
+			"spacing": 0,
+			"style_classes": [
+				"compact"
+			]
+		}
+	],
+	"modules": {
+		"app_launcher": {
+			"enabled": true,
+			"tooltip": true,
+			"icon_size": 30,
+			"ignored_apps": []
+		},
+		"notification": {
+			"enabled": true,
+			"anchor": "top-right",
+			"auto_dismiss": true,
+			"ignored": [],
+			"timeout": 3000,
+			"transition_type": "slide-left",
+			"transition_duration": 350,
+			"play_sound": true,
+			"sound_file": "notification4",
+			"display_actions_on_hover": false, // this is to display the actions on hover
+			"dismiss_on_hover": true // this is to dismiss the notification on hover
+		},
+		"osd": {
+			"enabled": true,
+			"timeout": 2000,
+			"icon_size": 28,
+			"anchor": "bottom-center", // this is the position of the OSD, you can use top-center, top-left, top-right, bottom-center, bottom-left, bottom-right
+			"percentage": true
+		},
 		"screen_corners": {
 			"enabled": false,
 			"size": 12
@@ -214,7 +218,9 @@
 			"anchor": "bottom-right",
 			"date_format": "%A, %d %B %Y",
 			"layer": "bottom"
-		},
+		}
+	},
+	"general": {
 		"check_updates": false,
 		"layer": "top",
 		"auto_hide": false,
@@ -323,6 +329,59 @@
 		"ignored": [], // do not show these icons in the task bar
 		"tooltip": true
 	},
+	"theme_switcher": {
+		"icon": "",
+		"notify": false
+	},
+	"updates": {
+		"show_icon": true,
+		"icon": "󱧘",
+		"os": "arch",
+		"interval": 3600,
+		"tooltip": true,
+		"label": true,
+		"flatpak": true,
+		"snap": false,
+		"brew": false
+	},
+	"volume": {
+		"label": true,
+		"tooltip": true,
+		"step_size": 5
+	},
+	"hypr_picker": {
+		"icon": "",
+		"tooltip": true,
+		"label": false,
+		"show_icon": true
+	},
+	"weather": {
+		"location": "kathmandu", // this is the location to show the weather, you can use city name, latitude, longitude or zip code or leave it empty to use the default location
+		"label": true,
+		"tooltip": true,
+		"temperature_unit": "celsius",
+		"wind_speed_unit": "kmh",
+		"expanded": true, // this is to show the expanded weather widget
+		"interval": 3600 // this is the interval in seconds to update the weather, 1 hour is 3600 seconds
+	},
+	"window_title": {
+		"icon": true, // this is to enable the icon in the window title widget
+		"tooltip": true,
+		"truncation": true,
+		"truncation_size": 50,
+		"title_map": []
+	},
+	"workspaces": {
+		"count": 8, // this is the number of workspaces to show
+		"hide_unoccupied": true,
+		"default_label_format": "{id}",
+		"ignored": [
+			-99
+		], // this is the list of workspaces to ignore, currently -99 is the scratchpad workspace
+		"reverse_scroll": false,
+		"empty_scroll": false,
+		"icon_map": {}
+	},
 	"theme": {
 		"name": "catpuccin-mocha",
 		"font": {
@@ -335,69 +394,91 @@
 		"padding": "7pt",
 		"spacing": "12pt",
 		"border-width": "1px",
-		"dock": {
-			"scaling": 100,
-			"opacity": 50,
-			"shadow": {
-				"enabled": false,
-				"offset": 0,
-				"blur": 0,
-				"spread": 0,
-				"opacity": 100
+		"modules": {
+			"app_launcher": {
+				"scaling": 100,
+				"opacity": 50,
+				"shadow": {
+					"enabled": false,
+					"offset": 0,
+					"blur": 0,
+					"spread": 0,
+					"opacity": 100
+				},
+				"padding_x": "8px",
+				"padding_y": "8px",
+				"margin_x": "8px",
+				"margin_y": "8px",
+				"border": {
+					"enabled": false,
+					"width": "1px",
+					"radius": "1.5rem"
+				}
 			},
-			"padding_x": "8px",
-			"padding_y": "8px",
-			"margin_x": "8px",
-			"margin_y": "8px",
-			"border": {
-				"enabled": false,
-				"width": "1px",
-				"radius": "1.5rem"
-			}
-		},
-		"osd": {
-			"scaling": 100,
-			"opacity": 100,
-			"widget_style": "default",
-			"sliders": {
-				"height": "0.5em",
-				"slider": false
+			"dock": {
+				"scaling": 100,
+				"opacity": 50,
+				"shadow": {
+					"enabled": false,
+					"offset": 0,
+					"blur": 0,
+					"spread": 0,
+					"opacity": 100
+				},
+				"padding_x": "8px",
+				"padding_y": "8px",
+				"margin_x": "8px",
+				"margin_y": "8px",
+				"border": {
+					"enabled": false,
+					"width": "1px",
+					"radius": "1.5rem"
+				}
 			},
-			"shadow": {
-				"enabled": false,
-				"offset": 0,
-				"blur": 0,
-				"spread": 0,
-				"opacity": 100
+			"osd": {
+				"scaling": 100,
+				"opacity": 100,
+				"widget_style": "default",
+				"sliders": {
+					"height": "0.5em",
+					"slider": false
+				},
+				"shadow": {
+					"enabled": false,
+					"offset": 0,
+					"blur": 0,
+					"spread": 0,
+					"opacity": 100
+				},
+				"padding_x": ".8em",
+				"padding_y": ".6em",
+				"margin_x": "0",
+				"margin_y": "1.25em",
+				"border": {
+					"enabled": false,
+					"width": "1px",
+					"radius": "16px"
+				}
 			},
-			"padding_x": ".8em",
-			"padding_y": ".6em",
-			"margin_x": "0",
-			"margin_y": "1.25em",
-			"border": {
-				"enabled": false,
-				"width": "1px",
-				"radius": "16px"
-			}
-		},
-		"notification": {
-			"scaling": 100,
-			"opacity": 100,
-			"shadow": {
-				"enabled": false,
-				"offset": 0,
-				"blur": 0,
-				"spread": 0,
-				"opacity": 100
-			},
-			"padding_x": ".9em",
-			"padding_y": ".9em",
-			"margin_x": "0",
-			"margin_y": "1.25em",
-			"border": {
-				"enabled": false,
-				"width": "1px",
-				"radius": "16px"
+			"notification": {
+				"scaling": 100,
+				"opacity": 100,
+				"shadow": {
+					"enabled": false,
+					"offset": 0,
+					"blur": 0,
+					"spread": 0,
+					"opacity": 100
+				},
+				"padding_x": ".9em",
+				"padding_y": ".9em",
+				"margin_x": "0",
+				"margin_y": "1.25em",
+				"border": {
+					"enabled": false,
+					"width": "1px",
+					"radius": "16px"
+				}
 			}
 		},
 		"bar": {
@@ -813,57 +894,5 @@
 				}
 			}
 		}
-	},
-	"theme_switcher": {
-		"icon": "",
-		"notify": false
-	},
-	"updates": {
-		"show_icon": true,
-		"icon": "󱧘",
-		"os": "arch",
-		"interval": 3600,
-		"tooltip": true,
-		"label": true,
-		"flatpak": true,
-		"snap": false,
-		"brew": false
-	},
-	"volume": {
-		"label": true,
-		"tooltip": true,
-		"step_size": 5
-	},
-	"hypr_picker": {
-		"icon": "",
-		"tooltip": true,
-		"label": false,
-		"show_icon": true
-	},
-	"weather": {
-		"location": "kathmandu", // this is the location to show the weather, you can use city name, latitude, longitude or zip code or leave it empty to use the default location
-		"label": true,
-		"tooltip": true,
-		"temperature_unit": "celsius",
-		"expanded": true, // this is to show the expanded weather widget
-		"interval": 3600 // this is the interval in seconds to update the weather, 1 hour is 3600 seconds
-	},
-	"window_title": {
-		"icon": true, // this is to enable the icon in the window title widget
-		"tooltip": true,
-		"truncation": true,
-		"truncation_size": 50,
-		"title_map": []
-	},
-	"workspaces": {
-		"count": 8, // this is the number of workspaces to show
-		"hide_unoccupied": true,
-		"default_label_format": "{id}",
-		"ignored": [
-			-99
-		], // this is the list of workspaces to ignore, currently -99 is the scratchpad workspace
-		"reverse_scroll": false,
-		"empty_scroll": false,
-		"icon_map": {}
 	}
 }

@@ -249,7 +249,7 @@
 				"right_section": {
 					"$ref": "#/definitions/widgets"
 				},
-				"module_groups": {
+				"widget_groups": {
 					"type": "array",
 					"items": {
 						"type": "object",
@@ -297,6 +297,11 @@
 					"type": "string",
 					"enum": ["celsius", "fahrenheit"],
 					"description": "Specifies the temperature unit to use."
+				},
+				"wind_speed_unit": {
+					"type": "string",
+					"enum": ["kmh", "mph"],
+					"description": "Specifies the wind speed unit to use."
 				},
 				"label": {
 					"type": "boolean",
@@ -402,10 +407,10 @@
 					"type": "string",
 					"description": "Icon name from icon theme"
 				},
-				"unit": {
+				"temperature_unit": {
 					"type": "string",
 					"enum": ["celsius", "fahrenheit"],
-					"description": "Unit to display temperature in"
+					"description": "Specifies the temperature unit to use."
 				},
 				"round": {
 					"type": "boolean",
@@ -1000,6 +1005,30 @@
 					"running_icon": {
 						"type": "string",
 						"description": "Icon to display when the stopwatch is running"
+					}
+				}
+			},
+			"app_launcher": {
+				"type": "object",
+				"properties": {
+					"enabled": {
+						"type": "boolean",
+						"description": "Determines whether the app launcher is enabled"
+					},
+					"tooltip": {
+						"type": "boolean",
+						"description": "Determines whether the app launcher has a tooltip"
+					},
+					"icon_size": {
+						"type": "integer",
+						"description": "Size of the app launcher icon"
+					},
+					"ignored_apps": {
+						"type": "array",
+						"items": {
+							"type": "string",
+							"description": "List of apps to ignore"
+						}
 					}
 				}
 			},

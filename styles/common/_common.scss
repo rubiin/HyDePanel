@@ -10,6 +10,19 @@
   border-radius: 4px;
 }
 
+
+button.launcher-button:focus {
+  background-color: theme.$background;
+}
+
+button.launcher-button:focus label {
+  color: theme.$text-main;
+}
+
+#launcher-prompt {
+  font-size: 12px;
+}
+
 .shadow {
   @extend .flat;
   box-shadow: color.mix(theme.$background-dark, black, 15%) 0 4px;

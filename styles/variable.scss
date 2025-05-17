@@ -8,7 +8,7 @@ $quicksettings-width: 370px;
 
 $radius-large: 9999px;
 
-$radius: 10px;  // TODO: Change to settings.$radius
+$radius: settings.$border-radius;  // TODO: Change to settings.$radius
 
 $border-color: theme.$surface-disabled;
 $border: settings.$border-width solid $border-color;

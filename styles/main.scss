@@ -11,9 +11,10 @@
 @use "datemenu.scss";
 @use "workspace.scss";
 @use "system_tray.scss";
-@use "module_group.scss";
+@use "widget_group.scss";
 @use "notification.scss";
 @use "quicksettings.scss";
+@use "app_launcher.scss";
 
 /* unset so we can style everything from the ground up. */
 

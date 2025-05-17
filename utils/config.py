@@ -66,7 +66,7 @@ class HydeConfig:
         validate_widgets(parsed_data, DEFAULT_CONFIG)
 
         for key in exclude_keys(DEFAULT_CONFIG, ["$schema"]):
-            if key == "module_groups":
+            if key == "widget_groups":
                 # For lists, use the user's value or default if not present
                 parsed_data[key] = parsed_data.get(key, DEFAULT_CONFIG[key])
             else:

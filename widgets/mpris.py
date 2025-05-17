@@ -1,3 +1,5 @@
+import re
+
 from fabric.utils import bulk_connect
 from fabric.widgets.box import Box
 from fabric.widgets.label import Label
@@ -73,7 +75,7 @@ class Mpris(ButtonWidget):
         )
 
     def get_current(self):
-        bar_label = self.player.title
+        bar_label = re.sub(r"\r?\n", " ", self.player.title)
 
         truncated_info = (
             bar_label

@@ -19,6 +19,7 @@ from fabric.widgets.image import Image
 from fabric.widgets.wayland import WaylandWindow as Window
 from gi.repository import Gdk, GLib, Gtk
 
+from shared.widget_container import ToggleableWidget
 from utils.icon_resolver import IconResolver
 from utils.icons import icons
 from utils.monitors import HyprlandWithMonitors
@@ -42,7 +43,7 @@ def create_surface_from_widget(widget: Gtk.Widget) -> cairo.ImageSurface:
     return surface
 
 
-class Dock(Window):
+class Dock(Window, ToggleableWidget):
     """Dock class for managing application buttons and interactions."""
 
     _instances: ClassVar[list] = []
@@ -56,7 +57,7 @@ class Dock(Window):
         return filtered_apps
 
     def __init__(self, config, **kwargs):
-        self.config = config
+        self.config = config["modules"]["dock"]
 
         super().__init__(
             name="dock-window",

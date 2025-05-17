@@ -8,8 +8,8 @@
   <img alt="discord" src="https://img.shields.io/discord/1200448076620501063" />
 </p>
 
-A semi-customizable bar written using the [Fabric Widget System](https://github.com/Fabric-Development/fabric).
-The panel focuses on providing an all-in-one, fully integrated panel experience, where users don’t have to rely on separate, theme-less third-party tools to manage niche functions like bluetooth, notifications and notification panel,on screen display.
+
+HyDePanel is a modular status bar for the Hyprland Wayland compositor. Built on [Fabric Widget System](https://github.com/Fabric-Development/fabric), it offers a flexible architecture for building custom panels with individual widgets. It’s designed to be lightweight, performant, and user-configurable.
 
 <h2><sub><img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Camera%20with%20Flash.png" alt="Camera with Flash" width="25" height="25" /></sub> Screenshots</h2>
 
@@ -44,6 +44,30 @@ The panel focuses on providing an all-in-one, fully integrated panel experience,
 </table>
 
 ---
+
+## ✨ Features
+
+- 🖥 **Tailored for Hyprland**
+  Built with full support for Hyprland’s ecosystem and event model.
+
+- 🧩 **Modular Widget System**
+  Includes pluggable widgets for Dock, Launcher, CPU, memory, network, media playback, battery, and more.
+
+- 🎨 **Fully Themeable**
+  Customize fonts, colors, layouts, and behavior using the power of Fabric.
+
+- ⚙️ **Highly Configurable**
+  Control the positioning, behavior, and appearance of every widget and element. Tailor the experience to fit your exact needs.
+
+- ⚡ **Lightweight & Fast**
+  Designed with performance in mind — minimal memory and CPU usage.
+
+- 📢 **On-Screen Display (OSD) Support**
+  Display real-time notifications or alerts directly on the screen (e.g., for volume, media, or custom events) in a visually appealing overlay.
+
+- 🛎️ **Notification System**
+  Integrated notification support allows HyDePanel to show alerts from your system, apps, or scripts. Notifications can be styled, timed, and customized based on user preferences.
+
 
 ## Prerequisites
 
@@ -267,6 +291,14 @@ layerrule = ignorezero ,gtk-layer-shell
 
 ### 5. **No Icons?**
 Make sure your icon theme has the required icons. One of the recommended icon theme is  `Tela Circle`
+
+### 6. **Hide bar on keypress?**
+
+Add this to your `hyprland.conf`
+
+```conf
+bind = SUPER, Q, exec,  python -m fabric execute hydepanel "bar.toggle()" -j
+```
 
 
 ## Contributing

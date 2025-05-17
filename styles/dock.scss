@@ -2,28 +2,29 @@
 @use "variable";
 @use "sass:color";
 
+//TODO
 :vars {
   --surface-bright: #423735;
 }
 
 #dock {
-  $dock-opacity-ratio: variable.$dock-opacity * .01;
+  $modules-dock-opacity-ratio: variable.$modules-dock-opacity * .01;
   $transparency-value: (
-    1 - $dock-opacity-ratio) * 100%;
+    1 - $modules-dock-opacity-ratio) * 100%;
   background-color: color.mix(theme.$bar-background, transparent, $transparency-value
   );
-padding: variable.$dock-padding_y variable.$dock-padding_x;
-margin: variable.$dock-margin_y variable.$dock-margin_x;
-border: if(variable.$dock-border-enabled, variable.$border, none);
-border-radius: variable.$dock-border-radius;
+padding: variable.$modules-dock-padding_y variable.$modules-dock-padding_x;
+margin: variable.$modules-dock-margin_y variable.$modules-dock-margin_x;
+border: if(variable.$modules-dock-border-enabled, variable.$border, none);
+border-radius: variable.$modules-dock-border-radius;
 transition: all .25s cubic-bezier(.5, .25, 0, 1);
 
 
 $shadow: 0 0 0 variable.$bar-border-width theme.$shadow-color,
-    variable.$dock-shadow-offset variable.$dock-shadow-blur variable.$dock-shadow-spread color.adjust(theme.$shadow-color,
-      $alpha: calc(variable.$dock-shadow-opacity - 1));
+    variable.$modules-dock-shadow-offset variable.$modules-dock-shadow-blur variable.$modules-dock-shadow-spread color.adjust(theme.$shadow-color,
+      $alpha: calc(variable.$modules-dock-shadow-opacity - 1));
 
-  box-shadow: if(variable.$dock-shadow-enabled, $shadow, none);
+  box-shadow: if(variable.$modules-dock-shadow-enabled, $shadow, none);
 }
 
 #dock.occluded {
@@ -36,18 +37,18 @@ $shadow: 0 0 0 variable.$bar-border-width theme.$shadow-color,
   margin: 8px 0;
   background-color: var(--surface-bright);
   border-width: 1px;
-  border-radius: calc(variable.$dock-border-radius * 0.1);
+  border-radius: calc(variable.$modules-dock-border-radius * 0.1);
 }
 
 #dock-app-button {
   padding: 4px;
-  border-radius: variable.$dock-border-radius;
+  border-radius: variable.$modules-dock-border-radius;
 }
 
 #dock-app-button:hover,
 #dock-app-button:hover.instance {
   background-color: var(--surface-bright);
-  border-top: variable.$dock-border-width solid theme.$accent-blue;
+  border-top: variable.$modules-dock-border-width solid theme.$accent-blue;
   padding-top: 3px;
 }
 
@@ -58,7 +59,7 @@ $shadow: 0 0 0 variable.$bar-border-width theme.$shadow-color,
 
 #dock-app-button.instance {
   background: linear-gradient(to top, transparent, var(--surface-bright));
-  border-bottom: variable.$dock-border-width solid theme.$shadow-color;
-  border-top: variable.$dock-border-width solid theme.$surface-neutral;
+  border-bottom: variable.$modules-dock-border-width solid theme.$shadow-color;
+  border-top: variable.$modules-dock-border-width solid theme.$surface-neutral;
   padding: 4px;
 }

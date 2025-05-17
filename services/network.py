@@ -76,9 +76,6 @@ class Wifi(Service):
     def toggle_wifi(self):
         self._client.wireless_set_enabled(not self._client.wireless_get_enabled())
 
-    # def set_active_ap(self, ap):
-    #     self._device.access
-
     def scan(self):
         self._device.request_scan_async(
             None,
@@ -265,6 +262,13 @@ class NetworkClient(Service):
 
     @Signal
     def device_ready(self) -> None: ...
+
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(NetworkClient, cls).__new__(cls)
+        return cls._instance
 
     def __init__(self, **kwargs):
         self._client: NM.Client | None = None

@@ -149,10 +149,7 @@ class SystemTrayWidget(ButtonWidget):
         super().__init__(widget_config["system_tray"], name="system_tray", **kwargs)
 
         # Create main tray box and toggle icon
-        self.tray_box = Box(
-            name="system-tray-box",
-            orientation="horizontal",
-        )
+        self.tray_box = Box(name="system-tray-box", orientation="horizontal", spacing=2)
         self.toggle_icon = Image(
             icon_name=icons["ui"]["arrow"]["down"],
             icon_size=self.config["icon_size"],

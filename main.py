@@ -32,9 +32,11 @@ def process_and_apply_css(app: Application):
     else:
         app.set_stylesheet_from_string("")
         logger.error(f"{Colors.ERROR}[Main]Failed to compile sass!")
+        logger.error(f"{Colors.ERROR}[Main] {output}")
 
 
 general_options = widget_config["general"]
+module_options = widget_config["modules"]
 
 if not general_options["debug"]:
     for log in [
@@ -55,37 +57,39 @@ if __name__ == "__main__":
 
     windows = [bar]
 
-    if widget_config["notification"]["enabled"]:
+    if module_options["app_launcher"]["enabled"]:
+        from modules import AppLauncher
+
+        app_launcher = AppLauncher(widget_config)
+        windows.append(app_launcher)
+
+    if module_options["notification"]["enabled"]:
         from modules import NotificationPopup
 
-        notifications = NotificationPopup(widget_config)
-        windows.append(notifications)
+        windows.append(NotificationPopup(widget_config))
 
-    if (
-        general_options["screen_corners"]
-        and general_options["screen_corners"]["enabled"]
-    ):
-        from modules.corners import ScreenCorners
+    if module_options["screen_corners"]["enabled"]:
+        from modules import ScreenCorners
 
-        windows.append(ScreenCorners(general_options["screen_corners"]["size"]))
+        screen_corners = ScreenCorners(widget_config)
 
-    if general_options["dock"] and general_options["dock"]["enabled"]:
+        windows.append(screen_corners)
+
+    if module_options["dock"]["enabled"]:
         from modules.dock import Dock
 
-        windows.append(Dock(general_options["dock"]))
+        dock = Dock(widget_config)
 
-    if general_options["desktop_clock"] and general_options["desktop_clock"]["enabled"]:
-        from widgets.desktop_clock import DesktopClock
+        windows.append(dock)
 
-        windows.append(
-            DesktopClock(
-                date_format=general_options["desktop_clock"]["date_format"],
-                layer=general_options["desktop_clock"]["layer"],
-                anchor=general_options["desktop_clock"]["anchor"],
-            )
-        )
+    if module_options["desktop_clock"]["enabled"]:
+        from modules import DesktopClock
 
-    if widget_config["osd"]["enabled"]:
+        desktop_clock = DesktopClock(widget_config)
+
+        windows.append(desktop_clock)
+
+    if module_options["osd"]["enabled"]:
         from modules import OSDContainer
 
         windows.append(OSDContainer(widget_config))
