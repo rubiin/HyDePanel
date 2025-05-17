@@ -2,10 +2,8 @@
 import math
 import os
 import re
-from time import sleep
 from typing import List
 
-from fabric import Fabricator
 from fabric.utils import bulk_connect, get_relative_path
 from fabric.widgets.box import Box
 from fabric.widgets.button import Button
@@ -226,6 +224,35 @@ class PlayerBox(Box):
             notify_value=self.set_notify_value,
         )
 
+        self.seek_bar = Scale(
+            min_value=0,
+            max_value=100,
+            increments=(5, 5),
+            orientation="h",
+            draw_value=False,
+            name="seek-bar",
+            value=0,
+        )
+        self.seek_bar.connect("change-value", self.on_scale_move)
+
+        self.player.connect(
+            "notify::length",
+            lambda *_: (
+                self.length_label.set_label(self.length_str(self.player.length)),
+                self.art_animator.play(),
+            ),
+        )
+
+        self.player.connect(
+            "notify::position",
+            lambda *_: (
+                self.seek_bar.set_value(self.normalize_position()),
+                self.position_label.set_label(self.length_str(self.player.position)),
+            ),
+        )
+
+        GLib.timeout_add(1000, self.move_seekbar)
+
         # Track Info
         self.track_title = Label(
             label="No Title",
@@ -302,19 +329,6 @@ class PlayerBox(Box):
                 "notify::shuffle": self.shuffle_update,
             },
         )
-
-        def position_poll(_):
-            while True:
-                try:
-                    yield self.player.position
-                    sleep(1)
-                except Exception:  # noqa: PERF203
-                    self.player_fabricator.stop()
-
-        # Create a fabricator to poll the system stats
-        self.player_fabricator = Fabricator(poll_from=position_poll, stream=True)
-
-        self.player_fabricator.connect("changed", self.move_seekbar)
 
         # Buttons
         self.button_box = Box(
@@ -403,25 +417,12 @@ class PlayerBox(Box):
             self.play_pause_button,
             self.next_button,
         )
-
-        self.player.connect(
-            "notify::length",
-            lambda _, x: (
-                self.length_label.set_label(
-                    self.length_str(self.player.length),
-                ),
-                self.art_animator.play(),
-            )  # type: ignore
-            if self.player.length
-            else None,
-        )
-
         self.player_info_box = Box(
             name="player-info-box",
             v_align="center",
             h_align="start",
             orientation="v",
-            children=[self.track_info, self.controls_box],
+            children=[self.track_info, self.seek_bar, self.controls_box],
         )
 
         self.inner_box = Box(
@@ -454,12 +455,6 @@ class PlayerBox(Box):
 
     def set_notify_value(self, p, *_):
         self.image_box.set_angle(p.value)
-
-    def on_scale_move(self, scale: Scale, event, moved_pos: int):
-        scale.set_value(moved_pos)
-        self.player.position = moved_pos
-        self.position_label.set_label(self.length_str(moved_pos))
-        # self.player.set_position(moved_pos)
 
     def on_title(self, *_):
         self.track_title.set_label(self.player.title)
@@ -549,7 +544,24 @@ class PlayerBox(Box):
         except ValueError:
             logger.error("[PLAYER] Failed to grab artUrl")
 
+    def normalize_position(self) -> int:
+        return (
+            (self.player.position / self.player.length) * 100
+            if self.player.length
+            else 0
+        )
+
+
+
     def move_seekbar(self, *_):
+        if self.player.position is None:
+            return False
+        position = self.normalize_position()
         self.position_label.set_label(self.length_str(self.player.position))
+        self.seek_bar.set_value(position)
         if self.exit or not self.player.can_seek:
             return False
+
+    def on_scale_move(self, scale: Scale, event, moved_pos: int):
+        self.player.position = moved_pos
+        self.position_label.set_label(self.length_str(moved_pos))
