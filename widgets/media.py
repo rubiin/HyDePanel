@@ -23,7 +23,6 @@ from shared import Animator, CircleImage, HoverButton
 from utils import APP_CACHE_DIRECTORY
 from utils.functions import ensure_directory
 from utils.icons import icons
-from utils.widget_utils import setup_cursor_hover
 
 
 class PlayerBoxStack(Box):
@@ -405,23 +404,9 @@ class PlayerBox(Box):
             self.next_button,
         )
 
-        # Seek Bar
-        self.seek_bar = Scale(
-            min_value=0,
-            max_value=100,
-            increments=(5, 5),
-            orientation="h",
-            draw_value=False,
-            name="seek-bar",
-        )
-
-        setup_cursor_hover(self.seek_bar)
-
         self.player.connect(
             "notify::length",
             lambda _, x: (
-                self.seek_bar.set_value(self.player.position),
-                self.seek_bar.set_range(0, self.player.length),
                 self.length_label.set_label(
                     self.length_str(self.player.length),
                 ),
@@ -430,14 +415,13 @@ class PlayerBox(Box):
             if self.player.length
             else None,
         )
-        self.player.bind_property("can-seek", self.seek_bar, "sensitive")
 
         self.player_info_box = Box(
             name="player-info-box",
             v_align="center",
             h_align="start",
             orientation="v",
-            children=[self.track_info, self.seek_bar, self.controls_box],
+            children=[self.track_info, self.controls_box],
         )
 
         self.inner_box = Box(
@@ -569,4 +553,3 @@ class PlayerBox(Box):
         self.position_label.set_label(self.length_str(self.player.position))
         if self.exit or not self.player.can_seek:
             return False
-        self.seek_bar.set_value(self.player.position)

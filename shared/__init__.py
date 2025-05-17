@@ -11,7 +11,6 @@ from .lottie import *
 from .pop_over import *
 from .pop_up import *
 from .separator import *
-from .setting_scale import *
 from .submenu import *
 from .widget_container import *
 from .widget_groups import *

@@ -1,10 +1,10 @@
 from fabric.utils import exec_shell_command_async
+from fabric.widgets.box import Box
 
 from shared.buttons import QSChevronButton, ScanButton
 from shared.submenu import QuickSubMenu
 from utils.functions import is_app_running, toggle_command
 from utils.widget_utils import (
-    create_scale,
     util_fabricator,
 )
 
@@ -16,24 +16,15 @@ class HyprSunsetSubMenu(QuickSubMenu):
         # Create refresh button first since parent needs it
         self.scan_button = ScanButton(visible=False)
 
-        self.scale = create_scale(
-            min_value=1000,
-            max_value=9000,
-            value=6500,
-            increments=(100, 100),
-        )
+        self.box = Box()
 
         super().__init__(
             title="HyprSunset",
             title_icon="redshift-status-on",
             name="hyprsunset-sub-menu",
             scan_button=self.scan_button,
-            child=self.scale,
+            child=self.box,
         )
-
-        if self.scale:
-            self.scale.connect("change-value", self.on_scale_move)
-            self.update_ui(int(self.scale.get_value()))
 
     def on_scale_move(self, _, __, moved_pos):
         exec_shell_command_async(
@@ -45,8 +36,7 @@ class HyprSunsetSubMenu(QuickSubMenu):
 
     def update_ui(self, moved_pos):
         """Update the UI elements."""
-        # Update the scale value based on the current temperature
-        self.scale.set_value(moved_pos)
+
         self.scale.set_tooltip_text(f"{moved_pos}K")
 
 
