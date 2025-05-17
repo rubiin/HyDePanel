@@ -19,7 +19,7 @@ from loguru import logger
 from services import MprisPlayer, MprisPlayerManager
 from shared import Animator, CircleImage, HoverButton
 from utils import APP_CACHE_DIRECTORY
-from utils.functions import ensure_directory
+from utils.functions import convert_to_percent, ensure_directory
 from utils.icons import icons
 from utils.widget_utils import setup_cursor_hover
 
@@ -247,7 +247,9 @@ class PlayerBox(Box):
         self.player.connect(
             "notify::position",
             lambda *_: (
-                self.seek_bar.set_value(self.normalize_position()),
+                self.seek_bar.set_value(
+                    convert_to_percent(self.player.position, self.player.length)
+                ),
                 self.position_label.set_label(self.length_str(self.player.position)),
             ),
         )
@@ -548,17 +550,10 @@ class PlayerBox(Box):
         except ValueError:
             logger.error("[PLAYER] Failed to grab artUrl")
 
-    def normalize_position(self) -> int:
-        return (
-            (self.player.position / self.player.length) * 100
-            if self.player.length
-            else 0
-        )
-
     def move_seekbar(self, *_):
         if self.player.position is None:
             return False
-        position = self.normalize_position()
+        position = convert_to_percent(self.player.position, self.player.length)
         self.position_label.set_label(self.length_str(self.player.position))
         self.seek_bar.set_value(position)
         if self.exit or not self.player.can_seek:
