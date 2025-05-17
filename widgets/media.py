@@ -21,6 +21,7 @@ from shared import Animator, CircleImage, HoverButton
 from utils import APP_CACHE_DIRECTORY
 from utils.functions import ensure_directory
 from utils.icons import icons
+from utils.widget_utils import setup_cursor_hover
 
 
 class PlayerBoxStack(Box):
@@ -393,10 +394,13 @@ class PlayerBox(Box):
         self.play_pause_stack.add_named(self.play_icon, "play")
         self.play_pause_stack.add_named(self.pause_icon, "pause")
 
-        self.play_pause_button = HoverButton(
+        self.play_pause_button = Button(
             name="player-button",
             child=self.play_pause_stack,
         )
+
+        setup_cursor_hover(self.play_pause_button)
+
         self.play_pause_button.connect("clicked", self.player.play_pause)
         self.player.bind_property("can_pause", self.play_pause_button, "sensitive")
 
@@ -561,6 +565,6 @@ class PlayerBox(Box):
             return False
 
     def on_scale_move(self, scale: Scale, event, moved_pos: int):
-        # TODO: fix this seekbar
+        # TODO: fix this seek
         self.player.position = moved_pos
         self.position_label.set_label(self.length_str(moved_pos))
