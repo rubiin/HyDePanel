@@ -4,7 +4,7 @@ import os
 import re
 from typing import List
 
-from fabric.utils import bulk_connect, get_relative_path
+from fabric.utils import bulk_connect, get_relative_path, invoke_repeater
 from fabric.widgets.box import Box
 from fabric.widgets.button import Button
 from fabric.widgets.centerbox import CenterBox
@@ -225,40 +225,6 @@ class PlayerBox(Box):
             notify_value=self.set_notify_value,
         )
 
-        self.seek_bar = Scale(
-            min_value=0,
-            max_value=100,
-            increments=(5, 5),
-            orientation="h",
-            draw_value=False,
-            name="seek-bar",
-            value=0,
-        )
-        self.seek_bar.connect("change-value", self.on_scale_move)
-        self.player.bind("can-seek", "sensitive", self.seek_bar)
-
-        setup_cursor_hover(self.seek_bar)
-
-        self.player.connect(
-            "notify::length",
-            lambda *_: (
-                self.length_label.set_label(self.length_str(self.player.length)),
-                self.art_animator.play(),
-            ),
-        )
-
-        self.player.connect(
-            "notify::position",
-            lambda *_: (
-                self.seek_bar.set_value(
-                    convert_to_percent(self.player.position, self.player.length)
-                ),
-                self.position_label.set_label(self.length_str(self.player.position)),
-            ),
-        )
-
-        GLib.timeout_add(1000, self.move_seekbar)
-
         # Track Info
         self.track_title = Label(
             label="No Title",
@@ -355,6 +321,40 @@ class PlayerBox(Box):
             style_classes="time-label",
             visible=self.config["show_time"],
         )
+
+        self.seek_bar = Scale(
+            min_value=0,
+            max_value=100,
+            increments=(5, 5),
+            orientation="h",
+            draw_value=False,
+            name="seek-bar",
+            value=0,
+        )
+        self.seek_bar.connect("change-value", self.on_scale_move)
+        self.player.bind("can-seek", "sensitive", self.seek_bar)
+
+        setup_cursor_hover(self.seek_bar)
+
+        self.player.connect(
+            "notify::length",
+            lambda *_: (
+                self.length_label.set_label(self.length_str(self.player.length)),
+                self.art_animator.play(),
+            ),
+        )
+
+        self.player.connect(
+            "notify::position",
+            lambda *_: (
+                self.seek_bar.set_value(
+                    convert_to_percent(self.player.position, self.player.length)
+                ),
+                self.position_label.set_label(self.length_str(self.player.position)),
+            ),
+        )
+
+        invoke_repeater(1000, self.move_seekbar)
 
         self.controls_box = CenterBox(
             style_classes="player-controls",
@@ -460,6 +460,7 @@ class PlayerBox(Box):
                 ),
             ],
         )
+
         self.children = [*self.children, self.overlay_box]
 
     def set_notify_value(self, p, *_):
@@ -559,8 +560,6 @@ class PlayerBox(Box):
         position = convert_to_percent(self.player.position, self.player.length)
         self.position_label.set_label(self.length_str(self.player.position))
         self.seek_bar.set_value(position)
-        if self.exit or not self.player.can_seek:
-            return False
 
     def on_scale_move(self, scale: Scale, event, moved_pos: int):
         # TODO: fix this seek

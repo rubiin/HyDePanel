@@ -339,6 +339,8 @@ def get_relative_time(mins: int) -> str:
 def convert_to_percent(
     current: int | float, max: int | float, is_int=True
 ) -> int | float:
+    if max == 0:
+        return 0
     if is_int:
         return int((current / max) * 100)
     else:
