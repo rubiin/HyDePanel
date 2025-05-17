@@ -1,10 +1,10 @@
 from fabric.utils import exec_shell_command_async
-from fabric.widgets.box import Box
 
 from shared.buttons import QSChevronButton, ScanButton
 from shared.submenu import QuickSubMenu
 from utils.functions import is_app_running, toggle_command
 from utils.widget_utils import (
+    create_scale,
     util_fabricator,
 )
 
@@ -16,28 +16,53 @@ class HyprSunsetSubMenu(QuickSubMenu):
         # Create refresh button first since parent needs it
         self.scan_button = ScanButton(visible=False)
 
-        self.box = Box()
+        self.scale = create_scale(
+            name="hyprsunset-scale",
+            increments=(100, 100),
+        )
+
+        self.scale.set_range(1000.0, 10000.0)
 
         super().__init__(
             title="HyprSunset",
             title_icon="redshift-status-on",
             name="hyprsunset-sub-menu",
             scan_button=self.scan_button,
-            child=self.box,
+            child=self.scale,
+            **kwargs,
         )
+
+        if self.scale:
+            self.scale.connect("change-value", self.on_scale_move)
+            self.update_ui(6500)
+
+        # reusing the fabricator to call specified intervals
+        util_fabricator.connect("changed", self.update_scale)
 
     def on_scale_move(self, _, __, moved_pos):
         exec_shell_command_async(
-            f"hyprctl hyprsunset temperature {int(moved_pos)}", lambda *_: None
+            f"hyprctl hyprsunset temperature {int(moved_pos)}",
+            lambda *_: self.update_ui(int(moved_pos)),
         )
-        self.update_ui(int(moved_pos))
-
         return True
 
-    def update_ui(self, moved_pos):
-        """Update the UI elements."""
+    def update_scale(self, *_):
+        if is_app_running("hyprsunset"):
+            self.scale.set_sensitive(True)
+            exec_shell_command_async(
+                "hyprctl hyprsunset temperature",
+                self.update_ui,
+            )
+        else:
+            self.scale.set_sensitive(False)
 
-        self.scale.set_tooltip_text(f"{moved_pos}K")
+    def update_ui(self, moved_pos):
+        # Update the scale value based on the current temperature
+        sanitized_value = (
+            float(moved_pos.strip("\n").strip("")) if isinstance(moved_pos, str) else moved_pos
+        )
+        self.scale.set_value(sanitized_value)
+        self.scale.set_tooltip_text(f"{sanitized_value}K")
 
 
 class HyprSunsetToggle(QSChevronButton):
