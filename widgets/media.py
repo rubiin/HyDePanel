@@ -235,6 +235,9 @@ class PlayerBox(Box):
             value=0,
         )
         self.seek_bar.connect("change-value", self.on_scale_move)
+        self.player.bind("can-seek", "sensitive", self.seek_bar)
+
+        setup_cursor_hover(self.seek_bar)
 
         self.player.connect(
             "notify::length",
