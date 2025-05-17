@@ -551,8 +551,6 @@ class PlayerBox(Box):
             else 0
         )
 
-
-
     def move_seekbar(self, *_):
         if self.player.position is None:
             return False
@@ -563,5 +561,6 @@ class PlayerBox(Box):
             return False
 
     def on_scale_move(self, scale: Scale, event, moved_pos: int):
+        # TODO: fix this seekbar
         self.player.position = moved_pos
         self.position_label.set_label(self.length_str(moved_pos))
