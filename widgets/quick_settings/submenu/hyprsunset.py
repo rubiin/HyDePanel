@@ -1,12 +1,5 @@
-from fabric.utils import cooldown, exec_shell_command_async
-
 from shared.buttons import QSChevronButton, ScanButton
 from shared.submenu import QuickSubMenu
-from utils.functions import is_app_running, toggle_command
-from utils.widget_utils import (
-    create_scale,
-    util_fabricator,
-)
 
 
 class HyprSunsetSubMenu(QuickSubMenu):
@@ -16,56 +9,14 @@ class HyprSunsetSubMenu(QuickSubMenu):
         # Create refresh button first since parent needs it
         self.scan_button = ScanButton(visible=False)
 
-        self.scale = create_scale(
-            name="hyprsunset-scale",
-            increments=(100, 100),
-        )
-
-        self.scale.set_range(1000.0, 10000.0)
-
         super().__init__(
             title="HyprSunset",
             title_icon="redshift-status-on",
             name="hyprsunset-sub-menu",
             scan_button=self.scan_button,
-            child=self.scale,
+            child=self.scan_button,
             **kwargs,
         )
-
-        if self.scale:
-            self.scale.connect("change-value", self.on_scale_move)
-            self.update_ui(2600)
-
-        # reusing the fabricator to call specified intervals
-        util_fabricator.connect("changed", self.update_scale)
-
-    @cooldown(0.1)
-    def on_scale_move(self, _, __, moved_pos):
-        exec_shell_command_async(
-            f"hyprctl hyprsunset temperature {int(moved_pos)}",
-            lambda *_: self.update_ui(int(moved_pos)),
-        )
-        return True
-
-    def update_scale(self, *_):
-        if is_app_running("hyprsunset"):
-            self.scale.set_sensitive(True)
-            exec_shell_command_async(
-                "hyprctl hyprsunset temperature",
-                self.update_ui,
-            )
-        else:
-            self.scale.set_sensitive(False)
-
-    def update_ui(self, moved_pos):
-        # Update the scale value based on the current temperature
-        sanitized_value = (
-            float(moved_pos.strip("\n").strip(""))
-            if isinstance(moved_pos, str)
-            else moved_pos
-        )
-        self.scale.set_value(sanitized_value)
-        self.scale.set_tooltip_text(f"{sanitized_value}K")
 
 
 class HyprSunsetToggle(QSChevronButton):
@@ -80,31 +31,3 @@ class HyprSunsetToggle(QSChevronButton):
             **kwargs,
         )
         self.action_button.set_sensitive(True)
-
-        self.connect("action-clicked", self.on_action)
-
-        # reusing the fabricator to call specified intervals
-        util_fabricator.connect("changed", self.update_action_button)
-
-    def redlight_temperature(self):
-        """Get the redlight temperature from the scale."""
-        return int(self.submenu.scale.get_value())
-
-    def on_action(self, *_):
-        """Handle the action button click event."""
-        toggle_command(
-            "hyprsunset",
-            full_command=f"hyprsunset -t {self.redlight_temperature()}",
-        )
-        return True
-
-    def update_action_button(self, *_):
-        self.is_running = is_app_running("hyprsunset")
-        icon = "redshift-status-on" if self.is_running else "redshift-status-off"
-
-        self.action_icon.set_from_icon_name(icon, 18)
-        self.set_action_label("Enabled" if self.is_running else "Disabled")
-        if self.is_running:
-            self.set_active_style(True)
-        else:
-            self.set_active_style(False)
