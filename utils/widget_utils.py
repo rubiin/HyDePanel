@@ -8,10 +8,7 @@ from fabric import Fabricator
 from fabric.utils import bulk_connect
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
-from fabric.widgets.scale import ScaleMark
 from gi.repository import Gdk, GLib
-
-from shared.animated.scale import AnimatedScale
 
 from .config import widget_config
 from .functions import uptime
@@ -164,40 +161,6 @@ def get_brightness_icon_name(level: int) -> dict[Literal["icon_text", "icon"], s
         "text_icon": text_icons["brightness"]["high"],
         "icon": icons["brightness"]["high"],
     }
-
-
-# Create a scale widget
-def create_scale(
-    name,
-    marks=None,
-    value=0,
-    min_value: float = 0,
-    max_value: float = 100,
-    increments=(1, 1),
-    orientation="h",
-    h_expand=True,
-    h_align="center",
-    style_classes="",
-    duration=0.8,
-    **kwargs,
-) -> AnimatedScale:
-    if marks is None:
-        marks = (ScaleMark(value=i) for i in range(1, 100, 10))
-
-    return AnimatedScale(
-        name=name,
-        marks=marks,
-        value=value,
-        min_value=min_value,
-        max_value=max_value,
-        increments=increments,
-        orientation=orientation,
-        h_expand=h_expand,
-        h_align=h_align,
-        duration=duration,
-        style_classes=style_classes,
-        **kwargs,
-    )
 
 
 # Function to get the volume icons

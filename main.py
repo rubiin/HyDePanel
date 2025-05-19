@@ -86,11 +86,6 @@ if __name__ == "__main__":
 
         windows.append(desktop_clock)
 
-    if module_options["osd"]["enabled"]:
-        from modules import OSDContainer
-
-        windows.append(OSDContainer(widget_config))
-
     @Application.action("toggle")
     def toggle(
         item: Literal["bar", "desktop_clock", "dock", "screen_corners", "app_launcher"],
