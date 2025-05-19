@@ -203,9 +203,10 @@ class PlayerBox(Box):
             **kwargs,
             h_expand=True,
         )
+
         # Setup
         self.player: MprisPlayer = player
-        self.cover_path = get_relative_path("../assets/images/disk.png")
+        self.fallback_cover_path = get_relative_path("../assets/images/disk.png")
 
         self.image_size = 115
 
@@ -218,7 +219,9 @@ class PlayerBox(Box):
         self.angle_direction = 1
         self.skipped = False
 
-        self.image_box = CircleImage(size=self.image_size, image_file=self.cover_path)
+        self.image_box = CircleImage(
+            size=self.image_size, image_file=self.fallback_cover_path
+        )
 
         self.image_box.set_size_request(self.image_size, self.image_size)
 
