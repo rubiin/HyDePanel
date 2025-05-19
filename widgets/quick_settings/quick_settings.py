@@ -33,9 +33,7 @@ from widgets.quick_settings.submenu.hyprsunset import (
 
 from ..media import PlayerBoxStack
 from .shortcuts import ShortcutsContainer
-from .sliders import AudioSlider, BrightnessSlider, MicrophoneSlider
 from .submenu import (
-    AudioSubMenu,
     BluetoothSubMenu,
     BluetoothToggle,
     PowerProfileSubMenu,
@@ -43,7 +41,6 @@ from .submenu import (
     WifiSubMenu,
     WifiToggle,
 )
-from .submenu.mic import MicroPhoneSubMenu
 from .togglers import (
     HyprIdleQuickSetting,
     NotificationQuickSetting,
@@ -266,10 +263,6 @@ class QuickSettingsMenu(Box):
             v_expand=True,
         )
 
-        # Add audio submenu
-        self.audio_submenu = AudioSubMenu()
-        self.mic_submenu = MicroPhoneSubMenu()
-
         # TODO: check gtk_adjustment_set_value: assertion 'GTK_IS_ADJUSTMENT, microphone
 
         # Create center box with sliders and shortcuts if configured
@@ -298,35 +291,9 @@ class QuickSettingsMenu(Box):
             orientation="v",
             spacing=10,
             style_classes=[slider_class],
-            children=(sliders_grid, self.audio_submenu, self.mic_submenu),
+            children=(sliders_grid),
             h_expand=True,
         )
-
-        for index, slider in enumerate(self.config["controls"]["sliders"]):
-            if slider == "brightness":
-                sliders_grid.attach(
-                    BrightnessSlider(),
-                    0,
-                    index,
-                    1,
-                    1,
-                )
-            elif slider == "volume":
-                sliders_grid.attach(
-                    AudioSlider(),
-                    0,
-                    index,
-                    1,
-                    1,
-                )
-            else:
-                sliders_grid.attach(
-                    MicrophoneSlider(),
-                    0,
-                    index,
-                    1,
-                    1,
-                )
 
         if self.config.get("shortcuts")["enabled"]:
             shortcuts_box = Box(
