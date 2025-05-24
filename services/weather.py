@@ -2,8 +2,7 @@ import json
 import os
 import ssl
 import time
-import urllib.request
-from urllib.error import HTTPError
+from urllib import error, parse, request
 
 from fabric.core.service import Service
 from loguru import logger
@@ -18,7 +17,7 @@ context = ssl._create_unverified_context()
 class WeatherService(Service):
     """This class provides weather information for a given city."""
 
-    _instance = None  # Class-level private instance variable
+    _instance = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -27,26 +26,27 @@ class WeatherService(Service):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.request = request.build_opener()
+        self.request.addheaders = [
+            (
+                "User-Agent",
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",  # noqa: E501
+            )
+        ]
 
     def simple_weather_info(self, location: str):
         try:
-            url = ""
-            # Construct the URL for fetching weather information
-            if location != "":
-                encoded_location = urllib.parse.quote_plus(location.capitalize())
-
-                url = f"http://wttr.in/{encoded_location}?format=j1"
-            else:
-                url = "http://wttr.in/?format=j1"
+            url = f"https://wttr.in/{parse.quote_plus(location.title())}?format=j1"
 
             logger.info(f"[WeatherService] Fetching weather information from {url}")
-            contents = (
-                urllib.request.urlopen(url, context=context, timeout=10)
-                .read()
-                .decode("utf-8")
-            )
+
+            # Open the URL and read the contents
+            contents = self.request.open(url, timeout=20).read().decode("utf-8")
 
             # Parse the weather information
+            print(f"{Colors.INFO}[WeatherService] Parsing weather information")
+            # Use json.loads to parse the JSON data
+
             data = json.loads(contents)
 
             current_weather = data["current_condition"][0]
@@ -61,9 +61,9 @@ class WeatherService(Service):
                 "astronomy": weather["astronomy"][0],  # the sunrise and sunset times
             }
 
-        except HTTPError as e:
+        except error.HTTPError as e:
             if e.code == 404:
-                logger.error(
+                logger.exception(
                     f"{Colors.ERROR}[WeatherService] Error: City not found. Try a different city."  # noqa: E501
                 )
             return None

@@ -5,17 +5,22 @@ from fabric.widgets.label import Label
 from fabric.widgets.scrolledwindow import ScrolledWindow
 
 from services import NetworkService, Wifi
-from shared import QSChevronButton, QuickSubMenu
-from shared.buttons import ScanButton
-from utils.icons import icons
+from shared import HoverButton, QSChevronButton, QuickSubMenu, ScanButton
+from utils import symbolic_icons
 
 
 class WifiSubMenu(QuickSubMenu):
     """A submenu to display the Wifi settings."""
 
+    def is_secured(self, ap) -> bool:
+        wpa_flags = ap.get("wpa_flags", 0)
+        rsn_flags = ap.get("rsn_flags", 0)
+        # Both zero means no security
+        return (wpa_flags != 0) or (rsn_flags != 0)
+
     def __init__(self, **kwargs):
         self.client = NetworkService()
-        self.wifi_device = self.client.wifi_device
+
         self.client.connect("device-ready", self.on_device_ready)
 
         self.available_networks_box = Box(orientation="v", spacing=4, h_expand=True)
@@ -33,11 +38,19 @@ class WifiSubMenu(QuickSubMenu):
 
         super().__init__(
             title="Network",
-            title_icon=icons["network"]["wifi"]["generic"],
+            title_icon=symbolic_icons["network"]["wifi"]["generic"],
             scan_button=self.scan_button,
             child=self.child,
             **kwargs,
         )
+
+    def on_scan(self, _, value, *args):
+        """Called when the scan is complete."""
+
+        if value:
+            self.scan_button.play_animation()
+        else:
+            self.scan_button.stop_animation()
 
     def start_new_scan(self, _):
         self.client.wifi_device.scan() if self.client.wifi_device else None
@@ -46,7 +59,7 @@ class WifiSubMenu(QuickSubMenu):
 
     def on_device_ready(self, client: NetworkService):
         self.wifi_device = client.wifi_device
-        self.build_wifi_options()
+        self.start_new_scan(None)
 
     def build_wifi_options(self):
         self.available_networks_box.children = []
@@ -58,22 +71,53 @@ class WifiSubMenu(QuickSubMenu):
                 self.available_networks_box.add(btn)
 
     def make_button_from_ap(self, ap) -> Button:
-        ap_button = Button(style_classes="submenu-button", name="wifi-ap-button")
-        ap_button.add(
-            Box(
-                style="padding: 5px;",
-                children=[
-                    Image(
-                        icon_name=ap.get("icon-name"),
-                        icon_size=18,
-                    ),
-                    Label(label=ap.get("ssid"), style_classes="submenu-item-label"),
-                ],
+        def disconnect(*_):
+            self.client.disconnect_wifi_bssid(ap.get("bssid"))  # TODO: Fix this
+
+        security_label = ""
+
+        ap_container = Box(
+            style="padding: 5px;",
+            orientation="h",
+            spacing=4,
+            tooltip_markup=ap.get("ssid"),
+            children=[
+                Image(
+                    icon_name=ap.get("icon-name"),
+                    icon_size=18,
+                ),
+                Label(
+                    label=ap.get("ssid"),
+                    style_classes="submenu-item-label",
+                    ellipsization="end",
+                    v_align="center",
+                    h_align="start",
+                    h_expand=True,
+                ),
+            ],
+        )
+
+        ap_button = HoverButton(style_classes="submenu-button", name="wifi-ap-button")
+
+        if self.is_secured(ap):
+            security_label = ""
+
+        if self.wifi_device.state == "activated" and ap.get(
+            "ssid"
+        ) == self.wifi_device.get_property("ssid"):
+            security_label = " " + security_label
+
+        ap_container.add(
+            Label(
+                label=security_label,
+                style="font-size: 14px;font-weight: bold;",
+                v_align="center",
             )
         )
-        ap_button.connect(
-            "clicked", lambda _: self.client.connect_wifi_bssid(ap.get("bssid"))
-        )
+
+        ap_button.add(ap_container)
+
+        ap_button.connect("clicked", disconnect)
         return ap_button
 
 
@@ -82,7 +126,7 @@ class WifiToggle(QSChevronButton):
 
     def __init__(self, submenu: QuickSubMenu, **kwargs):
         super().__init__(
-            action_icon=icons["network"]["wifi"]["generic"],
+            action_icon=symbolic_icons["network"]["wifi"]["generic"],
             action_label=" Wifi Disabled",
             submenu=submenu,
             **kwargs,
@@ -100,9 +144,10 @@ class WifiToggle(QSChevronButton):
                 "notify::enabled",
                 lambda *_: self.set_active_style(wifi.get_property("enabled")),  # type: ignore
             )
+            wifi.connect("changed", self.update_status)
 
             self.action_icon.set_from_icon_name(
-                wifi.get_property("icon-name") + "-symbolic", 18
+                wifi.get_property("icon-name") + "-symbolic", self.pixel_size
             )
             wifi.bind_property("icon-name", self.action_icon, "icon-name")
 
@@ -113,3 +158,9 @@ class WifiToggle(QSChevronButton):
         wifi: Wifi | None = self.client.wifi_device
         if wifi:
             wifi.toggle_wifi()
+
+    def update_status(self, wifi: Wifi):
+        self.action_icon.set_from_icon_name(
+            wifi.icon_name,
+            self.pixel_size,
+        )

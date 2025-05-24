@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import subprocess
 import time
 from datetime import datetime
 from functools import lru_cache
@@ -18,6 +19,7 @@ from loguru import logger
 
 from .colors import Colors
 from .constants import named_colors
+from .exceptions import ExecutableNotFoundError
 from .icons import text_icons
 from .thread import run_in_thread
 
@@ -62,7 +64,7 @@ def copy_theme(theme: str):
         shutil.copyfile(source_file, destination_file)
 
     except FileNotFoundError:
-        logger.error(
+        logger.exception(
             f"{Colors.ERROR}Error: The theme file '{source_file}' was not found."
         )
         exit(1)
@@ -75,8 +77,49 @@ def celsius_to_fahrenheit(celsius):
 
 
 # Merge the parsed data with the default configuration
-def merge_defaults(data: dict, defaults: dict):
-    return {**defaults, **data}
+def merge_defaults(data, defaults):
+    merged = defaults.copy()
+    for key, user_value in data.items():
+        if (
+            key in merged
+            and isinstance(merged[key], dict)
+            and isinstance(user_value, dict)
+        ):
+            merged[key] = merge_defaults(user_value, merged[key])
+        else:
+            merged[key] = user_value
+    return merged
+
+
+# Set the scale's adjustment
+def set_scale_adjustment(
+    scale, min_value: float = 0, max_value: float = 100, steps: float = 1
+):
+    adj = scale.get_adjustment()
+    if adj.get_upper() == adj.get_lower():
+        scale.set_adjustment(
+            Gtk.Adjustment(
+                lower=min_value,
+                upper=max_value,
+                step_increment=steps,
+                page_increment=0,
+                page_size=0,
+            )
+        )
+
+
+# Function to toggle a shell command
+def toggle_command(command: str, full_command: str):
+    if is_app_running(command):
+        kill_process(command)
+    else:
+        subprocess.Popen(
+            full_command.split(" "),
+            stdin=subprocess.DEVNULL,  # No input stream
+            stdout=subprocess.DEVNULL,  # Optionally discard the output
+            stderr=subprocess.DEVNULL,  # Optionally discard the error output
+            start_new_session=True,  # This prevents the process from being killed
+        )
 
 
 ## Function to execute a shell command asynchronously
@@ -121,10 +164,10 @@ def validate_widgets(parsed_data, default_config):
                         f"'{group_idx}' in section {section}. Must be a number."
                     )
                 idx = int(group_idx)
-                groups = parsed_data.get("module_groups", [])
+                groups = parsed_data.get("widget_groups", [])
                 if not isinstance(groups, list):
                     raise ValueError(
-                        "module_groups must be an array when using @group references"
+                        "widget_groups must be an array when using @group references"
                     )
                 if not (0 <= idx < len(groups)):
                     raise ValueError(
@@ -237,7 +280,6 @@ def check_icon_exists(icon_name: str, fallback_icon: str) -> str:
 
 # Function to play sound
 @cooldown(1)
-@run_in_thread
 def play_sound(file: str):
     exec_shell_command_async(f"pw-play {file}", lambda *_: None)
     return True
@@ -254,9 +296,12 @@ def get_distro_icon():
 
 # Function to check if an executable exists
 @ttl_lru_cache(600, 10)
-def executable_exists(executable_name):
-    executable_path = shutil.which(executable_name)
-    return bool(executable_path)
+def check_executable_exists(executable_name):
+    executable_path = GLib.find_program_in_path(executable_name)
+    if not executable_path:
+        raise ExecutableNotFoundError(
+            executable_name
+        )  # Raise an error if the executable is not found and exit the application
 
 
 # Function to send a notification
@@ -314,6 +359,8 @@ def get_relative_time(mins: int) -> str:
 def convert_to_percent(
     current: int | float, max: int | float, is_int=True
 ) -> int | float:
+    if max == 0:
+        return 0
     if is_int:
         return int((current / max) * 100)
     else:

@@ -9,21 +9,21 @@ $hover-transition: background .15s ease-in-out;
 
 #notification-eventbox {
   #notification {
-    padding:variable.$notification-padding_y variable.$notification-padding_x;
-    opacity: variable.$notification-opacity * .01;
+    padding:variable.$modules-notification-padding_y variable.$modules-notification-padding_x;
+    opacity: variable.$modules-notification-opacity * .01;
     color: theme.$text-main;
-    border-radius: variable.$notification-border-radius;
+    border-radius: variable.$modules-notification-border-radius;
     background-color: theme.$background-alt;
-    border: if(variable.$notification-border-enabled, variable.$border, none);
-    border-width: variable.$notification-border-width;
+    border: if(variable.$modules-notification-border-enabled, variable.$border, none);
+    border-width: variable.$modules-notification-border-width;
     transition: border 100ms ease-in-out;
 
 
 $shadow: 0 0 0 variable.$bar-border-width theme.$shadow-color,
-    variable.$notification-shadow-offset variable.$notification-shadow-blur variable.$notification-shadow-spread color.adjust(theme.$shadow-color,
-      $alpha: calc(variable.$notification-shadow-opacity - 1));
+    variable.$modules-notification-shadow-offset variable.$modules-notification-shadow-blur variable.$modules-notification-shadow-spread color.adjust(theme.$shadow-color,
+      $alpha: calc(variable.$modules-notification-shadow-opacity - 1));
 
-  box-shadow: if(variable.$notification-shadow-enabled, $shadow, none);
+  box-shadow: if(variable.$modules-notification-shadow-enabled, $shadow, none);
 
     .notification-header {
       padding: common.toEm(5);

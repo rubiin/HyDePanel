@@ -170,7 +170,7 @@ class Popover(Widget):
             try:
                 self._create_popover()
             except Exception as e:
-                logger.error(f"Could not create popover! Error: {e}")
+                logger.exception(f"Could not create popover! Error: {e}")
         else:
             self._manager.activate_popover(self)
             self._content_window.show()

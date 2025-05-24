@@ -51,7 +51,7 @@
   border: if(variable.$bar-widgets-cpu-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-cpu-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-cpu-icon_size;
     margin-right: variable.$bar-widgets-cpu-spacing;
   }
@@ -63,7 +63,7 @@
   border: if(variable.$bar-widgets-window_count-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-window_count-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-cpu-icon_size;
     margin-right: variable.$bar-widgets-cpu-spacing;
   }
@@ -76,7 +76,7 @@
 
 
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-memory-icon_size;
     margin-right: variable.$bar-widgets-memory-spacing;
   }
@@ -92,7 +92,7 @@
     margin-right: variable.$bar-widgets-network_usage-spacing;
   }
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-network_usage-icon_size;
     margin-right: variable.$bar-widgets-network_usage-spacing;
   }
@@ -103,7 +103,7 @@
   border: if(variable.$bar-widgets-storage-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-storage-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-storage-icon_size;
     margin-right: variable.$bar-widgets-storage-spacing;
   }
@@ -129,7 +129,7 @@
   border-width: variable.$bar-widgets-brightness-border-width;
 
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-brightness-icon_size;
     margin-right: variable.$bar-widgets-brightness-spacing;
   }
@@ -148,7 +148,7 @@
   border-width: variable.$bar-widgets-click_counter-border-width;
 
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-click_counter-icon_size;
     margin-right: variable.$bar-widgets-click_counter-spacing;
   }
@@ -172,7 +172,7 @@
   border: if(variable.$bar-widgets-hypr_idle-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-hypr_idle-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-hypr_idle-icon_size;
     margin-right: variable.$bar-widgets-hypr_idle-spacing;
   }
@@ -183,7 +183,7 @@
   border: if(variable.$bar-widgets-hypr_picker-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-hypr_picker-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-hypr_picker-icon_size;
     margin-right: variable.$bar-widgets-hypr_picker-spacing;
   }
@@ -194,7 +194,7 @@
   border: if(variable.$bar-widgets-hypr_sunset-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-hypr_sunset-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-hypr_sunset-icon_size;
     margin-right: variable.$bar-widgets-hypr_sunset-spacing;
   }
@@ -205,7 +205,7 @@
   border: if(variable.$bar-widgets-keyboard-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-keyboard-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-keyboard-icon_size;
     margin-right: variable.$bar-widgets-keyboard-spacing;
   }
@@ -216,7 +216,7 @@
   border: if(variable.$bar-widgets-language-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-language-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-language-icon_size;
     margin-right: variable.$bar-widgets-language-spacing;
   }
@@ -227,7 +227,7 @@
   border: if(variable.$bar-widgets-microphone-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-microphone-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-microphone-icon_size;
     margin-right: variable.$bar-widgets-microphone-spacing;
   }
@@ -239,7 +239,7 @@
   border: if(variable.$bar-widgets-world_clock-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-world_clock-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-world_clock-icon_size;
     margin-right: variable.$bar-widgets-world_clock-spacing;
   }
@@ -309,12 +309,6 @@
 
 }
 
-#overview {
-  border-radius: variable.$bar-widgets-overview-border-radius;
-  border: if(variable.$bar-widgets-overview-border-enabled, variable.$border, none);
-  border-width: variable.$bar-widgets-overview-border-width;
-
-}
 
 
 #recorder {
@@ -330,7 +324,7 @@
   border: if(variable.$bar-widgets-stop_watch-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-stop_watch-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-stop_watch-icon_size;
     margin-right: variable.$bar-widgets-stop_watch-spacing;
   }
@@ -341,7 +335,7 @@
   border: if(variable.$bar-widgets-submap-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-submap-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-submap-icon_size;
     margin-right: variable.$bar-widgets-submap-spacing;
   }
@@ -355,7 +349,7 @@
   border: if(variable.$bar-widgets-theme-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-theme-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-theme-icon_size;
     margin-right: variable.$bar-widgets-theme-spacing;
   }
@@ -366,7 +360,7 @@
   border: if(variable.$bar-widgets-updates-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-updates-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-updates-icon_size;
     margin-right: variable.$bar-widgets-updates-spacing;
   }
@@ -377,7 +371,7 @@
   border: if(variable.$bar-widgets-volume-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-volume-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-volume-icon_size;
     margin-right: variable.$bar-widgets-volume-spacing;
   }
@@ -389,7 +383,7 @@
   border: if(variable.$bar-widgets-window_title-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-window_title-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-window_title-icon_size; // TODO: fix this
     margin-right: variable.$bar-widgets-window_title-spacing;
   }

@@ -7,8 +7,7 @@ from fabric.widgets.wayland import WaylandWindow as Window
 from fabric.widgets.widget import Widget
 from gi.repository import Gdk, GLib
 
-from utils import HyprlandWithMonitors
-from utils.types import Anchor, Keyboard_Mode, Layer
+from utils import Anchor, HyprlandWithMonitors, Keyboard_Mode, Layer
 
 
 class Padding(EventBox):
@@ -203,8 +202,8 @@ class PopupWindow(Window):
     def __init__(
         self,
         layer: Layer = "overlay",
-        name: str = "popup-window",
-        decorations: str = "padding: 1px;",
+        name="popup-window",
+        decorations="padding: 1px;",
         child: Widget | None = None,
         transition_type: Literal[
             "none",
@@ -215,7 +214,7 @@ class PopupWindow(Window):
             "slide-down",
         ]
         | None = None,
-        transition_duration: int = 100,
+        transition_duration=100,
         popup_visible: bool = False,
         anchor: Anchor = "top-right",
         enable_inhibitor: bool = False,
@@ -235,12 +234,12 @@ class PopupWindow(Window):
         self.hyprland_monitor = HyprlandWithMonitors()
 
         self.reveal_child = PopupRevealer(
-            name=name,
             popup_window=self,
             child=child,
             transition_type=transition_type,
             transition_duration=transition_duration,
             decorations=decorations,
+            name=name,
         )
 
         super().__init__(

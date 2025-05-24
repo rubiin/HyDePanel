@@ -20,13 +20,12 @@ class QuickSubMenu(Box):
         self.title = title
         self.title_icon = title_icon
         self.child = child
+        self.scan_button = scan_button
 
         super().__init__(visible=False, **kwargs)
         self.revealer_child = Box(orientation="v", name="submenu")
 
         self.submenu_title_box = self.make_submenu_title_box()
-
-        self.scan_button = scan_button
 
         self.revealer_child.add(
             self.submenu_title_box

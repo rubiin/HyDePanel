@@ -16,13 +16,13 @@ class KeyboardLayoutWidget(ButtonWidget):
     def __init__(self, widget_config: BarConfig, **kwargs):
         super().__init__(widget_config["keyboard"], name="keyboard", **kwargs)
 
-        self.kb_label = Label(label="0", style_classes="panel-text")
+        self.kb_label = Label(label="keyboard", style_classes="panel-text")
 
         if self.config["show_icon"]:
             # Create a TextIcon with the specified icon and size
             self.icon = text_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
             )
             self.box.add(self.icon)
 
@@ -72,7 +72,4 @@ class KeyboardLayoutWidget(ButtonWidget):
                 f"Caps Lock 󰪛: {main_kb['capsLock']} | Num Lock : {main_kb['numLock']}"
             )
 
-        # Update the label with the used storage if enabled
-        if self.config["label"]:
-            self.kb_label.set_label(KBLAYOUT_MAP[layout])
-            self.kb_label.set_visible(True)
+        self.kb_label.set_label(KBLAYOUT_MAP[layout])

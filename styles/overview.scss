@@ -5,6 +5,23 @@
 
 /* overview  widget */
 
+#overview-menu {
+  @include common.floating-widget;
+  @include common.spacing;
+}
+
+#overview {
+  border-radius: variable.$bar-widgets-overview-border-radius;
+  border: if(variable.$bar-widgets-overview-border-enabled, variable.$border, none);
+  border-width: variable.$bar-widgets-overview-border-width;
+
+  #nerd-icon.panel-font-icon {
+    font-size: variable.$bar-widgets-overview-icon_size;
+    margin-right: variable.$bar-widgets-overview-spacing;
+  }
+
+}
+
 #overview-window {
   background-color: color.mix(black, transparent, 90%);
   border-radius: 50px;

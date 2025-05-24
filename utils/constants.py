@@ -19,6 +19,23 @@ WEATHER_CACHE_FILE = f"{APP_CACHE_DIRECTORY}/weather.json"
 # Default configuration values
 DEFAULT_CONFIG = {
     "$schema": "./hydepanel.schema.json",
+    "cliphist": {
+        "icon": "",
+        "label": False,
+        "tooltip": True,
+    },
+    "emoji_picker": {
+        "icon": "",
+        "label": False,
+        "tooltip": True,
+        "per_row": 9,
+        "per_column": 4,
+    },
+    "kanban": {
+        "icon": "󱞁",
+        "label": True,
+        "tooltip": True,
+    },
     "battery": {
         "full_battery_level": 100,
         "hide_label_when_full": True,
@@ -68,14 +85,18 @@ DEFAULT_CONFIG = {
         "step_size": 5,
     },
     "cava": {"bars": 10, "color": "#89b4fa"},
-    "overview": {},
+    "overview": {
+        "icon": "󰡃",
+        "label": False,
+        "tooltip": True,
+    },
     "click_counter": {"count": 0},
     "cpu": {
         "show_icon": True,
         "icon": "",
         "tooltip": True,
         "round": True,
-        "unit": "celsius",
+        "temperature_unit": "celsius",
         "show_unit": True,
         "sensor": "",
         "mode": "circular",
@@ -128,7 +149,7 @@ DEFAULT_CONFIG = {
         "truncation_size": 2,
         "show_icon": True,
     },
-    "module_groups": [
+    "widget_groups": [
         {
             "widgets": ["updates", "battery"],
             "spacing": 4,
@@ -168,36 +189,42 @@ DEFAULT_CONFIG = {
         "truncation_size": 30,
         "tooltip": True,
     },
-    "notification": {
-        "enabled": True,
-        "anchor": "top-right",
-        "auto_dismiss": True,
-        "ignored": [],
-        "timeout": 3000,
-        "max_count": 200,
-        "transition_type": "slide-left",
-        "transition_duration": 350,
-        "per_app_limits": {},
-        "play_sound": False,
-        "max_actions": 5,
-        "display_actions_on_hover": False,
-        "dismiss_on_hover": False,
-        "sound_file": "notification4",
-    },
-    "osd": {
-        "enabled": True,
-        "timeout": 1500,
-        "anchor": "bottom-center",
-        "percentage": True,
-        "icon_size": 28,
-    },
     "ocr": {
         "icon": "󰐳",
         "tooltip": True,
         "label": False,
         "show_icon": True,
     },
-    "general": {
+    "modules": {
+        "osd": {
+            "enabled": True,
+            "timeout": 1500,
+            "anchor": "bottom-center",
+            "percentage": True,
+            "icon_size": 28,
+        },
+        "app_launcher": {
+            "enabled": False,
+            "tooltip": True,
+            "icon_size": 16,
+            "ignored_apps": [],
+        },
+        "notification": {
+            "enabled": True,
+            "anchor": "top-right",
+            "auto_dismiss": True,
+            "ignored": [],
+            "timeout": 3000,
+            "max_count": 200,
+            "transition_type": "slide-left",
+            "transition_duration": 350,
+            "per_app_limits": {},
+            "play_sound": False,
+            "max_actions": 5,
+            "display_actions_on_hover": False,
+            "dismiss_on_hover": False,
+            "sound_file": "notification4",
+        },
         "screen_corners": {
             "enabled": False,
             "size": 20,
@@ -216,10 +243,13 @@ DEFAULT_CONFIG = {
             "anchor": "center",
             "date_format": "%A, %d %B %Y",
         },
+    },
+    "general": {
         "check_updates": False,
         "layer": "top",
         "auto_hide": False,
         "debug": True,
+        "monitor_styles": True,
         "location": "top",
         "widget_style": "default",
     },
@@ -304,6 +334,7 @@ DEFAULT_CONFIG = {
         "tooltip": True,
         "expanded": True,
         "temperature_unit": "celsius",
+        "wind_speed_unit": "kmh",
         "interval": HIGH_POLL_INTERVAL,
     },
     "window_title": {

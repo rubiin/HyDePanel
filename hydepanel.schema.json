@@ -50,6 +50,8 @@
 							"click_counter",
 							"cpu",
 							"date_time",
+							"emoji_picker",
+							"kanban",
 							"divider",
 							"hypr_idle",
 							"hypr_sunset",
@@ -59,6 +61,7 @@
 							"media",
 							"microphone",
 							"network_usage",
+							"cliphist",
 							"ocr",
 							"power",
 							"recorder",
@@ -66,6 +69,7 @@
 							"spacer",
 							"storage",
 							"submap",
+							"overview",
 							"mpris",
 							"screen_shot",
 							"stop_watch",
@@ -218,6 +222,10 @@
 					"type": "boolean",
 					"description": "Determines whether debug mode is enabled."
 				},
+				"monitor_styles": {
+					"type": "boolean",
+					"description": "Determines whether to use monitor stylesheet."
+				},
 				"check_updates": {
 					"type": "boolean",
 					"description": "Determines whether to check for updates on startup."
@@ -249,7 +257,7 @@
 				"right_section": {
 					"$ref": "#/definitions/widgets"
 				},
-				"module_groups": {
+				"widget_groups": {
 					"type": "array",
 					"items": {
 						"type": "object",
@@ -297,6 +305,11 @@
 					"type": "string",
 					"enum": ["celsius", "fahrenheit"],
 					"description": "Specifies the temperature unit to use."
+				},
+				"wind_speed_unit": {
+					"type": "string",
+					"enum": ["kmh", "mph"],
+					"description": "Specifies the wind speed unit to use."
 				},
 				"label": {
 					"type": "boolean",
@@ -382,6 +395,65 @@
 				}
 			}
 		},
+		"cliphist": {
+			"type": "object",
+			"properties": {
+				"max_items": {
+					"type": "integer",
+					"description": "Maximum number of items to display in the clipboard history."
+				},
+				"icon_size": {
+					"type": "integer",
+					"description": "Specifies the size of the clipboard icon."
+				},
+				"show_icon": {
+					"type": "boolean",
+					"description": "Determines whether to show the icon."
+				}
+			}
+		},
+		"emoji_picker": {
+			"type": "object",
+			"properties": {
+				"max_items": {
+					"type": "integer",
+					"description": "Maximum number of items to display in the emoji picker."
+				},
+				"icon_size": {
+					"type": "integer",
+					"description": "Specifies the size of the emoji icon."
+				},
+				"show_icon": {
+					"type": "boolean",
+					"description": "Determines whether to show the icon."
+				},
+				"per_row": {
+					"type": "integer",
+					"description": "Number of emojis to display per row."
+				},
+				"per_column": {
+					"type": "integer",
+					"description": "Number of emojis to display per column."
+				}
+			}
+		},
+		"kanban": {
+			"type": "object",
+			"properties": {
+				"max_items": {
+					"type": "integer",
+					"description": "Maximum number of items to display in the clipboard history."
+				},
+				"icon_size": {
+					"type": "integer",
+					"description": "Specifies the size of the clipboard icon."
+				},
+				"show_icon": {
+					"type": "boolean",
+					"description": "Determines whether to show the icon."
+				}
+			}
+		},
 		"cpu": {
 			"type": "object",
 			"properties": {
@@ -402,10 +474,10 @@
 					"type": "string",
 					"description": "Icon name from icon theme"
 				},
-				"unit": {
+				"temperature_unit": {
 					"type": "string",
 					"enum": ["celsius", "fahrenheit"],
-					"description": "Unit to display temperature in"
+					"description": "Specifies the temperature unit to use."
 				},
 				"round": {
 					"type": "boolean",
@@ -1000,6 +1072,30 @@
 					"running_icon": {
 						"type": "string",
 						"description": "Icon to display when the stopwatch is running"
+					}
+				}
+			},
+			"app_launcher": {
+				"type": "object",
+				"properties": {
+					"enabled": {
+						"type": "boolean",
+						"description": "Determines whether the app launcher is enabled"
+					},
+					"tooltip": {
+						"type": "boolean",
+						"description": "Determines whether the app launcher has a tooltip"
+					},
+					"icon_size": {
+						"type": "integer",
+						"description": "Size of the app launcher icon"
+					},
+					"ignored_apps": {
+						"type": "array",
+						"items": {
+							"type": "string",
+							"description": "List of apps to ignore"
+						}
 					}
 				}
 			},

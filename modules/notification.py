@@ -16,10 +16,9 @@ from loguru import logger
 
 import utils.constants as constants
 import utils.functions as helpers
-import utils.icons as icons
 from services import notification_service
-from shared.circle_image import CircleImage
-from utils import BarConfig, Colors, HyprlandWithMonitors
+from shared import CircleImage
+from utils import BarConfig, Colors, HyprlandWithMonitors, symbolic_icons
 from utils.widget_utils import get_icon
 
 
@@ -31,7 +30,7 @@ class NotificationPopup(Window):
 
         self.widget_config = widget_config
 
-        self.config = widget_config["notification"]
+        self.config = widget_config["modules"]["notification"]
 
         self.hyprland_monitor = HyprlandWithMonitors()
 
@@ -149,8 +148,8 @@ class NotificationWidget(EventBox):
                     Button(
                         image=Image(
                             icon_name=helpers.check_icon_exists(
-                                icons.icons["ui"]["close"],
-                                icons.icons["ui"]["window_close"],
+                                symbolic_icons["ui"]["close"],
+                                symbolic_icons["ui"]["window_close"],
                             ),
                             icon_size=16,
                         ),
@@ -192,12 +191,12 @@ class NotificationWidget(EventBox):
         body_container.add(
             Label(
                 markup=helpers.parse_markup(self._notification.body),
-                line_wrap="char",
                 v_align="start",
                 h_expand=True,
                 h_align="start",
                 style_classes="body",
                 chars_width=20,
+                line_wrap="char",
                 max_chars_width=40,
             ),
         )

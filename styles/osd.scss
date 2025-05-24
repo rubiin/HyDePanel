@@ -9,17 +9,17 @@
   background-color: theme.$shadow-color;
   padding: common.toEm(12) common.toEm(20);
   margin-bottom: 100px;
-  opacity: variable.$osd-opacity * 0.01;
-  border: if(variable.$osd-border-enabled, variable.$border, none);
-  border-width: variable.$osd-border-width;
+  opacity: variable.$modules-osd-opacity * 0.01;
+  border: if(variable.$modules-osd-border-enabled, variable.$border, none);
+  border-width: variable.$modules-osd-border-width;
 
   $shadow: 0 0 0 variable.$bar-border-width theme.$shadow-color,
-    variable.$osd-shadow-offset variable.$osd-shadow-blur variable.$osd-shadow-spread color.adjust(theme.$shadow-color,
-      $alpha: calc(variable.$osd-shadow-opacity - 1));
+    variable.$modules-osd-shadow-offset variable.$modules-osd-shadow-blur variable.$modules-osd-shadow-spread color.adjust(theme.$shadow-color,
+      $alpha: calc(variable.$modules-osd-shadow-opacity - 1));
 
-  box-shadow: if(variable.$osd-shadow-enabled, $shadow, none);
+  box-shadow: if(variable.$modules-osd-shadow-enabled, $shadow, none);
 
-  @include common.widget_style(variable.$osd-widget_style);
+  @include common.widget_style(variable.$modules-osd-widget_style);
 
   #osd-level {
     font-weight: 600;
@@ -31,5 +31,5 @@
       background-color: theme.$accent-red;
     }
 
-  @include common.slider($slider: variable.$osd-sliders-slider, $min-length: 150px, $height: variable.$osd-sliders-height);
+  @include common.slider($slider: variable.$modules-osd-sliders-slider, $min-length: 150px, $height: variable.$modules-osd-sliders-height);
 }

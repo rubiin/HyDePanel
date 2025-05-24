@@ -7,10 +7,10 @@ from fabric.widgets.centerbox import CenterBox
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 from gi.repository import GLib, Gtk
+from loguru import logger
 
 import utils.functions as helpers
-from services import Brightness, MprisPlayerManager, audio_service
-from services.network import NetworkService
+from services import Brightness, MprisPlayerManager, NetworkService, Wifi, audio_service
 from shared import (
     ButtonWidget,
     CircleImage,
@@ -20,12 +20,15 @@ from shared import (
     Popover,
     QSChevronButton,
 )
-from utils import BarConfig
-from utils.icons import icons
+from utils import BarConfig, symbolic_icons
 from utils.widget_utils import (
     get_audio_icon_name,
     get_brightness_icon_name,
     util_fabricator,
+)
+from widgets.quick_settings.submenu.hyprsunset import (
+    HyprSunsetSubMenu,
+    HyprSunsetToggle,
 )
 
 from ..media import PlayerBoxStack
@@ -43,7 +46,6 @@ from .submenu import (
 from .submenu.mic import MicroPhoneSubMenu
 from .togglers import (
     HyprIdleQuickSetting,
-    HyprSunsetQuickSetting,
     NotificationQuickSetting,
 )
 
@@ -83,8 +85,8 @@ class QuickSettingsButtonBox(Box):
 
         self.power_pfl = PowerProfileToggle(submenu=PowerProfileSubMenu())
 
+        self.hypr_sunset = HyprSunsetToggle(submenu=HyprSunsetSubMenu())
         self.hypr_idle = HyprIdleQuickSetting()
-        self.hypr_sunset = HyprSunsetQuickSetting()
         self.notification_btn = NotificationQuickSetting()
 
         self.grid.attach(self.wifi_toggle, 1, 1, 1, 1)
@@ -112,11 +114,13 @@ class QuickSettingsButtonBox(Box):
         self.wifi_toggle.connect("reveal-clicked", self.set_active_submenu)
         self.bluetooth_toggle.connect("reveal-clicked", self.set_active_submenu)
         self.power_pfl.connect("reveal-clicked", self.set_active_submenu)
+        self.hypr_sunset.connect("reveal-clicked", self.set_active_submenu)
 
         self.add(self.grid)
         self.add(self.wifi_toggle.submenu)
         self.add(self.bluetooth_toggle.submenu)
         self.add(self.power_pfl.submenu)
+        self.add(self.hypr_sunset.submenu)
 
     def set_active_submenu(self, btn: QSChevronButton):
         if btn.submenu != self.active_submenu and self.active_submenu is not None:
@@ -202,7 +206,8 @@ class QuickSettingsMenu(Box):
                 children=(
                     HoverButton(
                         image=Image(
-                            icon_name=icons["powermenu"]["reboot"], icon_size=16
+                            icon_name=symbolic_icons["powermenu"]["reboot"],
+                            icon_size=16,
                         ),
                         v_align="center",
                         on_clicked=lambda *_: (
@@ -216,7 +221,8 @@ class QuickSettingsMenu(Box):
                     ),
                     HoverButton(
                         image=Image(
-                            icon_name=icons["powermenu"]["shutdown"], icon_size=16
+                            icon_name=symbolic_icons["powermenu"]["shutdown"],
+                            icon_size=16,
                         ),
                         v_align="center",
                         on_clicked=lambda *_: (
@@ -390,34 +396,35 @@ class QuickSettingsButtonWidget(ButtonWidget):
             widget_config["quick_settings"], name="quick_settings", **kwargs
         )
 
-        self.panel_icon_size = 16
-        self.audio = audio_service
-
         self._timeout_id = None
+        self.panel_icon_size = 16
 
-        self.network = NetworkService()
+        self.audio_service = audio_service
 
-        # Initialize the audio service
+        self.network_service = NetworkService()
+
         self.brightness_service = Brightness()
 
-        self.audio.connect("notify::speaker", self.on_speaker_changed)
-        self.brightness_service.connect(
-            "brightness_changed", self.on_brightness_changed
-        )
+        self.audio_service.connect("notify::speaker", self.on_speaker_changed)
+        self.audio_service.connect("changed", self.check_mute)
+
+        self.brightness_service.connect("brightness_changed", self.update_brightness)
+
+        self.network_service.connect("device-ready", self._get_network_icon)
 
         popup = Popover(
             content_factory=lambda: QuickSettingsMenu(config=self.config),
             point_to=self,
         )
 
-        self.audio_icon = Image(style_classes="panel-icon")
+        self.audio_icon = Image(style_classes="panel-font-icon")
 
         self.network_icon = Image(
-            style_classes="panel-icon",
+            style_classes="panel-font-icon",
         )
 
         self.brightness_icon = Image(
-            style_classes="panel-icon",
+            style_classes="panel-font-icon",
         )
 
         self.update_brightness()
@@ -435,75 +442,60 @@ class QuickSettingsButtonWidget(ButtonWidget):
             popup.open,
         )
 
-    def start_timeout(self):
-        self.stop_timeout()
-        self._timeout_id = GLib.timeout_add(2000, self.close_notification)
+    def _get_network_icon(self, *_):
+        # Check if the network service is ready
+        if self.network_service.primary_device == "wifi":
+            wifi = self.network_service.wifi_device
 
-    def stop_timeout(self):
-        if self._timeout_id is not None:
-            GLib.source_remove(self._timeout_id)
-            self._timeout_id = None
+            self.network_icon.set_from_icon_name(
+                wifi.icon_name,
+                self.panel_icon_size,
+            )
+            wifi.connect("changed", self.update_wifi_status)
 
-        def get_network_icon(*_):
-            if self.network.primary_device == "wifi":
-                wifi = self.network.wifi_device
-
-                if wifi:
-                    self.network_icon.set_from_icon_name(
-                        wifi.get_icon_name(),
-                        self.panel_icon_size,
-                    )
-                else:
-                    self.network_icon.set_from_icon_name(
-                        icons["network"]["wifi"]["disconnected"],
-                        self.panel_icon_size,
-                    )
-
-            else:
-                ethernet = self.network.ethernet_device
-                if ethernet:
-                    self.network_icon.set_from_icon_name(
-                        ethernet.get_icon_name(),
-                        self.panel_icon_size,
-                    )
-                else:
-                    self.network_icon.set_from_icon_name(
-                        icons["network"]["wifi"]["disconnected"],
-                        self.panel_icon_size,
-                    )
-
-        self.network.connect("notify::primary-device", get_network_icon)
-
-    def on_speaker_changed(self, *_):
-        # Update the progress bar value based on the speaker volume
-        if not self.audio.speaker:
-            return
-
-        self.audio.speaker.connect("notify::volume", self.update_volume)
-        self.update_volume()
-
-    def update_volume(self, *_):
-        if self.audio.speaker:
-            volume = round(self.audio.speaker.volume)
-
-            self.audio_icon.set_from_icon_name(
-                get_audio_icon_name(volume, self.audio.speaker.muted)["icon"],
+        else:
+            ethernet = self.network_service.ethernet_device
+            self.network_icon.set_from_icon_name(
+                ethernet.icon_name,
                 self.panel_icon_size,
             )
 
-    def on_brightness_changed(self, *_):
-        self.update_brightness()
+    def update_wifi_status(self, wifi: Wifi):
+        self.network_icon.set_from_icon_name(
+            wifi.icon_name,
+            self.panel_icon_size,
+        )
+
+    def on_speaker_changed(self, *_):
+        # Update the progress bar value based on the speaker volume
+        if not self.audio_service.speaker:
+            return
+
+        self.audio_service.speaker.connect("notify::volume", self.update_volume)
+
+    def check_mute(self, audio):
+        if not self.audio_service.speaker:
+            return
+        self.audio_icon.set_from_icon_name(
+            get_audio_icon_name(
+                self.audio_service.speaker.volume, self.audio_service.speaker.muted
+            )["icon"],
+            self.panel_icon_size,
+        )
+
+    def update_volume(self, *_):
+        if self.audio_service.speaker:
+            volume = round(self.audio_service.speaker.volume)
+
+            self.audio_icon.set_from_icon_name(
+                get_audio_icon_name(volume, self.audio_service.speaker.muted)["icon"],
+                self.panel_icon_size,
+            )
 
     def update_brightness(self, *_):
         """Update the brightness icon."""
         try:
-            # Convert brightness to percentage (0-100)
-
-            normalized_brightness = helpers.convert_to_percent(
-                self.brightness_service.screen_brightness,
-                self.brightness_service.max_screen,
-            )
-
+            normalized_brightness = self.brightness_service.screen_brightness_percentage
             icon_info = get_brightness_icon_name(normalized_brightness)
             if icon_info:
                 self.brightness_icon.set_from_icon_name(
@@ -513,13 +505,13 @@ class QuickSettingsButtonWidget(ButtonWidget):
             else:
                 # Fallback icon if something goes wrong
                 self.brightness_icon.set_from_icon_name(
-                    icons["brightness"]["indicator"],
+                    symbolic_icons["brightness"]["indicator"],
                     self.panel_icon_size,
                 )
         except Exception as e:
-            print(f"Error updating brightness icon: {e}")
+            logger.exception(f"Error updating brightness icon: {e}")
             # Fallback icon if something goes wrong
             self.brightness_icon.set_from_icon_name(
-                icons["brightness"]["indicator"],
+                symbolic_icons["brightness"]["indicator"],
                 self.panel_icon_size,
             )

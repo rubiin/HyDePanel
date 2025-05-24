@@ -20,15 +20,14 @@ class WindowCountWidget(ButtonWidget):
         self.connection = get_hyprland_connection()
 
         self.count_label = Label(label="0", style_classes="panel-text")
+        self.box.add(self.count_label)
 
         if self.config["show_icon"]:
             self.icon = text_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
             )
             self.box.add(self.icon)
-
-        self.box.add(self.count_label)
 
         bulk_connect(
             self.connection,

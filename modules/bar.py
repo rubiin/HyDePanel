@@ -6,22 +6,13 @@ from fabric.widgets.box import Box
 from fabric.widgets.centerbox import CenterBox
 from fabric.widgets.wayland import WaylandWindow as Window
 
-from shared import ModuleGroup
+from shared import ToggleableWidget, WidgetGroup
 from utils import HyprlandWithMonitors
-from utils.functions import run_in_thread
 from utils.widget_utils import lazy_load_widget
 
 
-class StatusBar(Window):
+class StatusBar(Window, ToggleableWidget):
     """A widget to display the status bar panel."""
-
-    @run_in_thread
-    def check_for_bar_updates(self):
-        exec_shell_command_async(
-            get_relative_path("../assets/scripts/barupdate.sh"),
-            lambda _: None,
-        )
-        return True
 
     def __init__(self, config, **kwargs):
         self.widgets_list = {
@@ -30,6 +21,9 @@ class StatusBar(Window):
             "world_clock": "widgets.WorldClockWidget",
             "brightness": "widgets.BrightnessWidget",
             "cava": "widgets.CavaWidget",
+            "cliphist": "widgets.ClipHistoryWidget",
+            "kanban": "widgets.KanbanWidget",
+            "emoji_picker": "widgets.EmojiPickerWidget",
             "click_counter": "widgets.ClickCounterWidget",
             "cpu": "widgets.CpuWidget",
             "date_time": "widgets.DateTimeWidget",
@@ -102,7 +96,10 @@ class StatusBar(Window):
         )
 
         if options["check_updates"]:
-            self.check_for_bar_updates()
+            exec_shell_command_async(
+                get_relative_path("../assets/scripts/barupdate.sh"),
+                lambda _: None,
+            )
 
     def make_layout(self, widget_config):
         """assigns the three sections their respective widgets"""
@@ -118,12 +115,12 @@ class StatusBar(Window):
 
                     if group_name.isdigit():
                         idx = int(group_name)
-                        groups = widget_config.get("module_groups", [])
+                        groups = widget_config.get("widget_groups", [])
                         if isinstance(groups, list) and 0 <= idx < len(groups):
                             group_config = groups[idx]
 
                     if group_config:
-                        group = ModuleGroup.from_config(
+                        group = WidgetGroup.from_config(
                             group_config,
                             self.widgets_list,
                             bar=self,

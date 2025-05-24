@@ -8,7 +8,7 @@ from fabric.widgets.image import Image
 from gi.repository import GdkPixbuf, GLib, Gtk
 from loguru import logger
 
-from shared.widget_container import ButtonWidget, HoverButton
+from shared import ButtonWidget, HoverButton
 from utils import BarConfig, Colors
 
 
@@ -136,7 +136,7 @@ class TaskBarWidget(ButtonWidget):
                                         if window_class in app_name:
                                             return icon_name
                         except Exception as e:
-                            logger.error(
+                            logger.exception(
                                 f"{Colors.ERROR}Error reading {file_path}: {e}"
                             )
         return None

@@ -3,6 +3,7 @@ import subprocess
 from fabric.widgets.box import Box
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
+from loguru import logger
 
 from shared import Grid, HoverButton
 
@@ -46,7 +47,7 @@ class ShortcutButton(HoverButton):
         try:
             subprocess.Popen(["hyprctl", "dispatch", "exec", self.command])
         except Exception as e:
-            print(f"Error executing shortcut command: {e}")
+            logger.exception(f"Error executing shortcut command: {e}")
 
 
 class ShortcutsContainer(Box):

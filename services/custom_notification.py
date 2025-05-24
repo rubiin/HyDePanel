@@ -65,7 +65,7 @@ class CustomNotifications(Notifications):
                         return (True, notif, notif.get("id", 0))
                     except Exception as e:
                         msg = f"[Notification] Invalid: {str(e)[:50]}"
-                        logger.error(f"{Colors.INFO}{msg}")
+                        logger.exception(f"{Colors.INFO}{msg}")
                         return (False, None, 0)
 
                 # Validate all notifications at once
@@ -84,7 +84,7 @@ class CustomNotifications(Notifications):
                 self._write_notifications(self.all_notifications)
 
             except (json.JSONDecodeError, KeyError, ValueError, IndexError) as e:
-                logger.error(f"{Colors.INFO}[Notification] {e}")
+                logger.exception(f"{Colors.INFO}[Notification] {e}")
                 self.all_notifications = []
                 self._count = 0
 
@@ -204,7 +204,7 @@ class CustomNotifications(Notifications):
                 return (self._deserialize_notification(notif), None)
             except Exception as e:
                 msg = f"[Notification] Deserialize failed: {str(e)[:50]}"
-                logger.error(f"{Colors.INFO}{msg}")
+                logger.exception(f"{Colors.INFO}{msg}")
                 return (None, notif.get("id"))
 
         # Process all notifications at once

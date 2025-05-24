@@ -6,8 +6,7 @@ from fabric.widgets.overlay import Overlay
 import utils.functions as helpers
 from services import Brightness
 from shared import EventBoxWidget
-from utils import BarConfig
-from utils.icons import text_icons
+from utils import BarConfig, text_icons
 from utils.widget_utils import get_brightness_icon_name, text_icon
 
 
@@ -38,21 +37,16 @@ class BrightnessWidget(EventBoxWidget):
             value=normalized_brightness / 100,
         )
 
-        self.brightness_label = Label(
-            visible=False, label=f"{normalized_brightness}%", style_classes="panel-text"
-        )
-
         self.icon = text_icon(
             icon=text_icons["brightness"]["medium"],
             props={
-                "style_classes": "panel-icon overlay-icon",
+                "style_classes": "panel-font-icon overlay-icon",
             },
         )
 
         # Create an event box to handle scroll events for brightness control
-        self.box.children = (
+        self.box.add(
             Overlay(child=self.progress_bar, overlays=self.icon, name="overlay"),
-            self.brightness_label,
         )
 
         # Connect the audio service to update the progress bar on brightness change
@@ -64,9 +58,13 @@ class BrightnessWidget(EventBoxWidget):
         self.connect("scroll-event", self.on_scroll)
 
         if self.config["label"]:
-            self.brightness_label.set_visible(True)
+            self.brightness_label = Label(
+                label=f"{normalized_brightness}%",
+                style_classes="panel-text",
+            )
+            self.box.add(self.brightness_label)
 
-    @cooldown(1)
+    @cooldown(0.1)
     def on_scroll(self, _, event):
         # Adjust the brightness based on the scroll direction
         val_y = event.delta_y
@@ -83,7 +81,8 @@ class BrightnessWidget(EventBoxWidget):
         )
         self.progress_bar.set_value(normalized_brightness / 100)
 
-        self.brightness_label.set_text(f"{normalized_brightness}%")
+        if self.config["label"]:
+            self.brightness_label.set_text(f"{normalized_brightness}%")
 
         self.icon.set_text(get_brightness_icon_name(normalized_brightness)["text_icon"])
 
