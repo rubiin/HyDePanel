@@ -458,50 +458,57 @@ Recording = TypedDict(
 ScreenShot = TypedDict("ScreenShot", {"path": str, "icon_size": int, "tooltip": bool})
 
 
+Widgets = TypedDict(
+    "Widgets",
+    {
+        "battery": Battery,
+        "bluetooth": BlueTooth,
+        "brightness": Brightness,
+        "cava": Cava,
+        "click_counter": ClickCounter,
+        "cpu": Cpu,
+        "emoji_picker": EmojiPicker,
+        "kanban": Kanban,
+        "date_time": DateTimeMenu,
+        "divider": Divider,
+        "hypr_idle": HyprIdle,
+        "hypr_sunset": HyprSunset,
+        "hypr_picker": HyprPicker,
+        "keyboard": Keyboard,
+        "language": Language,
+        "layout": Layout,
+        "memory": Memory,
+        "microphone": MicroPhone,
+        "mpris": Mpris,
+        "network_usage": NetworkUsage,
+        "ocr": OCR,
+        "overview": Overview,
+        "power_button": PowerButton,
+        "quick_settings": QuickSettings,
+        "recorder": Recording,
+        "screen_shot": ScreenShot,
+        "spacing": Spacing,
+        "stop_watch": StopWatch,
+        "storage": Storage,
+        "system_tray": SystemTray,
+        "submap": Submap,
+        "task_bar": TaskBar,
+        "theme_switcher": ThemeSwitcher,
+        "updates": Updates,
+        "volume": Volume,
+        "weather": Weather,
+        "window_title": WindowTitle,
+        "window_count": WindowCount,
+        "workspaces": Workspaces,
+        "world_clock": WorldClock,
+    },
+)
+
+
 class BarConfig(TypedDict):
     """Main configuration that includes all other configurations"""
 
-    battery: Battery
-    bluetooth: BlueTooth
-    brightness: Brightness
-    cava: Cava
-    click_counter: ClickCounter
-    cpu: Cpu
-    emoji_picker: EmojiPicker
-    kanban: Kanban
-    date_time: DateTimeMenu
-    divider: Divider
-    hypr_idle: HyprIdle
-    hypr_sunset: HyprSunset
-    hypr_picker: HyprPicker
-    keyboard: Keyboard
-    language: Language
-    layout: Layout
-    memory: Memory
-    microphone: MicroPhone
-    mpris: Mpris
-    network_usage: NetworkUsage
     general: General
-    ocr: OCR
+    widgets: Widgets
     modules: Modules
-    overview: Overview
-    power: PowerButton
-    quick_settings: QuickSettings
-    recorder: Recording
-    screen_shot: ScreenShot
-    spacing: Spacing
-    stop_watch: StopWatch
-    storage: Storage
-    system_tray: SystemTray
-    submap: Submap
-    task_bar: TaskBar
-    theme: Theme
-    theme_switcher: ThemeSwitcher
-    updates: Updates
-    volume: Volume
-    weather: Weather
-    window_title: WindowTitle
-    window_count: WindowCount
-    workspaces: Workspaces
-    world_clock: WorldClock
-    cliphist: Cliphist
+
