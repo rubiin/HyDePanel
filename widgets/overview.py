@@ -399,7 +399,7 @@ class OverviewWidget(ButtonWidget):
 
     def __init__(self, widget_config: BarConfig, **kwargs):
         # Initialize as a Box instead of a PopupWindow.
-        super().__init__(widget_config["overview"], name="overview1", **kwargs)
+        super().__init__(widget_config["overview"], name="overview", **kwargs)
 
         if self.config["tooltip"]:
             self.set_tooltip_text("Overview")
