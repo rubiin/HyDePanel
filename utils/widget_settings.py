@@ -327,6 +327,9 @@ Overview = TypedDict("Overview", {"icon": str, **BaseConfig.__annotations__})
 
 Cliphist = TypedDict("Cliphist", {"icon": str, **BaseConfig.__annotations__})
 
+# LofiPlayer configuration
+LofiPlayer = TypedDict("LofiPlayer", {"icon": str, **BaseConfig.__annotations__})
+
 Kanban = TypedDict("kanban", {"icon": str, **BaseConfig.__annotations__})
 
 EmojiPicker = TypedDict(
@@ -505,3 +508,4 @@ class BarConfig(TypedDict):
     workspaces: Workspaces
     world_clock: WorldClock
     cliphist: Cliphist
+    lofi_player: LofiPlayer

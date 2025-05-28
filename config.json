@@ -98,6 +98,11 @@
 		"label": false,
 		"tooltip": true
 	},
+	"lofi_player": {
+		"icon": "",
+		"label": false,
+		"tooltip": true
+	},
 	"kanban": {
 		"icon": "󱞁",
 		"label": false,
@@ -143,7 +148,8 @@
 			"window_title"
 		], // this is the left section of the panel
 		"middle_section": [
-			"date_time"
+			"date_time",
+			"lofi_player"
 		], // this is the middle section of the panel
 		"right_section": [
 			"recorder",

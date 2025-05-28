@@ -13,6 +13,7 @@ from .hypr_sunset import *
 from .kanban import *
 from .keyboard_layout import *
 from .language import *
+from .lofi import *
 from .microphone import *
 from .mpris import *
 from .ocr import *

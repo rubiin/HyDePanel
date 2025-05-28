@@ -32,6 +32,7 @@ class StatusBar(Window, ToggleableWidget):
             "hypr_sunset": "widgets.HyprSunsetWidget",
             "keyboard": "widgets.KeyboardLayoutWidget",
             "language": "widgets.LanguageWidget",
+            "lofi_player": "widgets.LofiWidget",
             "memory": "widgets.MemoryWidget",
             "microphone": "widgets.MicrophoneIndicatorWidget",
             "mpris": "widgets.Mpris",
