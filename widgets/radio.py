@@ -108,6 +108,7 @@ class RadioMenu(Box):
 
             # Add style to current row
             row.get_style_context().add_class("playing")
+            row.set_sensitive(False)
             self.current_row = row
             self.emit("changed", name)
 
