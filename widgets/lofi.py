@@ -40,7 +40,7 @@ class LofiMenu(Box):
         # Listbox to show stations
         self.listbox = Gtk.ListBox(visible=True)
         self.listbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
-        self.listbox.connect("row-selected", self.on_station_selected)
+        self.listbox.connect("row-activated", self.on_station_selected)
 
         # Add stations to listbox
         for station in self.stations:
