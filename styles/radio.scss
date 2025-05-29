@@ -1,0 +1,38 @@
+@use "sass:color";
+@use "theme";
+@use "common";
+@use "variable";
+
+#radio_menu {
+  @include common.floating-widget;
+  @include common.spacing;
+
+  #radio_scrolled_window {
+    padding: 10px 0;
+
+    #station_label {
+      font-weight: 700;
+      padding: 10px 5px;
+    }
+
+    #station_row.playing {
+      color: theme.$accent-green;
+    }
+
+
+  }
+
+}
+
+
+
+#radio_player {
+  border-radius: variable.$bar-widgets-radio_player-border-radius;
+  border: if(variable.$bar-widgets-radio_player-border-enabled, variable.$border, none);
+  border-width: variable.$bar-widgets-radio_player-border-width;
+
+  #nerd-icon.panel-font-icon {
+    font-size: variable.$bar-widgets-radio_player-icon_size; // TODO: fix this
+    margin-right: variable.$bar-widgets-radio_player-spacing;
+  }
+}
