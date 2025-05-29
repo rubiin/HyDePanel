@@ -4,6 +4,7 @@ import gi
 from fabric.utils import cooldown
 from fabric.widgets.box import Box
 from fabric.widgets.label import Label
+from fabric.widgets.scrolledwindow import ScrolledWindow
 from gi.repository import GObject, Gst, Gtk
 
 from shared.pop_over import Popover
@@ -19,11 +20,13 @@ class RadioMenu(Box):
 
     __gsignals__: ClassVar = {"changed": (GObject.SignalFlags.RUN_FIRST, None, (str,))}
 
-    def __init__(self):
-        super().__init__(name="radio_menu")
+    def __init__(self, config, **kwargs):
+        super().__init__(name="radio_menu", **kwargs)
 
         # Initialize GStreamer
         Gst.init(None)
+
+        row_height_px = 40  # Height of each row in pixels
 
         # List of radio stations: (Name, URL)
         self.stations = [
@@ -54,6 +57,14 @@ class RadioMenu(Box):
         self.listbox.set_selection_mode(Gtk.SelectionMode.SINGLE)
         self.listbox.connect("row-activated", self.on_station_selected)
 
+        self.scrolled_window = ScrolledWindow(
+            name="radio_scrolled_window",
+            v_scrollbar_policy="automatic",
+            h_scrollbar_policy="never",
+            size=(300, config["max_visible_stations"] * row_height_px),
+            child=self.listbox,
+        )
+
         # Add stations to listbox
         for station in self.stations:
             name = station["name"]
@@ -67,7 +78,7 @@ class RadioMenu(Box):
             row.station_name = name
             self.listbox.add(row)
 
-        self.add(self.listbox)
+        self.add(self.scrolled_window)
 
         # GStreamer player
         self.player = Gst.ElementFactory.make("playbin", "player")
@@ -133,7 +144,7 @@ class RadioWidget(ButtonWidget):
             )
             self.box.add(self.label)
 
-        radio_menu = RadioMenu()
+        radio_menu = RadioMenu(config=self.config)
 
         self.popover = Popover(
             content_factory=lambda: radio_menu,

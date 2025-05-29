@@ -327,8 +327,11 @@ Overview = TypedDict("Overview", {"icon": str, **BaseConfig.__annotations__})
 
 Cliphist = TypedDict("Cliphist", {"icon": str, **BaseConfig.__annotations__})
 
-# LofiPlayer configuration
-LofiPlayer = TypedDict("LofiPlayer", {"icon": str, **BaseConfig.__annotations__})
+# RadioPlayer configuration
+RadioPlayer = TypedDict(
+    "RadioPlayer",
+    {"icon": str, "max_visible_stations": int, **BaseConfig.__annotations__},
+)
 
 Kanban = TypedDict("kanban", {"icon": str, **BaseConfig.__annotations__})
 
@@ -508,4 +511,4 @@ class BarConfig(TypedDict):
     workspaces: Workspaces
     world_clock: WorldClock
     cliphist: Cliphist
-    radio_player: LofiPlayer
+    radio_player: RadioPlayer

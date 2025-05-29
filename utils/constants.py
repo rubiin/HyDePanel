@@ -27,6 +27,7 @@ DEFAULT_CONFIG = {
         "icon": "",
         "label": True,
         "tooltip": True,
+        "max_visible_stations": 4,
     },
     "emoji_picker": {
         "icon": "",
