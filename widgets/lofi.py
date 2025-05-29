@@ -1,8 +1,9 @@
 from typing import ClassVar
+
 import gi
 from fabric.widgets.box import Box
 from fabric.widgets.label import Label
-from gi.repository import Gst, Gtk, GObject
+from gi.repository import GObject, Gst, Gtk
 
 from shared.pop_over import Popover
 from shared.widget_container import ButtonWidget
@@ -15,9 +16,7 @@ gi.require_version("Gst", "1.0")
 class LofiMenu(Box):
     "A menu for playing online radio stations using GStreamer."
 
-    __gsignals__: ClassVar = {
-        "changed": (GObject.SignalFlags.RUN_FIRST, None, (int,))
-    }
+    __gsignals__: ClassVar = {"changed": (GObject.SignalFlags.RUN_FIRST, None, (str,))}
 
     def __init__(self):
         super().__init__(name="lofi_menu")
@@ -62,6 +61,7 @@ class LofiMenu(Box):
     def on_station_selected(self, _, row):
         if row is not None:
             url = row.station_url
+            name = row.station_name
 
             # Stop previous stream
             self.player.set_state(Gst.State.NULL)
@@ -72,12 +72,12 @@ class LofiMenu(Box):
 
             # Remove style from previous row
             if self.current_row:
-                self.current_row.remove_class("playing")
+                self.current_row.get_style_context().remove_class("playing")
 
             # Add style to current row
-            row.add_class("playing")
+            row.get_style_context().add_class("playing")
             self.current_row = row
-            self.emit("changed", row)
+            self.emit("changed", name)
 
 
 class LofiWidget(ButtonWidget):
@@ -93,10 +93,14 @@ class LofiWidget(ButtonWidget):
         )
         self.box.add(self.icon)
 
-        self.box.set_spacing(10)
-
+        # Create a label to display the current station
         if self.config["label"]:
-            self.box.add(Label(label="lofi_player", style_classes="panel-text"))
+            self.label = Label(
+                label="No station playing",
+                style_classes="panel-text",
+                name="lofi_label",
+            )
+            self.box.add(self.label)
 
         lofi_menu = LofiMenu()
 
@@ -106,4 +110,15 @@ class LofiWidget(ButtonWidget):
         )
         self.connect("clicked", self.popover.open)
 
-        lofi_menu.connect("changed", lambda _, row: print(f"Selected station: {row.station_name}"))
+        lofi_menu.connect("changed", self.handle_play)
+
+    def handle_play(self, _, name):
+        """Handle play button click."""
+
+        if self.config["label"]:
+            # Update the label with the name of the currently playing station
+            self.label.set_label(f"Now playing: {name}")
+
+        if self.config["tooltip"]:
+            # Update the tooltip with the name of the currently playing station
+            self.set_tooltip_text(f"Now playing: {name}")

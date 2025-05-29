@@ -98,6 +98,11 @@
 		"label": false,
 		"tooltip": true
 	},
+	"lofi_player": {
+		"icon": "",
+		"label": true,
+		"tooltip": true
+	},
 	"kanban": {
 		"icon": "󱞁",
 		"label": false,
@@ -144,7 +149,7 @@
 		], // this is the left section of the panel
 		"middle_section": [
 			"date_time",
-			"weather"
+			"lofi_player"
 		], // this is the middle section of the panel
 		"right_section": [
 			"recorder",
@@ -210,8 +215,7 @@
 			"timeout": 2000,
 			"icon_size": 28,
 			"anchor": "bottom-center", // this is the position of the OSD, you can use top-center, top-left, top-right, bottom-center, bottom-left, bottom-right
-			"percentage": true,
-			"play_sound": false
+			"percentage": true
 		},
 		"screen_corners": {
 			"enabled": false,

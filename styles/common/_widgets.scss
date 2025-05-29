@@ -398,3 +398,29 @@ button.launcher-button:focus label {
 #launcher-prompt {
   font-size: 12px;
 }
+
+
+
+
+#lofi_menu {
+  @include mixins.floating-widget;
+  @include mixins.spacing;
+
+  #station_label {
+    font-weight: 700;
+    padding: 10px;
+  }
+}
+
+
+
+#lofi_player {
+  border-radius: variable.$bar-widgets-lofi_player-border-radius;
+  border: if(variable.$bar-widgets-lofi_player-border-enabled, variable.$border, none);
+  border-width: variable.$bar-widgets-lofi_player-border-width;
+
+  #nerd-icon.panel-font-icon {
+    font-size: variable.$bar-widgets-lofi_player-icon_size; // TODO: fix this
+    margin-right: variable.$bar-widgets-lofi_player-spacing;
+  }
+}

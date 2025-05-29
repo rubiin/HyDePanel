@@ -99,8 +99,8 @@
 		"tooltip": true
 	},
 	"lofi_player": {
-		"icon": "",
-		"label": false,
+		"icon": "",
+		"label": true,
 		"tooltip": true
 	},
 	"kanban": {

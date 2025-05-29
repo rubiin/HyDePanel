@@ -358,12 +358,3 @@ scrolledwindow {
 }
 
 
-#lofi_menu {
-  @include mixins.floating-widget;
-  @include mixins.spacing;
-
-  #station_label{
-    font-weight: 700;
-    padding: 10px;
-  }
-}

@@ -24,8 +24,8 @@ DEFAULT_CONFIG = {
         "tooltip": True,
     },
     "lofi_player": {
-        "icon": "",
-        "label": False,
+        "icon": "",
+        "label": True,
         "tooltip": True,
     },
     "emoji_picker": {
