@@ -61,7 +61,7 @@ class RadioMenu(Box):
             name="radio_scrolled_window",
             v_scrollbar_policy="automatic",
             h_scrollbar_policy="never",
-            size=(225, config["max_visible_stations"] * row_height_px),
+            size=(240, config["max_visible_stations"] * row_height_px),
             child=self.listbox,
         )
 
