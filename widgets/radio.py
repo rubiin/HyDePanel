@@ -13,13 +13,13 @@ from utils.widget_utils import text_icon
 gi.require_version("Gst", "1.0")
 
 
-class LofiMenu(Box):
+class RadioMenu(Box):
     "A menu for playing online radio stations using GStreamer."
 
     __gsignals__: ClassVar = {"changed": (GObject.SignalFlags.RUN_FIRST, None, (str,))}
 
     def __init__(self):
-        super().__init__(name="lofi_menu")
+        super().__init__(name="radio_menu")
 
         # Initialize GStreamer
         Gst.init(None)
@@ -34,6 +34,18 @@ class LofiMenu(Box):
                 "name": "Radio - Chillhop 🎧🎶",
                 "url": "http://stream.zeno.fm/fyn8eh3h5f8uv",
             },
+            {
+                "name": "Radio - Chillhop de 🎧🎶",
+                "url": "https://streams.fluxfm.de/Chillhop/mp3-128/streams.fluxfm.de/",
+            },
+            {
+                "name": "Radion - NeoLofi 🎧🎶",
+                "url": "https://streams.fluxfm.de/neofm/mp3-320/radiode/",
+            },
+            {
+                "name": "Radio - XJazz 🎧🎶",
+                "url": "https://streams.fluxfm.de/xjazz/mp3-320/audio/",
+            },
         ]
 
         # Listbox to show stations
@@ -45,7 +57,9 @@ class LofiMenu(Box):
         for station in self.stations:
             name = station["name"]
             url = station["url"]
-            label = Label(label=name, name="station_label", v_align="center")
+            label = Label(
+                label=name, name="station_label", v_align="center", h_align="start"
+            )
             row = Gtk.ListBoxRow(visible=True, name="station_row")
             row.add(label)
             row.station_url = url
@@ -80,11 +94,11 @@ class LofiMenu(Box):
             self.emit("changed", name)
 
 
-class LofiWidget(ButtonWidget):
+class RadioWidget(ButtonWidget):
     """a widget that displays the title of the active window."""
 
     def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["lofi_player"], name="lofi_player", **kwargs)
+        super().__init__(widget_config["radio_player"], name="radio_player", **kwargs)
 
         # Create a TextIcon with the specified icon and size
         self.icon = text_icon(
@@ -102,15 +116,15 @@ class LofiWidget(ButtonWidget):
             )
             self.box.add(self.label)
 
-        lofi_menu = LofiMenu()
+        radio_menu = RadioMenu()
 
         self.popover = Popover(
-            content_factory=lambda: lofi_menu,
+            content_factory=lambda: radio_menu,
             point_to=self,
         )
         self.connect("clicked", self.popover.open)
 
-        lofi_menu.connect("changed", self.handle_play)
+        radio_menu.connect("changed", self.handle_play)
 
     def handle_play(self, _, name):
         """Handle play button click."""

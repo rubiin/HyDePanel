@@ -402,7 +402,7 @@ button.launcher-button:focus label {
 
 
 
-#lofi_menu {
+#radio_menu {
   @include mixins.floating-widget;
   @include mixins.spacing;
 
@@ -414,13 +414,13 @@ button.launcher-button:focus label {
 
 
 
-#lofi_player {
-  border-radius: variable.$bar-widgets-lofi_player-border-radius;
-  border: if(variable.$bar-widgets-lofi_player-border-enabled, variable.$border, none);
-  border-width: variable.$bar-widgets-lofi_player-border-width;
+#radio_player {
+  border-radius: variable.$bar-widgets-radio_player-border-radius;
+  border: if(variable.$bar-widgets-radio_player-border-enabled, variable.$border, none);
+  border-width: variable.$bar-widgets-radio_player-border-width;
 
   #nerd-icon.panel-font-icon {
-    font-size: variable.$bar-widgets-lofi_player-icon_size; // TODO: fix this
-    margin-right: variable.$bar-widgets-lofi_player-spacing;
+    font-size: variable.$bar-widgets-radio_player-icon_size; // TODO: fix this
+    margin-right: variable.$bar-widgets-radio_player-spacing;
   }
 }

@@ -508,4 +508,4 @@ class BarConfig(TypedDict):
     workspaces: Workspaces
     world_clock: WorldClock
     cliphist: Cliphist
-    lofi_player: LofiPlayer
+    radio_player: LofiPlayer

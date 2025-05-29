@@ -98,7 +98,7 @@
 		"label": false,
 		"tooltip": true
 	},
-	"lofi_player": {
+	"radio_player": {
 		"icon": "",
 		"label": true,
 		"tooltip": true
@@ -149,7 +149,7 @@
 		], // this is the left section of the panel
 		"middle_section": [
 			"date_time",
-			"lofi_player"
+			"radio_player"
 		], // this is the middle section of the panel
 		"right_section": [
 			"recorder",

@@ -23,7 +23,7 @@ DEFAULT_CONFIG = {
         "label": False,
         "tooltip": True,
     },
-    "lofi_player": {
+    "radio_player": {
         "icon": "",
         "label": True,
         "tooltip": True,

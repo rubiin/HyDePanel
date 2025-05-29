@@ -163,7 +163,7 @@
 					"radius": "16px"
 				}
 			},
-			"lofi_player": {
+			"radio_player": {
 				"spacing": ".125em",
 				"icon_size": "12px",
 				"border": {
