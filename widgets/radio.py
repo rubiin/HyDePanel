@@ -61,7 +61,7 @@ class RadioMenu(Box):
             name="radio_scrolled_window",
             v_scrollbar_policy="automatic",
             h_scrollbar_policy="never",
-            size=(300, config["max_visible_stations"] * row_height_px),
+            size=(225, config["max_visible_stations"] * row_height_px),
             child=self.listbox,
         )
 
@@ -75,7 +75,7 @@ class RadioMenu(Box):
                 v_align="center",
                 h_align="start",
                 ellipsization="end",
-                max_chars_width=20,
+                max_chars_width=30,
             )
 
             row = Gtk.ListBoxRow(visible=True, name="station_row")
