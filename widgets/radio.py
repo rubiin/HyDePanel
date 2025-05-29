@@ -70,8 +70,14 @@ class RadioMenu(Box):
             name = station["name"]
             url = station["url"]
             label = Label(
-                label=name, name="station_label", v_align="center", h_align="start"
+                label=name,
+                name="station_label",
+                v_align="center",
+                h_align="start",
+                ellipsization="end",
+                max_chars_width=20,
             )
+
             row = Gtk.ListBoxRow(visible=True, name="station_row")
             row.add(label)
             row.station_url = url
