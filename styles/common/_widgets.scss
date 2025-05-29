@@ -406,13 +406,19 @@ button.launcher-button:focus label {
   @include mixins.floating-widget;
   @include mixins.spacing;
 
-  #radio_scrolled_window{
+  #radio_scrolled_window {
     padding: 10px 0;
 
     #station_label {
       font-weight: 700;
       padding: 10px 5px;
     }
+
+    #station_row.playing {
+      color: theme.$accent-green;
+    }
+
+
   }
 
 }
