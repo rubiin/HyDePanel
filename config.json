@@ -101,7 +101,8 @@
 	"radio_player": {
 		"icon": "",
 		"label": true,
-		"tooltip": true
+		"tooltip": true,
+		"max_visible_stations": 5 // this is the maximum number of stations to show in the radio player
 	},
 	"kanban": {
 		"icon": "󱞁",
