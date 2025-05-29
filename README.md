@@ -250,6 +250,7 @@ Updating to latest commit is fairly simple, just git pull the latest changes.
 | **overview**          | Widget displays running applications in workspaces.                            |
 | **power**             | Widget controls power-related settings, including sleep and shutdown.          |
 | **ram**               | Widget displays information about system RAM usage and performance.            |
+| **radio_player**      | Widget that allows you to listen to defined online radios.                     |
 | **recorder**          | Widget for recording video on the system.                                      |
 | **screen_shot**       | Widget for taking screenshot on the system.                                    |
 | **spacer (utility)**  | A simple utility for adding space in UI layouts.                               |

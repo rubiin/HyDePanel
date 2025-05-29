@@ -58,6 +58,7 @@
 							"hypr_picker",
 							"keyboard",
 							"language",
+							"radio_player",
 							"media",
 							"microphone",
 							"network_usage",
@@ -569,6 +570,28 @@
 					"type": "integer",
 					"description": "Number of emojis to display per column."
 				}
+			}
+		},
+
+		"radio_player": {
+			"type": "object",
+			"properties": {
+				"label": {
+					"type": "boolean",
+					"description": "Determines whether the widget has a label."
+				},
+				"tooltip": {
+					"type": "boolean",
+					"description": "Determines whether the widget has a tooltip."
+				},
+				"icon": {
+					"type": "string",
+					"description": "Determines the icon to use for the radio player."
+				},
+				"max_visible_stations": {
+					"type": "integer",
+					"description": "Maximum number of stations to display in the radio player."
+				},
 			}
 		},
 		"kanban": {
