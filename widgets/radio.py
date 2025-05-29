@@ -1,6 +1,7 @@
 from typing import ClassVar
 
 import gi
+from fabric.utils import cooldown
 from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 from gi.repository import GObject, Gst, Gtk
@@ -93,6 +94,22 @@ class RadioMenu(Box):
             self.current_row = row
             self.emit("changed", name)
 
+    @cooldown(1)
+    def cycle_stations(self):
+        """Cycle through the stations."""
+        if not self.stations:
+            return
+
+        if self.current_row is None:
+            self.current_row = self.listbox.get_row_at_index(0)
+        else:
+            next_index = (self.listbox.get_row_index(self.current_row) + 1) % len(
+                self.stations
+            )
+            self.current_row = self.listbox.get_row_at_index(next_index)
+
+        self.on_station_selected(None, self.current_row)
+
 
 class RadioWidget(ButtonWidget):
     """a widget that displays the title of the active window."""
@@ -124,9 +141,9 @@ class RadioWidget(ButtonWidget):
         )
         self.connect("clicked", self.popover.open)
 
-        radio_menu.connect("changed", self.handle_play)
+        radio_menu.connect("changed", self.handle_station_change)
 
-    def handle_play(self, _, name):
+    def handle_station_change(self, _, name):
         """Handle play button click."""
 
         if self.config["label"]:
