@@ -511,4 +511,3 @@ class BarConfig(TypedDict):
     general: General
     widgets: Widgets
     modules: Modules
-

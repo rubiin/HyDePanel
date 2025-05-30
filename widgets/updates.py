@@ -63,10 +63,6 @@ class UpdatesWidget(ButtonWidget):
         util_fabricator.connect("changed", self.should_update)
 
     def should_update(self, *_):
-        """
-        Handles the 'changed' signal from the fabricator.
-        Checks if the update interval has elapsed and triggers an update if necessary.
-        """
         if (datetime.now() - self.update_time).total_seconds() >= self.config[
             "interval"
         ]:
@@ -95,10 +91,9 @@ class UpdatesWidget(ButtonWidget):
             self.check_update()
         return True
 
+    # Execute the update script asynchronously and update values
     @cooldown(1)
     def check_update(self, update=False):
-        # Execute the update script asynchronously and update values
-
         if update:
             exec_shell_command_async(
                 f"{self.base_command} up",

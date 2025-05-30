@@ -398,7 +398,6 @@ class OverviewWidget(ButtonWidget):
     """A widget to show the overview of all workspaces and windows."""
 
     def __init__(self, widget_config: BarConfig, **kwargs):
-        # Initialize as a Box instead of a PopupWindow.
         super().__init__(widget_config["overview"], name="overview", **kwargs)
 
         if self.config["tooltip"]:

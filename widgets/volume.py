@@ -52,9 +52,9 @@ class VolumeWidget(EventBoxWidget):
             self.volume_label = Label(style_classes="panel-text")
             self.box.add(self.volume_label)
 
+    # Adjust the volume based on the scroll direction
     @cooldown(0.1)
     def on_scroll(self, _, event):
-        # Adjust the volume based on the scroll direction
         val_y = event.delta_y
 
         if val_y > 0:
@@ -73,7 +73,7 @@ class VolumeWidget(EventBoxWidget):
         self.audio.speaker.connect("notify::volume", self.update_volume)
         self.update_volume()
 
-    # Mute and unmute the speaker
+    # Mute and un-mute the speaker
     def toggle_mute(self):
         current_stream = self.audio.speaker
         if current_stream:
@@ -82,6 +82,7 @@ class VolumeWidget(EventBoxWidget):
                 text_icons["volume"]["muted"]
             ) if current_stream.muted else self.update_volume()
 
+    # Update the volume display
     def update_volume(self, *_):
         if self.audio.speaker:
             volume = round(self.audio.speaker.volume)
