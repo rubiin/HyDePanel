@@ -122,18 +122,16 @@ class PowerWidget(ButtonWidget):
     def __init__(self, widget_config: BarConfig, **kwargs):
         super().__init__(widget_config["power"], name="power", **kwargs)
 
-        self.power_label = Label(label="power", style_classes="panel-text")
-
         if self.config["show_icon"]:
             # Create a TextIcon with the specified icon and size
             self.icon = text_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
             )
             self.box.add(self.icon)
 
         if self.config["label"]:
-            self.box.add(self.power_label)
+            self.box.add(Label(label="power", style_classes="panel-text"))
 
         if self.config["tooltip"]:
             self.set_tooltip_text("Power")

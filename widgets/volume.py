@@ -5,8 +5,7 @@ from fabric.widgets.overlay import Overlay
 
 from services import audio_service
 from shared import EventBoxWidget
-from utils import BarConfig
-from utils.icons import text_icons
+from utils import BarConfig, text_icons
 from utils.widget_utils import get_audio_icon_name, text_icon
 
 
@@ -31,19 +30,16 @@ class VolumeWidget(EventBoxWidget):
             size=24,
         )
 
-        self.volume_label = Label(visible=False, style_classes="panel-text")
-
         self.icon = text_icon(
             icon=text_icons["volume"]["medium"],
             props={
-                "style_classes": "panel-icon overlay-icon",
+                "style_classes": "panel-font-icon overlay-icon",
             },
         )
 
         # Create an event box to handle scroll events for volume control
-        self.box.children = (
+        self.box.add(
             Overlay(child=self.progress_bar, overlays=self.icon, name="overlay"),
-            self.volume_label,
         )
 
         # Connect the audio service to update the progress bar on volume change
@@ -53,9 +49,10 @@ class VolumeWidget(EventBoxWidget):
         self.connect("scroll-event", self.on_scroll)
 
         if self.config["label"]:
-            self.volume_label.set_visible(True)
+            self.volume_label = Label(style_classes="panel-text")
+            self.box.add(self.volume_label)
 
-    @cooldown(1)
+    @cooldown(0.1)
     def on_scroll(self, _, event):
         # Adjust the volume based on the scroll direction
         val_y = event.delta_y
@@ -90,7 +87,8 @@ class VolumeWidget(EventBoxWidget):
             volume = round(self.audio.speaker.volume)
             self.progress_bar.set_value(volume / 100)
 
-            self.volume_label.set_text(f"{volume}%")
+            if self.config["label"]:
+                self.volume_label.set_text(f"{volume}%")
 
         self.icon.set_text(
             get_audio_icon_name(volume, self.audio.speaker.muted)["text_icon"]

@@ -23,18 +23,16 @@ class OCRWidget(ButtonWidget):
         self.current_lang = "eng"  # default
         self.script_file = get_relative_path("../assets/scripts/ocr.sh")
 
-        self.ocr_label = Label(label="Ocr", style_classes="panel-text")
-
         if self.config["show_icon"]:
             # Create a TextIcon with the specified icon and size
             self.icon = text_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
             )
             self.box.add(self.icon)
 
         if self.config["label"]:
-            self.box.add(self.ocr_label)
+            self.box.add(Label(label="Ocr", style_classes="panel-text"))
 
         # Left click for OCR
         self.connect("button-press-event", self.on_button_press)

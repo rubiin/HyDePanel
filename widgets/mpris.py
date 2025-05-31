@@ -1,11 +1,12 @@
+import re
+
 from fabric.utils import bulk_connect
 from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 from loguru import logger
 
 from services import MprisPlayer, MprisPlayerManager
-from shared import ButtonWidget
-from shared.pop_over import Popover
+from shared import ButtonWidget, Popover
 from utils import BarConfig, Colors
 from widgets.media import PlayerBoxStack
 
@@ -73,7 +74,7 @@ class Mpris(ButtonWidget):
         )
 
     def get_current(self):
-        bar_label = self.player.title
+        bar_label = re.sub(r"\r?\n", " ", self.player.title)
 
         truncated_info = (
             bar_label

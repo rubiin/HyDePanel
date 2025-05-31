@@ -103,8 +103,7 @@
   background-color: theme.$text-main;
 }
 
-@mixin slider(
-  $height: 11px,
+@mixin slider($height: 11px,
   $highlight-color: white,
   $slider: false,
   $radius: variable.$radius,
@@ -159,6 +158,7 @@
   }
 
   &:disabled {
+
     highlight,
     progress {
       background-color: color.mix(theme.$text-main, transparent, 60%);

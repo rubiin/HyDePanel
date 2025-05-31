@@ -20,6 +20,8 @@ Anchor = Literal[
 
 Temperature_Unit = Literal["celsius", "fahrenheit"]
 
+Wind_Speed_Unit = Literal["mph", "kmh"]
+
 Keyboard_Mode = Literal["none", "exclusive", "on-demand"]
 
 

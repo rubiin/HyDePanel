@@ -1,8 +1,9 @@
 @use "sass:color";
 @use "sass:math";
-@use "theme.scss";
-@use "variable.scss";
+@use "theme";
+@use "variable";
 @use "common";
+
 
 #player-stack-button {
   @extend %dots_dots;
@@ -36,7 +37,7 @@
   }
 
   #inner-player-box {
-    background-color: theme.$background;
+    background: linear-gradient(135deg, color.mix(theme.$background-alt, white, 80%), theme.$background-alt, #4b2353);
     border-radius: 15px;
     margin-left: math.floor(calc($image_size / 2));
     min-width: math.floor(calc($player_width - $image_size / 2));

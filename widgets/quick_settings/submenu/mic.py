@@ -5,9 +5,8 @@ from fabric.widgets.scrolledwindow import ScrolledWindow
 from gi.repository import Gtk
 
 from services import audio_service
-from shared.buttons import ScanButton
-from shared.submenu import QuickSubMenu
-from utils.icons import icons
+from shared import QuickSubMenu, ScanButton
+from utils import symbolic_icons
 from widgets.quick_settings.sliders.mic import MicrophoneSlider
 
 
@@ -42,7 +41,7 @@ class MicroPhoneSubMenu(QuickSubMenu):
         # Initialize parent with our components
         super().__init__(
             title="Microphones",
-            title_icon=icons["audio"]["mic"]["high"],
+            title_icon=symbolic_icons["audio"]["mic"]["high"],
             scan_button=self.scan_button,
             child=self.child,
             **kwargs,
@@ -98,7 +97,7 @@ class MicroPhoneSubMenu(QuickSubMenu):
 
             # App icon
             icon = Image(
-                icon_name=app.icon_name or icons["audio"]["mic"]["high"],
+                icon_name=app.icon_name or symbolic_icons["audio"]["mic"]["high"],
                 icon_size=16,
             )
             name_box.pack_start(icon, False, True, 0)

@@ -1,11 +1,26 @@
 from fabric.widgets.box import Box
 from fabric.widgets.button import Button
 from fabric.widgets.eventbox import EventBox
+from fabric.widgets.widget import Widget
 
 from utils.widget_utils import setup_cursor_hover
 
 
-class BoxWidget(Box):
+class ToggleableWidget(Widget):
+    """A widget that can be toggled on and off."""
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def toggle(self):
+        """Toggle the visibility of the bar."""
+        if self.is_visible():
+            self.hide()
+        else:
+            self.show()
+
+
+class BoxWidget(Box, ToggleableWidget):
     """A container for box widgets."""
 
     def __init__(self, spacing=None, style_classes=None, **kwargs):
@@ -24,7 +39,7 @@ class BoxWidget(Box):
         )
 
 
-class EventBoxWidget(EventBox):
+class EventBoxWidget(EventBox, ToggleableWidget):
     """A container for box widgets."""
 
     def __init__(self, config, **kwargs):
@@ -38,7 +53,7 @@ class EventBoxWidget(EventBox):
         setup_cursor_hover(self)
 
 
-class ButtonWidget(Button):
+class ButtonWidget(Button, ToggleableWidget):
     """A container for button widgets. Only used for new widgets that are used on bar"""
 
     def __init__(self, config, **kwargs):

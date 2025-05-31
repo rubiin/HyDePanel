@@ -26,7 +26,7 @@ class LanguageWidget(ButtonWidget):
             self.icon = text_icon(
                 icon=self.config["icon"],
                 props={
-                    "style_classes": "panel-icon",
+                    "style_classes": "panel-font-icon",
                 },
             )
             self.box.add(self.icon)

@@ -76,12 +76,12 @@ left_section = [ "workspaces", "window_title" ]
 middle_section = [ "date_time" ]
 right_section = [ "recorder", "@group:1", "@group:0", "system_tray" ]
 
-[[module_groups]]
+[[widget_groups]]
 widgets = [ "updates", "ocr", "battery" ]
 spacing = 4
 style_classes = [ "compact" ]
 
-[[module_groups]]
+[[widget_groups]]
 widgets = [ "quick_settings", "cpu" ]
 spacing = 0
 style_classes = [ "compact" ]

@@ -1,10 +1,12 @@
+from functools import partial
+
 from fabric.core.service import Signal
 from fabric.utils import get_relative_path
 from fabric.widgets.box import Box
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 
-from utils.icons import icons
+from utils import cubic_bezier, symbolic_icons
 from utils.widget_utils import setup_cursor_hover
 
 from .animator import Animator
@@ -21,17 +23,16 @@ class ScanButton(HoverButton):
         super().__init__(name="scan-button", style_classes="submenu-button", **kwargs)
 
         self.scan_image = CircleImage(
-            image_file=get_relative_path("../assets/icons/png/refresh.png"),
+            image_file=get_relative_path("../assets/icons/png/refresh2.png"),
             size=20,
         )
 
         self.scan_animator = Animator(
-            bezier_curve=(0, 0, 1, 1),
+            timing_function=partial(cubic_bezier, 0, 0, 1, 1),
             duration=4,
             min_value=0,
             max_value=360,
             tick_widget=self,
-            repeat=False,
             notify_value=self.set_notify_value,
         )
 
@@ -56,8 +57,8 @@ class QSToggleButton(Box):
     def __init__(
         self,
         action_label: str = "My Label",
-        action_icon: str = icons["fallback"]["package"],
-        pixel_size: int = 20,
+        action_icon: str = symbolic_icons["fallback"]["package"],
+        pixel_size: int = 18,
         **kwargs,
     ):
         self.pixel_size = pixel_size
@@ -66,7 +67,7 @@ class QSToggleButton(Box):
 
         # Action button can hold an icon and a label NOTHING MORE
         self.action_icon = Image(
-            style_classes="panel-icon",
+            style_classes="panel-font-icon",
             icon_name=action_icon,
             icon_size=pixel_size,
         )
@@ -127,14 +128,16 @@ class QSChevronButton(QSToggleButton):
     def __init__(
         self,
         action_label: str = "My Label",
-        action_icon: str = icons["fallback"]["package"],
-        pixel_size: int = 20,
+        action_icon: str = symbolic_icons["fallback"]["package"],
+        pixel_size: int = 18,
         submenu: QuickSubMenu | None = None,
         **kwargs,
     ):
         self.submenu = submenu
 
-        self.button_image = Image(icon_name=icons["ui"]["arrow"]["right"], icon_size=20)
+        self.button_image = Image(
+            icon_name=symbolic_icons["ui"]["arrow"]["right"], icon_size=20
+        )
 
         self.reveal_button = HoverButton(
             style_classes="toggle-revealer", image=self.button_image, h_expand=True

@@ -5,7 +5,7 @@ from fabric.widgets.label import Label
 
 import utils.functions as helpers
 from shared import ButtonWidget
-from utils import BarConfig, ExecutableNotFoundError
+from utils import BarConfig
 
 
 class CavaWidget(ButtonWidget):
@@ -16,8 +16,7 @@ class CavaWidget(ButtonWidget):
 
         cava_command = "cava"
 
-        if not helpers.executable_exists(cava_command):
-            raise ExecutableNotFoundError(cava_command)
+        helpers.check_executable_exists(cava_command)
 
         if not helpers.is_valid_gjs_color(self.config["color"]):
             raise ValueError("Invalid color supplied for cava widget")

@@ -1,6 +1,6 @@
-@use "theme.scss";
+@use "theme";
 @use "common";
-@use "variable.scss";
+@use "variable";
 
 /** taskbar widget **/
 
@@ -13,9 +13,9 @@
   color: theme.$text-main;
   background-color: theme.$background-dark;
 
-    &-box {
-        margin: 0 variable.$bar-widgets-task_bar-spacing;
-      }
+  &-box {
+    margin: 0 variable.$bar-widgets-task_bar-spacing;
+  }
 
   button {
     padding: 0 common.toEm(2);
