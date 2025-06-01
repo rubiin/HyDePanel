@@ -13,6 +13,7 @@ from gi.repository import Gdk, GLib, GObject, Gtk
 from loguru import logger
 
 from shared import ButtonWidget, Popover
+from shared.grid import Grid
 from utils.widget_settings import BarConfig
 from utils.widget_utils import create_surface_from_widget, text_icon
 
@@ -191,12 +192,10 @@ class KanbanColumn(Gtk.Frame):
     }
 
     def __init__(self, title):
-        super().__init__(name="kanban-column")
+        super().__init__(name="kanban-column", vexpand=True, hexpand=True)
         self.title = title
         self.setup_ui()
         self.setup_dnd()
-        self.set_hexpand(True)
-        self.set_vexpand(True)
 
     def setup_ui(self):
         self.box = Box(orientation=Gtk.Orientation.VERTICAL, spacing=4)
@@ -317,7 +316,7 @@ class Kanban(Box):
     def __init__(self):
         super().__init__(name="kanban-board", spacing=4)
 
-        self.grid = Gtk.Grid(column_spacing=4, column_homogeneous=True, vexpand=True)
+        self.grid = Grid(column_spacing=4, column_homogeneous=True, v_expand=True)
 
         self.add(self.grid)
 

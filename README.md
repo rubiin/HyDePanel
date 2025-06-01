@@ -181,7 +181,7 @@ If you prefer to have more control over the installation process, you can instal
 Run the following command to install the required system packages:
 
 ```sh
-sudo pacman -S --noconfirm --needed pipewire playerctl dart-sass power-profiles-daemon networkmanager brightnessctl pkgconf wf-recorder kitty python pacman-contrib gtk3 cairo gtk-layer-shell libgirepository gobject-introspection gobject-introspection-runtime python-pip python-gobject python-psutil python-cairo python-loguru python-setproctitle libnotify cliphist
+sudo pacman -S --noconfirm --needed pipewire playerctl dart-sass power-profiles-daemon networkmanager brightnessctl pkgconf wf-recorder kitty python pacman-contrib gtk3 cairo gtk-layer-shell libgirepository noto-fonts-emoji gobject-introspection gobject-introspection-runtime python-pip python-gobject python-psutil python-cairo python-loguru python-setproctitle libnotify cliphist
 ```
 
 #### Step 2: Install AUR Packages
@@ -189,7 +189,7 @@ sudo pacman -S --noconfirm --needed pipewire playerctl dart-sass power-profiles-
 Using `yay` to install the required AUR packages:
 
 ```sh
-yay -S --needed gray-git python-fabric gnome-bluetooth-3.0 python-rlottie-python python-pytomlpp slurp imagemagick tesseract tesseract-data-eng python-pyjson5 ttf-jetbrains-mono-nerd grimblast-git python-ijson
+yay -S --needed gray-git 	python-fabric-git gnome-bluetooth-3.0 python-rlottie-python python-pytomlpp slurp imagemagick tesseract tesseract-data-eng python-pyjson5 ttf-jetbrains-mono-nerd grimblast-git python-ijson
 ```
 
 If you have something else besides `yay`, install with the respective aur helper.

@@ -2,7 +2,7 @@ import json
 
 import gi
 from fabric.hyprland.service import Hyprland
-from fabric.utils.helpers import get_desktop_applications
+from fabric.utils.helpers import bulk_connect, get_desktop_applications
 from fabric.widgets.box import Box
 from fabric.widgets.button import Button
 from fabric.widgets.eventbox import EventBox
@@ -223,9 +223,15 @@ class OverviewMenu(Box):
 
         # Remove the window_class_aliases dictionary completely
 
-        connection.connect("event::openwindow", self.do_update)
-        connection.connect("event::closewindow", self.do_update)
-        connection.connect("event::movewindow", self.do_update)
+        bulk_connect(
+            connection,
+            {
+                "event::openwindow": self.do_update,
+                "event::closewindow": self.do_update,
+                "event::movewindow": self.do_update,
+            },
+        )
+
         self.update()
 
     def _normalize_window_class(self, class_name):

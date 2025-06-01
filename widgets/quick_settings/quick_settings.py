@@ -1,7 +1,6 @@
 import os
-import weakref
 
-from fabric.utils import get_relative_path
+from fabric.utils import bulk_connect, get_relative_path
 from fabric.widgets.box import Box
 from fabric.widgets.centerbox import CenterBox
 from fabric.widgets.image import Image
@@ -17,9 +16,9 @@ from shared import (
     Dialog,
     Grid,
     HoverButton,
-    Popover,
     QSChevronButton,
 )
+from shared.popovev1 import PopupWindowV1
 from utils import BarConfig, symbolic_icons
 from utils.widget_utils import (
     get_audio_icon_name,
@@ -140,8 +139,6 @@ class QuickSettingsMenu(Box):
 
         self.config = config
 
-        self_ref = weakref.ref(self)
-
         user_image = (
             get_relative_path("../../assets/images/banner.jpg")
             if not os.path.exists(os.path.expandvars("$HOME/.face"))
@@ -211,7 +208,7 @@ class QuickSettingsMenu(Box):
                         ),
                         v_align="center",
                         on_clicked=lambda *_: (
-                            self_ref() and self_ref().get_parent().set_visible(False),
+                            self.get_parent().set_visible(False),
                             dialog.add_content(
                                 title="restart",
                                 body="Do you really want to restart?",
@@ -226,7 +223,7 @@ class QuickSettingsMenu(Box):
                         ),
                         v_align="center",
                         on_clicked=lambda *_: (
-                            self_ref() and self_ref().get_parent().set_visible(False),
+                            self.get_parent().set_visible(False),
                             dialog.add_content(
                                 title="shutdown",
                                 body="Do you really want to shutdown?",
@@ -405,16 +402,24 @@ class QuickSettingsButtonWidget(ButtonWidget):
 
         self.brightness_service = Brightness()
 
-        self.audio_service.connect("notify::speaker", self.on_speaker_changed)
-        self.audio_service.connect("changed", self.check_mute)
+        bulk_connect(
+            self.audio_service,
+            {
+                "notify::speaker": self.on_speaker_changed,
+                "changed": self.check_mute,
+            },
+        )
 
         self.brightness_service.connect("brightness_changed", self.update_brightness)
 
         self.network_service.connect("device-ready", self._get_network_icon)
 
-        popup = Popover(
-            content_factory=lambda: QuickSettingsMenu(config=self.config),
+        popup = PopupWindowV1(
+            child=QuickSettingsMenu(config=self.config),
             point_to=self,
+            parent=self,
+            visible=False,
+            all_visible=False,
         )
 
         self.audio_icon = Image(style_classes="panel-font-icon")
@@ -439,7 +444,7 @@ class QuickSettingsButtonWidget(ButtonWidget):
 
         self.connect(
             "clicked",
-            popup.open,
+            lambda *_: popup.show() if not popup.is_visible() else popup.hide(),
         )
 
     def _get_network_icon(self, *_):

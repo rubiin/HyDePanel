@@ -1,7 +1,7 @@
 from fabric.utils import cooldown, exec_shell_command_async
 
 from shared import QSChevronButton, QuickSubMenu, ScanButton
-from utils.functions import is_app_running, set_scale_adjustment, toggle_command
+from utils.functions import is_app_running, toggle_command
 from utils.widget_utils import (
     create_scale,
     util_fabricator,
@@ -18,9 +18,10 @@ class HyprSunsetSubMenu(QuickSubMenu):
         self.scale = create_scale(
             name="hyprsunset-scale",
             increments=(100, 100),
+            max_value=10000,
+            min_value=1000,
+            value=2600,
         )
-
-        self.scale.set_range(1000, 10000)
 
         super().__init__(
             title="HyprSunset",
@@ -33,7 +34,6 @@ class HyprSunsetSubMenu(QuickSubMenu):
 
         if self.scale:
             self.scale.connect("change-value", self.on_scale_move)
-            self.update_ui(2600)
 
         # reusing the fabricator to call specified intervals
         util_fabricator.connect("changed", self.update_scale)
@@ -63,12 +63,12 @@ class HyprSunsetSubMenu(QuickSubMenu):
             if isinstance(moved_pos, str)
             else moved_pos
         )
-
-        set_scale_adjustment(
-            scale=self.scale, min_value=1000, max_value=10000, steps=100
-        )
-
-        self.scale.set_value(sanitized_value)
+        adj = self.scale.get_adjustment()
+        print("HyprSunsetSubMenu: Current temperature", sanitized_value)
+        print(f"HyprSunset scale: {self.scale.get_name()}")
+        print("HyprSunsetSubMenu: lower temperature", adj.get_lower())
+        print("HyprSunsetSubMenu: upper temperature", adj.get_upper())
+        self.scale.set_value(float(sanitized_value))
         self.scale.set_tooltip_text(f"{sanitized_value}K")
 
 

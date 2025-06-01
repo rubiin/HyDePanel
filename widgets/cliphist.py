@@ -55,7 +55,7 @@ class ClipHistoryMenu(Box):
 
         self.search_entry.connect("notify::text", self._on_search_text_changed)
 
-        self.search_entry.props.xalign = 0.5
+        self.search_entry.props.xalign = 0.1
 
         self.scrolled_window = ScrolledWindow(
             name="scrolled-window",
@@ -236,7 +236,9 @@ class ClipHistoryMenu(Box):
         # Check if this is an image by examining the content
         is_image = self.is_image_data(content)
 
-        is_file_image = self.is_file_image(content)
+        is_file_image = self.is_file_image(content) and os.path.exists(
+            unquote(urlparse(content).path)
+        )
 
         if is_image:
             # For images, create item with image preview

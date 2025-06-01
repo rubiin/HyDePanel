@@ -61,7 +61,9 @@ class Brightness(Service):
             return
 
         # Monitor screen brightness file
-        self.screen_monitor = monitor_file(f"{self.screen_backlight_path}/brightness")
+        self.screen_monitor = monitor_file(
+            f"{self.screen_backlight_path}/brightness", initial_call=True
+        )
 
         self.screen_monitor.connect(
             "changed",

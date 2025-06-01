@@ -10,23 +10,14 @@ from fabric.utils import bulk_connect
 from gi.repository import GLib  # type: ignore
 from loguru import logger
 
-
-class PlayerctlImportError(ImportError):
-    """An error to raise when playerctl is not installed."""
-
-    def __init__(self, *args):
-        super().__init__(
-            "Playerctl is not installed, please install it first",
-            *args,
-        )
-
+from utils.exceptions import PlayerctlImportError
 
 # Try to import Playerctl, raise custom error if not available
 try:
     gi.require_version("Playerctl", "2.0")
     from gi.repository import Playerctl
 except ValueError:
-    raise PlayerctlImportError
+    raise PlayerctlImportError()
 
 
 class MprisPlayer(Service):

@@ -1,6 +1,6 @@
 from typing import ClassVar, Literal
 
-from fabric.utils import cooldown, get_relative_path
+from fabric.utils import bulk_connect, cooldown, get_relative_path
 from fabric.widgets.box import Box
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
@@ -95,8 +95,13 @@ class AudioOSDContainer(GenericOSDContainer):
 
         self.config = config
 
-        self.audio_service.connect("notify::speaker", self.on_speaker_changed)
-        self.audio_service.connect("changed", self.check_mute)
+        bulk_connect(
+            self.audio_service,
+            {
+                "notify::speaker": self.on_speaker_changed,
+                "changed": self.check_mute,
+            },
+        )
 
     @cooldown(0.1)
     def check_mute(self, audio):

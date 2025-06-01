@@ -14,6 +14,9 @@ APP_CACHE_DIRECTORY = f"{SYSTEM_CACHE_DIR}/{APPLICATION_NAME}"
 NOTIFICATION_CACHE_FILE = f"{APP_CACHE_DIRECTORY}/notifications.json"
 WEATHER_CACHE_FILE = f"{APP_CACHE_DIRECTORY}/weather.json"
 
+LOG_DIR = f"{GLib.get_user_state_dir()}/{APPLICATION_NAME}"
+LOG_FILE = f"{LOG_DIR}/{APPLICATION_NAME}.log"
+LOG_FORMAT = "{time:YYYY-MM-DD HH:mm:ss} [<level>{level}</level>] {message}"
 
 # Default configuration values
 DEFAULT_CONFIG = {
@@ -1045,13 +1048,16 @@ WINDOW_TITLE_MAP = [
     ["sioyek", "", "Sioyek"],
     # Cloud Services and Sync
     ["dropbox", "󰇣", "Dropbox"],
+    # cleanup and maintenance tools
+    ["org.bleachbit.bleachbit", "", "BleachBit"],
+    ["stacer", "", "Stacer"],
     # Desktop
     ["^$", "󰇄", "Desktop"],
 ]
 
 
 # Updated set of named colors
-named_colors = {
+NAMED_COLORS = {
     "alice blue",
     "antique white",
     "aqua",

@@ -118,11 +118,12 @@ install_packages() {
 		python-loguru
 		python-setproctitle
 		cliphist
+		noto-fonts-emoji
 	)
 
 		aur_deps=(
 		gray-git
-		python-fabric
+		python-fabric-git
 		gnome-bluetooth-3.0
 		python-rlottie-python
 		python-pytomlpp

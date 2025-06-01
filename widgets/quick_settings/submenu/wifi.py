@@ -26,6 +26,9 @@ class WifiSubMenu(QuickSubMenu):
         self.available_networks_box = Box(orientation="v", spacing=4, h_expand=True)
 
         self.scan_button = ScanButton()
+
+        self.scan_button.set_sensitive(False)
+
         self.scan_button.connect("clicked", self.start_new_scan)
 
         self.child = ScrolledWindow(
@@ -52,19 +55,20 @@ class WifiSubMenu(QuickSubMenu):
         else:
             self.scan_button.stop_animation()
 
-    def start_new_scan(self, _):
-        self.client.wifi_device.scan() if self.client.wifi_device else None
+    def start_new_scan(self, *_):
+        self.wifi_device.scan()
         self.build_wifi_options()
         self.scan_button.play_animation()
 
     def on_device_ready(self, client: NetworkService):
         self.wifi_device = client.wifi_device
-        self.start_new_scan(None)
+        if self.wifi_device:
+            self.scan_button.set_sensitive(True)
+            self.start_new_scan(None)
+            self.wifi_device.connect("changed", self.start_new_scan)
 
     def build_wifi_options(self):
         self.available_networks_box.children = []
-        if not self.wifi_device:
-            return
         for ap in self.wifi_device.access_points:
             if ap.get("ssid") != "Unknown":
                 btn = self.make_button_from_ap(ap)
@@ -153,6 +157,10 @@ class WifiToggle(QSChevronButton):
 
             self.action_label.set_label(wifi.get_property("ssid"))
             wifi.bind_property("ssid", self.action_label, "label")
+
+        else:
+            self.action_button.set_sensitive(False)
+            self.action_label.set_label("Wi-Fi device not available.")
 
     def on_action(self, btn):
         wifi: Wifi | None = self.client.wifi_device
