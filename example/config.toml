@@ -44,14 +44,14 @@ uptime = true
 [divider]
 size = 2
 
-[hypr_idle]
+[hypridle]
 enabled_icon = ""
 disabled_icon = ""
 icon_size = "12px"
 label = true
 tooltip = true
 
-[hypr_sunset]
+[hyprsunset]
 temperature = "2800k"
 enabled_icon = "󱩌"
 disabled_icon = "󰛨"
@@ -190,7 +190,7 @@ command = "firefox"
 tooltip = "Launch Firefox"
 icon_size = 18
 
-[stop_watch]
+[stopwatch]
 stopped_icon = "󱫞"
 running_icon = "󱫠"
 icon_size = "16px"
@@ -205,7 +205,7 @@ tooltip = true
 icon_size = 16
 ignored = [ ]
 
-[task_bar]
+[taskbar]
 icon_size = 22
 
 [theme]

@@ -6,7 +6,7 @@ from fabric.widgets.overlay import Overlay
 import utils.functions as helpers
 from services import NetworkSpeed
 from shared import ButtonWidget
-from utils import BarConfig, common_text_icons
+from utils import common_text_icons
 from utils.widget_utils import (
     get_bar_graph,
     text_icon,
@@ -19,12 +19,10 @@ class CpuWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config["cpu"],
             name="cpu",
             **kwargs,
         )
@@ -145,12 +143,10 @@ class MemoryWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config["memory"],
             name="memory",
             **kwargs,
         )
@@ -249,12 +245,10 @@ class StorageWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config["storage"],
             name="storage",
             **kwargs,
         )
@@ -354,11 +348,9 @@ class NetworkUsageWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         super().__init__(
-            widget_config["network_usage"],
             name="network_usage",
             **kwargs,
         )

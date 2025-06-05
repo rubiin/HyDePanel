@@ -3,7 +3,6 @@ import os
 from fabric.utils import get_relative_path
 
 from shared import ButtonWidget
-from utils import BarConfig
 from utils.functions import copy_theme, send_notification
 from utils.widget_utils import text_icon
 
@@ -11,17 +10,15 @@ from utils.widget_utils import text_icon
 class ThemeSwitcherWidget(ButtonWidget):
     """A widget to switch themes."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(
-            widget_config["theme_switcher"], name="theme_switcher", **kwargs
-        )
+    def __init__(self, **kwargs):
+        super().__init__(name="theme_switcher", **kwargs)
 
         theme_files = os.listdir(get_relative_path("../styles/themes"))
 
         # Remove the '.scss' part from each string in the list
         self.themes_list = [style.replace(".scss", "") for style in theme_files]
 
-        self.current_theme = widget_config["theme"]["name"]
+        self.current_theme = "some_default_theme"  # TODO: Set a default theme
 
         self.children = text_icon(
             self.config["icon"],

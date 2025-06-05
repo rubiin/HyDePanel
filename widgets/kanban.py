@@ -14,7 +14,6 @@ from loguru import logger
 
 from shared import ButtonWidget, Popover
 from shared.grid import Grid
-from utils.widget_settings import BarConfig
 from utils.widget_utils import create_surface_from_widget, text_icon
 
 
@@ -367,11 +366,9 @@ class KanbanWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         super().__init__(
-            widget_config["kanban"],
             name="kanban",
             **kwargs,
         )

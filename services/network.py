@@ -79,6 +79,34 @@ class Wifi(Service):
     def toggle_wifi(self):
         self._client.wireless_set_enabled(not self._client.wireless_get_enabled())
 
+    def get_ap_security(
+        self, nm_ap: NM.AccessPoint
+    ) -> Literal["WEP", "WPA1", "WPA2", "802.1X", "unsecured"]:
+        """Parse the security flags to return a string with 'WPA2', etc."""
+        flags = nm_ap.get_flags()
+        wpa_flags = nm_ap.get_wpa_flags()
+        rsn_flags = nm_ap.get_rsn_flags()
+        sec_str = ""
+        if (
+            (flags & getattr(NM, "80211ApFlags").PRIVACY)
+            and (wpa_flags == 0)
+            and (rsn_flags == 0)
+        ):
+            sec_str += " WEP"
+        if wpa_flags != 0:
+            sec_str += " WPA1"
+        if rsn_flags != 0:
+            sec_str += " WPA2"
+        if (wpa_flags & getattr(NM, "80211ApSecurityFlags").KEY_MGMT_802_1X) or (
+            rsn_flags & getattr(NM, "80211ApSecurityFlags").KEY_MGMT_802_1X
+        ):
+            sec_str += " 802.1X"
+
+        # If there is no security use "--"
+        if sec_str == "":
+            sec_str = "unsecured"
+        return sec_str.lstrip()
+
     def scan(self):
         """Start scanning for WiFi networks and emit scanning signal"""
         if self._device:
@@ -93,10 +121,86 @@ class Wifi(Service):
                 ],
             )
 
+    def is_active_ap(self, name) -> bool:
+        return self._ap.get_bssid() == name if self._ap else False
+
     def notifier(self, name: str, *args):
         self.notify(name)
         self.emit("changed")
         return
+
+    def forget_access_point(self, ssid):
+        try:
+            # List all saved connections
+            result = subprocess.check_output(
+                "nmcli connection show", shell=True, text=True
+            )
+
+            # Find connection ID that matches SSID
+            for line in result.splitlines():
+                if ssid in line:
+                    connection_id = line.split()[0]
+                    subprocess.check_call(
+                        f"nmcli connection delete id '{connection_id}'", shell=True
+                    )
+                    logger.info(
+                        f"[NetworkService] Deleted saved connection: {connection_id}"
+                    )
+                    return True
+
+            logger.warning(
+                f"[NetworkService] No saved connection found for SSID: {ssid}"
+            )
+            return False
+
+        except subprocess.CalledProcessError as e:
+            logger.error(f"[NetworkService] Error forgetting connection: {e}")
+            return False
+
+    def connect_network(
+        self, ssid: str, password: str = "", remember: bool = True
+    ) -> bool:
+        """Connect to a WiFi network"""
+        if not ssid:
+            logger.error("[NetworkService] SSID cannot be empty")
+            return False
+        try:
+            # First try to connect using saved connection
+            try:
+                subprocess.run(["nmcli", "con", "up", ssid], check=True)
+                return True
+            except subprocess.CalledProcessError:
+                # If saved connection fails, try with password if provided
+                if password:
+                    cmd = [
+                        "nmcli",
+                        "device",
+                        "wifi",
+                        "connect",
+                        ssid,
+                        "password",
+                        password,
+                    ]
+                    if not remember:
+                        cmd.extend(["--temporary"])
+                    subprocess.run(cmd, check=True)
+                    return True
+                return False
+        except subprocess.CalledProcessError as e:
+            logger.error(f"[NetworkService] Failed connecting to network: {e}")
+            return False
+
+    def disconnect_network(self, ssid: str) -> bool:
+        """Disconnect from a WiFi network"""
+        if not ssid:
+            logger.error("[NetworkService] SSID cannot be empty")
+            return False
+        try:
+            subprocess.run(["nmcli", "con", "down", ssid], check=True)
+            return True
+        except subprocess.CalledProcessError as e:
+            logger.error(f"[NetworkService] Failed disconnecting from network: {e}")
+            return False
 
     @Property(bool, "read-write", default_value=False)
     def enabled(self) -> bool:  # noqa: F811
@@ -154,9 +258,6 @@ class Wifi(Service):
         def make_ap_dict(ap: NM.AccessPoint):
             return {
                 "bssid": ap.get_bssid(),
-                # "address": ap.get_
-                "wpa_flags": ap.get_wpa_flags(),
-                "rsn_flags": ap.get_rsn_flags(),
                 "last_seen": ap.get_last_seen(),
                 "ssid": NM.utils_ssid_to_utf8(ap.get_ssid().get_data())
                 if ap.get_ssid()
@@ -331,39 +432,6 @@ class NetworkService(Service):
             in str(self._client.get_primary_connection().get_connection_type())
             else None
         )
-
-    def connect_network(
-        self, ssid: str, password: str = "", remember: bool = True
-    ) -> bool:
-        """Connect to a WiFi network"""
-        if not ssid:
-            logger.error("SSID cannot be empty")
-            return False
-        try:
-            # First try to connect using saved connection
-            try:
-                subprocess.run(["nmcli", "con", "up", ssid], check=True)
-                return True
-            except subprocess.CalledProcessError:
-                # If saved connection fails, try with password if provided
-                if password:
-                    cmd = [
-                        "nmcli",
-                        "device",
-                        "wifi",
-                        "connect",
-                        ssid,
-                        "password",
-                        password,
-                    ]
-                    if not remember:
-                        cmd.extend(["--temporary"])
-                    subprocess.run(cmd, check=True)
-                    return True
-                return False
-        except subprocess.CalledProcessError as e:
-            logger.error(f"Failed connecting to network: {e}")
-            return False
 
     @Property(str, "readable")
     def primary_device(self) -> Literal["wifi", "wired"] | None:

@@ -6,15 +6,15 @@ from fabric.widgets.label import Label
 from loguru import logger
 
 from shared import ButtonWidget
-from utils import KBLAYOUT_MAP, BarConfig
+from utils import KBLAYOUT_MAP
 from utils.widget_utils import text_icon
 
 
 class KeyboardLayoutWidget(ButtonWidget):
     """A widget to display the current keyboard layout."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["keyboard"], name="keyboard", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="keyboard", **kwargs)
 
         self.kb_label = Label(label="keyboard", style_classes="panel-text")
 

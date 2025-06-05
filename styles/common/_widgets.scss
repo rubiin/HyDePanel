@@ -153,12 +153,6 @@
   }
 }
 
-#datetime_menu {
-  border-radius: variable.$bar-widgets-datetime_menu-border-radius;
-  border: if(variable.$bar-widgets-datetime_menu-border-enabled, variable.$border, none);
-  border-width: variable.$bar-widgets-datetime_menu-border-width;
-}
-
 #desktop_clock {
   border-radius: variable.$bar-widgets-desktop_clock-border-radius;
   border: if(variable.$bar-widgets-desktop_clock-border-enabled, variable.$border, none);
@@ -166,36 +160,36 @@
 
 }
 
-#hypr_idle {
-  border-radius: variable.$bar-widgets-hypr_idle-border-radius;
-  border: if(variable.$bar-widgets-hypr_idle-border-enabled, variable.$border, none);
-  border-width: variable.$bar-widgets-hypr_idle-border-width;
+#hypridle {
+  border-radius: variable.$bar-widgets-hypridle-border-radius;
+  border: if(variable.$bar-widgets-hypridle-border-enabled, variable.$border, none);
+  border-width: variable.$bar-widgets-hypridle-border-width;
 
   #nerd-icon.panel-font-icon {
-    font-size: variable.$bar-widgets-hypr_idle-icon_size;
-    margin-right: variable.$bar-widgets-hypr_idle-spacing;
+    font-size: variable.$bar-widgets-hypridle-icon_size;
+    margin-right: variable.$bar-widgets-hypridle-spacing;
   }
 }
 
-#hypr_picker {
-  border-radius: variable.$bar-widgets-hypr_picker-border-radius;
-  border: if(variable.$bar-widgets-hypr_picker-border-enabled, variable.$border, none);
-  border-width: variable.$bar-widgets-hypr_picker-border-width;
+#hyprpicker {
+  border-radius: variable.$bar-widgets-hyprpicker-border-radius;
+  border: if(variable.$bar-widgets-hyprpicker-border-enabled, variable.$border, none);
+  border-width: variable.$bar-widgets-hyprpicker-border-width;
 
   #nerd-icon.panel-font-icon {
-    font-size: variable.$bar-widgets-hypr_picker-icon_size;
-    margin-right: variable.$bar-widgets-hypr_picker-spacing;
+    font-size: variable.$bar-widgets-hyprpicker-icon_size;
+    margin-right: variable.$bar-widgets-hyprpicker-spacing;
   }
 }
 
-#hypr_sunset {
-  border-radius: variable.$bar-widgets-hypr_sunset-border-radius;
-  border: if(variable.$bar-widgets-hypr_sunset-border-enabled, variable.$border, none);
-  border-width: variable.$bar-widgets-hypr_sunset-border-width;
+#hyprsunset {
+  border-radius: variable.$bar-widgets-hyprsunset-border-radius;
+  border: if(variable.$bar-widgets-hyprsunset-border-enabled, variable.$border, none);
+  border-width: variable.$bar-widgets-hyprsunset-border-width;
 
   #nerd-icon.panel-font-icon {
-    font-size: variable.$bar-widgets-hypr_sunset-icon_size;
-    margin-right: variable.$bar-widgets-hypr_sunset-spacing;
+    font-size: variable.$bar-widgets-hyprsunset-icon_size;
+    margin-right: variable.$bar-widgets-hyprsunset-spacing;
   }
 }
 
@@ -318,14 +312,14 @@
 }
 
 
-#stop_watch {
-  border-radius: variable.$bar-widgets-stop_watch-border-radius;
-  border: if(variable.$bar-widgets-stop_watch-border-enabled, variable.$border, none);
-  border-width: variable.$bar-widgets-stop_watch-border-width;
+#stopwatch {
+  border-radius: variable.$bar-widgets-stopwatch-border-radius;
+  border: if(variable.$bar-widgets-stopwatch-border-enabled, variable.$border, none);
+  border-width: variable.$bar-widgets-stopwatch-border-width;
 
   #nerd-icon.panel-font-icon {
-    font-size: variable.$bar-widgets-stop_watch-icon_size;
-    margin-right: variable.$bar-widgets-stop_watch-spacing;
+    font-size: variable.$bar-widgets-stopwatch-icon_size;
+    margin-right: variable.$bar-widgets-stopwatch-spacing;
   }
 }
 
@@ -381,7 +375,7 @@
   border-width: variable.$bar-widgets-window_title-border-width;
 
   #nerd-icon.panel-font-icon {
-    font-size: variable.$bar-widgets-window_title-icon_size; // TODO: fix this
+    font-size: variable.$bar-widgets-window_title-icon_size;
     margin-right: variable.$bar-widgets-window_title-spacing;
   }
 }

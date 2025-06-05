@@ -53,9 +53,9 @@
 							"emoji_picker",
 							"kanban",
 							"divider",
-							"hypr_idle",
-							"hypr_sunset",
-							"hypr_picker",
+							"hypridle",
+							"hyprsunset",
+							"hyprpicker",
 							"keyboard",
 							"language",
 							"radio_player",
@@ -72,10 +72,10 @@
 							"submap",
 							"overview",
 							"mpris",
-							"screen_shot",
-							"stop_watch",
+							"screenshot",
+							"stopwatch",
 							"system_tray",
-							"task_bar",
+							"taskbar",
 							"updates",
 							"volume",
 							"weather",
@@ -307,6 +307,11 @@
 							"type": "boolean",
 							"description": "Determines whether the OSD is enabled"
 						},
+						"orientation": {
+							"type": "string",
+							"enum": ["horizontal", "vertical"],
+							"description": "Specifies the orientation of the osd."
+						},
 						"duration": {
 							"type": "integer",
 							"description": "Duration in milliseconds to show the OSD"
@@ -469,7 +474,7 @@
 				}
 			}
 		},
-		"hypr_sunset": {
+		"hyprsunset": {
 			"type": "object",
 			"properties": {
 				"$ref": "#/definitions/baseProperties",
@@ -488,7 +493,7 @@
 				}
 			}
 		},
-		"hypr_idle": {
+		"hypridle": {
 			"type": "object",
 			"properties": {
 				"$ref": "#/definitions/baseProperties",
@@ -810,7 +815,7 @@
 				}
 			}
 		},
-		"hypr_picker": {
+		"hyprpicker": {
 			"type": "object",
 			"properties": {
 				"$ref": "#/definitions/baseProperties",
@@ -978,7 +983,7 @@
 					}
 				}
 			},
-			"task_bar": {
+			"taskbar": {
 				"type": "object",
 				"properties": {
 					"icon_size": {
@@ -1191,7 +1196,7 @@
 					}
 				}
 			},
-			"stop_watch": {
+			"stopwatch": {
 				"type": "object",
 				"properties": {
 					"stopped_icon": {

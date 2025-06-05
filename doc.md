@@ -100,10 +100,10 @@ The layout configuration defines the sections of the bar and the components disp
 
 # Component Configurations
 
-Each component, such as hypr_sunset, battery, cpu, memory, etc., has its own configuration with customizable options. Here's an example for the battery component:
+Each component, such as hyprsunset, battery, cpu, memory, etc., has its own configuration with customizable options. Here's an example for the battery component:
 
 ```json
-"hypr_sunset": {
+"hyprsunset": {
     "temperature": "2800k",
     "enabled_icon": "󱩌",
     "disabled_icon": "󰛨",
@@ -223,7 +223,7 @@ Other components follow a similar structure, where each configuration defines th
 ## HyprIdle
 
 ```json
-"hypr_idle": {
+"hypridle": {
     "enabled_icon": "",
     "disabled_icon": "",
     "label": true,
@@ -246,7 +246,7 @@ Other components follow a similar structure, where each configuration defines th
 ## HyprSunset
 
 ```json
-"hypr_sunset": {
+"hyprsunset": {
     "temperature": "2800k",
     "enabled_icon": "󱩌",
     "disabled_icon": "󰛨",
@@ -273,7 +273,7 @@ Other components follow a similar structure, where each configuration defines th
 ## Hyprpicker
 
 ```json
-"hypr_picker": {
+"hyprpicker": {
     "icon": "",
     "label": true,
     "tooltip": true,
@@ -479,7 +479,7 @@ Other components follow a similar structure, where each configuration defines th
 ## TaskBar and System Tray
 
 ```json
-"task_bar": {"icon_size": 22, "ignored": ["firefox"]},
+"taskbar": {"icon_size": 22, "ignored": ["firefox"]},
 "system_tray": {"icon_size": 22, "ignored": ["firefox"]},
 ```
 

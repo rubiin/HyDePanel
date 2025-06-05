@@ -279,7 +279,7 @@
 					"radius": "16px"
 				}
 			},
-			"datetime_menu": {
+			"date_time": {
 				"spacing": ".125em",
 				"border": {
 					"enabled": false,
@@ -295,7 +295,7 @@
 					"radius": "16px"
 				}
 			},
-			"hypr_idle": {
+			"hypridle": {
 				"spacing": ".125em",
 				"icon_size": "14px",
 				"border": {
@@ -304,7 +304,7 @@
 					"radius": "16px"
 				}
 			},
-			"hypr_picker": {
+			"hyprpicker": {
 				"spacing": ".125em",
 				"icon_size": "14px",
 				"border": {
@@ -313,7 +313,7 @@
 					"radius": "16px"
 				}
 			},
-			"hypr_sunset": {
+			"hyprsunset": {
 				"spacing": ".125em",
 				"icon_size": "14px",
 				"border": {
@@ -392,7 +392,7 @@
 					"radius": "16px"
 				}
 			},
-			"stop_watch": {
+			"stopwatch": {
 				"spacing": ".125em",
 				"icon_size": "14px",
 				"border": {
@@ -430,7 +430,7 @@
 					"radius": "16px"
 				}
 			},
-			"task_bar": {
+			"taskbar": {
 				"spacing": ".125em",
 				"border": {
 					"enabled": false,

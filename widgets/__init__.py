@@ -7,9 +7,9 @@ from .click_counter import *
 from .cliphist import *
 from .datetime_menu import *
 from .emoji_picker import *
-from .hypr_idle import *
-from .hypr_picker import *
-from .hypr_sunset import *
+from .hypridle import *
+from .hyprpicker import *
+from .hyprsunset import *
 from .kanban import *
 from .keyboard_layout import *
 from .language import *
@@ -21,9 +21,9 @@ from .power_button import *
 from .quick_settings.quick_settings import *
 from .radio import *
 from .recorder import *
-from .screen_shot import *
+from .screenshot import *
 from .stats import *
-from .stop_watch import *
+from .stopwatch import *
 from .submap import *
 from .system_tray import *
 from .taskbar import *

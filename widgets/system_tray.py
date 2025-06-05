@@ -9,7 +9,7 @@ from fabric.widgets.image import Image
 from gi.repository import Gdk, GdkPixbuf, GLib, Gray, Gtk
 
 from shared import ButtonWidget, Grid, HoverButton, Popover, Separator
-from utils import BarConfig, symbolic_icons
+from utils import symbolic_icons
 
 gi.require_version("Gray", "0.1")
 
@@ -144,8 +144,8 @@ class SystemTrayMenu(Box):
 class SystemTrayWidget(ButtonWidget):
     """A widget to display the system tray items."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["system_tray"], name="system_tray", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="system_tray", **kwargs)
 
         # Create main tray box and toggle icon
         self.tray_box = Box(name="system-tray-box", orientation="horizontal", spacing=2)

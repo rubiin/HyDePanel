@@ -1,4 +1,4 @@
-<p align="center"><img src="./assets/images/hydepanel.png" align="centre" width="100" height="130"/></p>
+<p align="center"><img src="assets/images/hydepanel.png" align="centre" width="100" height="130"/></p>
 <h1 align="center"><img src="https://raw.githubusercontent.com/JaKooLit/Telegram-Animated-Emojis/refs/heads/main/Activity/Sparkles.webp"/ height=35> HyDePanel <img src="https://raw.githubusercontent.com/JaKooLit/Telegram-Animated-Emojis/refs/heads/main/Activity/Sparkles.webp"/ height=35></h1>
 <p align="center">
  <a href="https://github.com/rubiin/HyDePanel/blob/master/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/rubiin/HyDePanel"></a>
@@ -181,7 +181,7 @@ If you prefer to have more control over the installation process, you can instal
 Run the following command to install the required system packages:
 
 ```sh
-sudo pacman -S --noconfirm --needed pipewire playerctl dart-sass power-profiles-daemon networkmanager brightnessctl pkgconf wf-recorder kitty python pacman-contrib gtk3 cairo gtk-layer-shell libgirepository noto-fonts-emoji gobject-introspection gobject-introspection-runtime python-pip python-gobject python-psutil python-cairo python-loguru python-setproctitle libnotify cliphist
+sudo pacman -S --noconfirm --needed pipewire playerctl dart-sass power-profiles-daemon networkmanager brightnessctl pkgconf wf-recorder kitty python pacman-contrib gtk3 cairo gtk-layer-shell libgirepository noto-fonts-emoji gobject-introspection gobject-introspection-runtime python-pip python-gobject python-psutil python-cairo python-loguru python-setproctitle libnotify cliphist python-colorthief
 ```
 
 #### Step 2: Install AUR Packages
@@ -237,9 +237,9 @@ Updating to latest commit is fairly simple, just git pull the latest changes.
 | **date_time**         | A menu displaying the current date and notifications.                          |
 | **divider (utility)** | Widget separates sections in a user interface for better organization.         |
 | **emoji_picker**      | Widget that allows users to select and insert emojis.                          |
-| **hypr_idle**         | Widget that tracks idle time or status of the system.                          |
-| **hypr_picker**       | Widget that picks color from images.                                           |
-| **hypr_sunset**       | Widget that adjusts screen settings based on the time of sunset.               |
+| **hypridle**         | Widget that tracks idle time or status of the system.                          |
+| **hyprpicker**       | Widget that picks color from images.                                           |
+| **hyprsunset**       | Widget that adjusts screen settings based on the time of sunset.               |
 | **keyboard**          | Widget that manages and manages the keyboard layout or settings.               |
 | **window_count**      | Widget that shows window count on active workspace.                            |
 | **language**          | Widget allows selection of the system's language or locale settings.           |
@@ -252,11 +252,11 @@ Updating to latest commit is fairly simple, just git pull the latest changes.
 | **ram**               | Widget displays information about system RAM usage and performance.            |
 | **radio_player**      | Widget that allows you to listen to defined online radios.                     |
 | **recorder**          | Widget for recording video on the system.                                      |
-| **screen_shot**       | Widget for taking screenshot on the system.                                    |
+| **screenshot**       | Widget for taking screenshot on the system.                                    |
 | **spacer (utility)**  | A simple utility for adding space in UI layouts.                               |
 | **storage**           | Widget that displays storage usage and manages disk partitions or drives.      |
 | **submap**            | Widget that displays active submap for hyprland.                               |
-| **stop_watch**        | A utility for tracking elapsed time, like a timer or stopwatch.                |
+| **stopwatch**        | A utility for tracking elapsed time, like a timer or stopwatch.                |
 | **system_tray**       | Widget that displays system tray icons and manages notifications.              |
 | **taskbar**           | A bar at the bottom of the screen for quick access to apps and notifications.  |
 | **updates**           | Widget that manages system updates, patches, and version upgrades.             |

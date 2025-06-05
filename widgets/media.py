@@ -27,8 +27,9 @@ from loguru import logger
 from services import MprisPlayer, MprisPlayerManager
 from shared import Animator, CircleImage, HoverButton
 from utils import APP_CACHE_DIRECTORY, cubic_bezier, symbolic_icons
-from utils.functions import ensure_directory
+from utils.functions import ensure_directory, grab_accent_color, rgb_to_css
 from utils.widget_utils import (
+    create_scale,
     setup_cursor_hover,
 )
 
@@ -298,12 +299,7 @@ class PlayerBox(Box):
         )
 
         # Seek Bar
-        self.seek_bar = Scale(
-            min_value=0,
-            max_value=1,
-            increments=(5, 5),
-            name="seek-bar",
-        )
+        self.seek_bar = create_scale(name="seek-bar")
 
         self.seek_bar.connect("change-value", self._on_scale_move)
         self.player.bind("can-seek", "sensitive", self.seek_bar)
@@ -311,7 +307,7 @@ class PlayerBox(Box):
         setup_cursor_hover(self.seek_bar)
 
         self.controls_box = CenterBox(
-            style_classes="player-controls",
+            name="player-controls",
             start_children=self.position_label,
             center_children=self.button_box,
             end_children=self.length_label,
@@ -415,8 +411,6 @@ class PlayerBox(Box):
             },
         )
 
-        invoke_repeater(1000, self._move_seekbar)
-
     def _on_metadata(self, *_):
         self._set_image()
 
@@ -424,6 +418,9 @@ class PlayerBox(Box):
 
         if duration:
             self.length_label.set_label(self.length_str(self.player.length))
+            self.seek_bar.set_range(0, duration)
+
+        invoke_repeater(1000, self._move_seekbar)
 
     def _set_notify_value(self, p, *_):
         self.image_box.set_angle(p.value)
@@ -459,7 +456,7 @@ class PlayerBox(Box):
         remaining_seconds = seconds % 60
         return f"{minutes:02}:{remaining_seconds:02}"
 
-    def _on_playback_change(self, player, status):
+    def _on_playback_change(self, _, status):
         status = self.player.playback_status
 
         if status == "stopped":
@@ -481,8 +478,31 @@ class PlayerBox(Box):
     def _update_image(self, image_path):
         if image_path and os.path.isfile(image_path):
             self.image_box.set_image_from_file(image_path)
+            self.update_colors(image_path)
         else:
             self.image_box.set_image_from_file(self.fallback_cover_path)
+            self.update_colors(self.fallback_cover_path)
+
+    def update_colors(self, image_path):
+        colors = (255, 255, 255)  # Default color if no accent is found
+
+        def on_accent_color(palette):
+            color = palette[0] if palette else colors
+            color = f"mix(rgb{color}, #F7EFD1, 0.5)"
+            bg = f"background-color: {color};"
+            border = f"border-color: {color};"
+            self.seek_bar.set_style(
+                f" trough highlight{{ {bg} {border} }} slider {{ {bg} }}"
+            )
+            # Convert RGB tuples to CSS color strings
+            css_colors = [rgb_to_css(color) for color in palette]
+
+            # Join into linear-gradient syntax
+            gradient = f"linear-gradient(135deg, {', '.join(css_colors)});"
+
+            self.inner_box.set_style(f"background: {gradient};")
+
+        grab_accent_color(image_path=image_path, quantity=5, callback=on_accent_color)
 
     def _set_image(self, *_):
         art_url = self.player.arturl
@@ -515,16 +535,14 @@ class PlayerBox(Box):
         return None
 
     def _move_seekbar(self, *_):
-        if self.player.position or self.player.length is None:
-            return False
         self.position_label.set_label(self.length_str(self.player.position))
-        self.seek_bar.set_value(
-            self.player.position / self.player.length
-        ) if self.player.length > 0 else self.seek_bar.set_value(0)
+
+        self.seek_bar.set_value(self.player.position)
+
+        return True
 
     @cooldown(0.1)
     def _on_scale_move(self, scale: Scale, event, pos: int):
-        actual_pos = pos * self.player.length
-        self.player.position = actual_pos
-        self.position_label.set_label(self.length_str(actual_pos))
+        self.player.position = pos
+        self.position_label.set_label(self.length_str(pos))
         self.seek_bar.set_value(pos)

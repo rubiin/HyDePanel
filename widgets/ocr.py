@@ -5,7 +5,6 @@ from fabric.widgets.label import Label
 from gi.repository import Gdk, Gtk
 
 from shared import ButtonWidget
-from utils import BarConfig
 from utils.functions import ttl_lru_cache
 from utils.widget_utils import text_icon
 
@@ -17,8 +16,8 @@ class OCRWidget(ButtonWidget):
     Right-click to select the OCR language from available tesseract language packs.
     """
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["ocr"], name="ocr", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="ocr", **kwargs)
 
         self.current_lang = "eng"  # default
         self.script_file = get_relative_path("../assets/scripts/ocr.sh")

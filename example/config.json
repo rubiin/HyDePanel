@@ -1,147 +1,303 @@
 {
 	"$schema": "./hydepanel.schema.json",
-	"battery": {
-		"full_battery_level": 100,
-		"hide_label_when_full": true,
-		"label": true,
-		"tooltip": true,
-		"orientation": "vertical",
-		"icon_size": 14,
-		"notifications": {
-			"low_threshold": 10,
-			"full_battery": false,
-			"low_battery": false
-		}
-	},
-	"bluetooth": {
-		"icon_size": 14,
-		"label": true,
-		"tooltip": true
-	},
-	"brightness": {
-		"label": true,
-		"tooltip": true,
-		"step_size": 5
-	},
-	"cava": {
-		"bars": 10,
-		"color": "#89b4fa"
-	},
-	"click_counter": {
-		"count": 0
-	},
-	"cpu": {
-		"show_icon": true,
-		"icon": "",
-		"mode": "graph",
-		"tooltip": true,
-		"temperature_unit": "celsius",
-		"round": true,
-		"show_unit": true,
-		"sensor": "acpitz",
-		"graph_length": 4
-	},
-	"date_time": {
-		"format": "%b %d %H:%M",
-		"notification": {
-			"enabled": true,
-			"count": true,
-			"hide_count_on_zero": true
+	"widgets": {
+		"battery": {
+			"full_battery_level": 100,
+			"hide_label_when_full": true,
+			"label": true,
+			"tooltip": true,
+			"orientation": "vertical",
+			"icon_size": 14,
+			"notifications": {
+				"low_threshold": 10,
+				"full_battery": false,
+				"low_battery": false
+			}
 		},
-		"calendar": true,
-		"clock_format": "24h",
-		"uptime": true,
-		"auto_hide": false,
-		"auto_hide_timeout": 2000
-	},
-	"hypr_idle": {
-		"enabled_icon": "",
-		"disabled_icon": "",
-		"label": true,
-		"tooltip": true
-	},
-	"hypr_sunset": {
-		"temperature": "2800k",
-		"enabled_icon": "󱩌",
-		"disabled_icon": "󰛨",
-		"label": true,
-		"tooltip": true
-	},
-	"keyboard": {
-		"icon": "󰌌",
-		"label": true,
-		"tooltip": true,
-		"show_icon": false
-	},
-	"window_count": {
-		"icon": "",
-		"label_format": "[{count}]",
-		"tooltip": true,
-		"show_icon": false,
-		"hide_when_zero": true
-	},
-	"language": {
-		"truncation_size": 2, // this is the number of characters to show in the language widget
-		"tooltip": true,
-		"icon": "",
-		"show_icon": false
-	},
-	"memory": {
-		"show_icon": true,
-		"icon": "",
-		"mode": "progress",
-		"tooltip": true,
-		"graph_length": 4
-	},
-	"cliphist": {
-		"icon": "",
-		"label": false,
-		"tooltip": true
-	},
-	"radio_player": {
-		"icon": "",
-		"label": true,
-		"tooltip": true,
-		"max_visible_stations": 5 // this is the maximum number of stations to show in the radio player
-	},
-	"kanban": {
-		"icon": "󱞁",
-		"label": false,
-		"tooltip": true
-	},
-	"emoji_picker": {
-		"icon": "",
-		"label": false,
-		"tooltip": true
-	},
-	"submap": {
-		"icon": "󰌌",
-		"label": true,
-		"tooltip": true,
-		"show_icon": false
-	},
-	"microphone": {
-		"label": false,
-		"tooltip": true
-	},
-	"ocr": {
-		"icon": "󰐳",
-		"tooltip": true,
-		"label": false,
-		"show_icon": true
-	},
-	"mpris": {
-		"truncation_size": 10,
-		"tooltip": false
-	},
-	"world_clock": {
-		"icon": "󱉊",
-		"show_icon": true,
-		"timezones": [
-			"America/New_York",
-			"Europe/London",
-			"Asia/Tokyo"
-		]
+		"overview": {
+			"icon": "󰡃",
+			"tooltip": true,
+			"label": false
+		},
+		"power": {
+			"icon": "󰐥",
+			"tooltip": true,
+			"items_per_row": 3,
+			"icon_size": 100,
+			"show_icon": true,
+			"label": false,
+			"buttons": {
+				"shutdown": "systemctl poweroff",
+				"reboot": "systemctl reboot",
+				"hibernate": "systemctl hibernate",
+				"suspend": "systemctl suspend",
+				"lock": "loginctl lock-session",
+				"logout": "loginctl terminate-user $USER"
+			}
+		},
+		"recorder": {
+			"path": "Videos/Screencasting",
+			"audio": true,
+			"icon_size": 16,
+			"tooltip": true
+		},
+		"screenshot": {
+			"path": "Pictures/Screenshots",
+			"icon_size": 16,
+			"tooltip": true,
+			"icon": "󰄀"
+		},
+		"network_usage": {
+			"upload_icon": "",
+			"download_icon": "",
+			"tooltip": true,
+			"upload": true,
+			"download": false
+		},
+		"quick_settings": {
+			"user": {
+				"avatar": "~/.face",
+				"name": "system",
+				// system means it will use the system user name, you can also use your own name
+				"distro_icon": true
+			},
+			"controls": {
+				"sliders": [
+					"brightness",
+					"volume"
+				]
+			},
+			"auto_hide": false,
+			"auto_hide_timeout": 2000,
+			"media": {
+				"enabled": true,
+				"ignore": [
+					"vlc"
+				],
+				"truncation_size": 30,
+				"show_album": true,
+				"show_artist": true,
+				"show_time": true,
+				"show_time_tooltip": true
+			},
+			"shortcuts": {
+				"enabled": true,
+				"items": [
+					{
+						"icon": "terminal-symbolic",
+						"label": "Terminal",
+						"command": "kitty",
+						"tooltip": "Open terminal",
+						"icon_size": 18
+					},
+					{
+						"icon": "firefox-symbolic",
+						"label": "Browser",
+						"command": "firefox",
+						"tooltip": "Launch Firefox",
+						"icon_size": 18
+					}
+				]
+			}
+		},
+		"stopwatch": {
+			"stopped_icon": "󱫞",
+			"running_icon": "󱫠"
+		},
+		"storage": {
+			"show_icon": true,
+			"icon": "󰋊",
+			"mode": "label",
+			"tooltip": true,
+			"graph_length": 4
+		},
+		"system_tray": {
+			"icon_size": 16,
+			"ignored": [], // do not show these icons in the system tray
+			"hidden": []
+		},
+		"taskbar": {
+			"icon_size": 22,
+			"ignored": [], // do not show these icons in the task bar
+			"tooltip": true
+		},
+		"theme_switcher": {
+			"icon": "",
+			"notify": false
+		},
+		"updates": {
+			"show_icon": true,
+			"icon": "󱧘",
+			"os": "arch",
+			"interval": 3600,
+			"tooltip": true,
+			"label": true,
+			"flatpak": true,
+			"snap": false,
+			"brew": false
+		},
+		"volume": {
+			"label": true,
+			"tooltip": true,
+			"step_size": 5
+		},
+		"hyprpicker": {
+			"icon": "",
+			"tooltip": true,
+			"label": false,
+			"show_icon": true
+		},
+		"weather": {
+			"location": "kathmandu", // this is the location to show the weather, you can use city name, latitude, longitude or zip code or leave it empty to use the default location
+			"label": true,
+			"tooltip": true,
+			"temperature_unit": "celsius",
+			"wind_speed_unit": "kmh",
+			"expanded": true, // this is to show the expanded weather widget
+			"interval": 3600 // this is the interval in seconds to update the weather, 1 hour is 3600 seconds
+		},
+		"window_title": {
+			"icon": true, // this is to enable the icon in the window title widget
+			"tooltip": true,
+			"truncation": true,
+			"truncation_size": 50,
+			"title_map": []
+		},
+		"workspaces": {
+			"count": 8, // this is the number of workspaces to show
+			"hide_unoccupied": true,
+			"default_label_format": "{id}",
+			"ignored": [
+				-99
+			], // this is the list of workspaces to ignore, currently -99 is the scratchpad workspace
+			"reverse_scroll": false,
+			"empty_scroll": false,
+			"icon_map": {}
+		},
+		"bluetooth": {
+			"icon_size": 14,
+			"label": true,
+			"tooltip": true
+		},
+		"brightness": {
+			"label": true,
+			"tooltip": true,
+			"step_size": 5
+		},
+		"cava": {
+			"bars": 10,
+			"color": "#89b4fa"
+		},
+		"click_counter": {
+			"count": 0
+		},
+		"cpu": {
+			"show_icon": true,
+			"icon": "",
+			"mode": "graph",
+			"tooltip": true,
+			"temperature_unit": "celsius",
+			"round": true,
+			"show_unit": true,
+			"sensor": "acpitz",
+			"graph_length": 4
+		},
+		"date_time": {
+			"format": "%b %d %H:%M",
+			"notification": {
+				"enabled": true,
+				"count": true,
+				"hide_count_on_zero": true
+			},
+			"calendar": true,
+			"clock_format": "24h",
+			"uptime": true,
+			"auto_hide": false,
+			"auto_hide_timeout": 2000
+		},
+		"hypridle": {
+			"enabled_icon": "",
+			"disabled_icon": "",
+			"label": true,
+			"tooltip": true
+		},
+		"hyprsunset": {
+			"temperature": "2800k",
+			"enabled_icon": "󱩌",
+			"disabled_icon": "󰛨",
+			"label": true,
+			"tooltip": true
+		},
+		"keyboard": {
+			"icon": "󰌌",
+			"label": true,
+			"tooltip": true,
+			"show_icon": false
+		},
+		"window_count": {
+			"icon": "",
+			"label_format": "[{count}]",
+			"tooltip": true,
+			"show_icon": false,
+			"hide_when_zero": true
+		},
+		"language": {
+			"truncation_size": 2, // this is the number of characters to show in the language widget
+			"tooltip": true,
+			"icon": "",
+			"show_icon": false
+		},
+		"memory": {
+			"show_icon": true,
+			"icon": "",
+			"mode": "progress",
+			"tooltip": true,
+			"graph_length": 4
+		},
+		"cliphist": {
+			"icon": "",
+			"label": false,
+			"tooltip": true
+		},
+		"kanban": {
+			"icon": "󱞁",
+			"label": false,
+			"tooltip": true
+		},
+		"emoji_picker": {
+			"icon": "",
+			"label": false,
+			"tooltip": true
+		},
+		"submap": {
+			"icon": "󰌌",
+			"label": true,
+			"tooltip": true,
+			"show_icon": false
+		},
+		"microphone": {
+			"label": false,
+			"tooltip": true
+		},
+		"ocr": {
+			"icon": "󰐳",
+			"tooltip": true,
+			"label": false,
+			"show_icon": true
+		},
+		"mpris": {
+			"truncation_size": 10,
+			"tooltip": false
+		},
+		"world_clock": {
+			"icon": "󱉊",
+			"show_icon": true,
+			"timezones": [
+				"America/New_York",
+				"Europe/London",
+				"Asia/Tokyo"
+			]
+		}
 	},
 	"layout": {
 		"left_section": [
@@ -158,7 +314,7 @@
 			"system_tray"
 		] // this is the right section of the panel
 	},
-	"widget_groups": [ // module groups are used to group multiple modules together, you can create multiple groups and access as @group:0, @group:1, etc
+	"widget_groups": [ // widget groups are used to group multiple modules together, you can create multiple groups and access as @group:0, @group:1, etc
 		{
 			"widgets": [
 				"workspaces",
@@ -172,7 +328,7 @@
 		{
 			"widgets": [
 				"updates",
-				"ocr",
+				"cliphist",
 				"battery"
 			],
 			"spacing": 4,
@@ -214,6 +370,7 @@
 			"enabled": true,
 			"timeout": 2000,
 			"icon_size": 28,
+			"orientation": "horizontal", // this is the orientation of the OSD, you can use vertical or horizontal
 			"anchor": "bottom-center", // this is the position of the OSD, you can use top-center, top-left, top-right, bottom-center, bottom-left, bottom-right
 			"percentage": true
 		},
@@ -248,165 +405,6 @@
 		"debug": true,
 		"monitor_styles": true,
 		"location": "top"
-	},
-	"overview": {
-		"icon": "󰡃",
-		"tooltip": true,
-		"label": false
-	},
-	"power": {
-		"icon": "󰐥",
-		"tooltip": true,
-		"items_per_row": 3,
-		"icon_size": 100,
-		"show_icon": true,
-		"label": false,
-		"buttons": {
-			"shutdown": "systemctl poweroff",
-			"reboot": "systemctl reboot",
-			"hibernate": "systemctl hibernate",
-			"suspend": "systemctl suspend",
-			"lock": "loginctl lock-session",
-			"logout": "loginctl terminate-user $USER"
-		}
-	},
-	"recorder": {
-		"path": "Videos/Screencasting",
-		"audio": true,
-		"icon_size": 16,
-		"tooltip": true
-	},
-	"screen_shot": {
-		"path": "Pictures/Screenshots",
-		"icon_size": 16,
-		"tooltip": true,
-		"icon": "󰄀"
-	},
-	"network_usage": {
-		"upload_icon": "",
-		"download_icon": "",
-		"tooltip": true,
-		"upload": true,
-		"download": false
-	},
-	"quick_settings": {
-		"user": {
-			"avatar": "~/.face",
-			"name": "system",
-			// system means it will use the system user name, you can also use your own name
-			"distro_icon": true
-		},
-		"controls": {
-			"sliders": [
-				"brightness",
-				"volume"
-			]
-		},
-		"auto_hide": false,
-		"auto_hide_timeout": 2000,
-		"media": {
-			"enabled": true,
-			"ignore": [
-				"vlc"
-			],
-			"truncation_size": 30,
-			"show_album": true,
-			"show_artist": true,
-			"show_time": true,
-			"show_time_tooltip": true
-		},
-		"shortcuts": {
-			"enabled": true,
-			"items": [
-				{
-					"icon": "terminal-symbolic",
-					"label": "Terminal",
-					"command": "kitty",
-					"tooltip": "Open terminal",
-					"icon_size": 18
-				},
-				{
-					"icon": "firefox-symbolic",
-					"label": "Browser",
-					"command": "firefox",
-					"tooltip": "Launch Firefox",
-					"icon_size": 18
-				}
-			]
-		}
-	},
-	"stop_watch": {
-		"stopped_icon": "󱫞",
-		"running_icon": "󱫠"
-	},
-	"storage": {
-		"show_icon": true,
-		"icon": "󰋊",
-		"mode": "label",
-		"tooltip": true,
-		"graph_length": 4
-	},
-	"system_tray": {
-		"icon_size": 16,
-		"ignored": [], // do not show these icons in the system tray
-		"hidden": []
-	},
-	"task_bar": {
-		"icon_size": 22,
-		"ignored": [], // do not show these icons in the task bar
-		"tooltip": true
-	},
-	"theme_switcher": {
-		"icon": "",
-		"notify": false
-	},
-	"updates": {
-		"show_icon": true,
-		"icon": "󱧘",
-		"os": "arch",
-		"interval": 3600,
-		"tooltip": true,
-		"label": true,
-		"flatpak": true,
-		"snap": false,
-		"brew": false
-	},
-	"volume": {
-		"label": true,
-		"tooltip": true,
-		"step_size": 5
-	},
-	"hypr_picker": {
-		"icon": "",
-		"tooltip": true,
-		"label": false,
-		"show_icon": true
-	},
-	"weather": {
-		"location": "kathmandu", // this is the location to show the weather, you can use city name, latitude, longitude or zip code or leave it empty to use the default location
-		"label": true,
-		"tooltip": true,
-		"temperature_unit": "celsius",
-		"wind_speed_unit": "kmh",
-		"expanded": true, // this is to show the expanded weather widget
-		"interval": 3600 // this is the interval in seconds to update the weather, 1 hour is 3600 seconds
-	},
-	"window_title": {
-		"icon": true, // this is to enable the icon in the window title widget
-		"tooltip": true,
-		"truncation": true,
-		"truncation_size": 50,
-		"title_map": []
-	},
-	"workspaces": {
-		"count": 8, // this is the number of workspaces to show
-		"hide_unoccupied": true,
-		"default_label_format": "{id}",
-		"ignored": [
-			-99
-		], // this is the list of workspaces to ignore, currently -99 is the scratchpad workspace
-		"reverse_scroll": false,
-		"empty_scroll": false,
-		"icon_map": {}
 	}
+
 }

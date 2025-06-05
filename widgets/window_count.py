@@ -7,15 +7,14 @@ from fabric.widgets.label import Label
 from loguru import logger
 
 from shared import ButtonWidget
-from utils import BarConfig
 from utils.widget_utils import text_icon
 
 
 class WindowCountWidget(ButtonWidget):
     """A widget to display windows in active workspace."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["window_count"], name="window_count", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="window_count", **kwargs)
 
         self.connection = get_hyprland_connection()
 

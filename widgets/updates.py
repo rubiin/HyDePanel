@@ -10,7 +10,7 @@ from fabric.widgets.label import Label
 from loguru import logger
 
 from shared import ButtonWidget
-from utils import BarConfig, Colors
+from utils import Colors
 from utils.widget_utils import (
     text_icon,
     util_fabricator,
@@ -22,11 +22,10 @@ class UpdatesWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the EventBox with specific name and style
-        super().__init__(widget_config["updates"], name="updates", **kwargs)
+        super().__init__(name="updates", **kwargs)
 
         self.update_time = datetime.now()
 

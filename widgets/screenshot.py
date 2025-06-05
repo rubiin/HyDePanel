@@ -2,15 +2,14 @@ from fabric.widgets.label import Label
 
 from services.screen_record import ScreenRecorder
 from shared import ButtonWidget
-from utils import BarConfig
 from utils.widget_utils import text_icon
 
 
 class ScreenShotWidget(ButtonWidget):
     """A widget to switch themes."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["screen_shot"], name="screen_shot", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="screenshot", **kwargs)
 
         if self.config["tooltip"]:
             self.set_tooltip_text("Screen Shot")

@@ -5,14 +5,13 @@ from fabric.widgets.label import Label
 
 import utils.functions as helpers
 from shared import ButtonWidget
-from utils import BarConfig
 
 
 class CavaWidget(ButtonWidget):
     """A widget to display the Cava audio visualizer."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["cava"], name="cava", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="cava", **kwargs)
 
         cava_command = "cava"
 

@@ -30,3 +30,14 @@ class PlayerctlImportError(ImportError):
             "Playerctl is not installed, please install it first",
             *args,
         )
+
+
+class DisplayNotFoundError(Exception):
+    """
+    Raised when the display is not found (e.g., a Wayland compositor is not running).
+    """
+
+    def __init__(self, *args: object) -> None:
+        super().__init__(
+            "Display not found! Ensure you are running a Wayland compositor", *args
+        )

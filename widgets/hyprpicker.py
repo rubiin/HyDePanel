@@ -3,7 +3,6 @@ from fabric.widgets.label import Label
 from gi.repository import Gdk
 
 from shared import ButtonWidget
-from utils import BarConfig
 from utils.functions import check_executable_exists
 from utils.widget_utils import text_icon
 
@@ -11,8 +10,8 @@ from utils.widget_utils import text_icon
 class HyprPickerWidget(ButtonWidget):
     """A widget to pick a color."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["hypr_picker"], name="hypr_picker", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="hyprpicker", **kwargs)
 
         check_executable_exists("hyprpicker")
 

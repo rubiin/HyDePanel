@@ -18,7 +18,7 @@ import utils.constants as constants
 import utils.functions as helpers
 from services import notification_service
 from shared import ButtonWidget, CircleImage, HoverButton, Popover, Separator
-from utils import BarConfig, Colors, symbolic_icons
+from utils import Colors, symbolic_icons
 from utils.functions import uptime
 from utils.widget_utils import get_icon, util_fabricator
 
@@ -438,10 +438,12 @@ class DateNotificationMenu(Box):
 class DateTimeWidget(ButtonWidget):
     """A widget to power off the system."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["date_time"], name="datetime_menu", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="date_time", **kwargs)
 
         self.indicator_icon_size = 14
+
+        notification_config = self.config["notification"]
 
         popup = Popover(
             content_factory=lambda: DateNotificationMenu(config=self.config),
@@ -450,19 +452,18 @@ class DateTimeWidget(ButtonWidget):
         self.notification_indicator = Image(
             icon_name=symbolic_icons["notifications"]["noisy"],
             icon_size=self.indicator_icon_size,
-            visible=self.config["notification"]["enabled"],
+            visible=notification_config["enabled"],
         )
 
         self.count_label = Label(
             name="notification-count",
             label=str(notification_service.count),
             v_align="start",
-            visible=self.config["notification"]["enabled"]
-            and self.config["notification"]["count"],
+            visible=notification_config["enabled"] and notification_config["count"],
         )
 
         if (
-            self.config["notification"]["hide_count_on_zero"]
+            notification_config["hide_count_on_zero"]
             and notification_service.count == 0
         ):
             self.count_label.set_visible(False)

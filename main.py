@@ -12,6 +12,7 @@ from utils import (
     APP_CACHE_DIRECTORY,
     APPLICATION_NAME,
     Colors,
+    theme_config,
     widget_config,
 )
 
@@ -118,7 +119,7 @@ if __name__ == "__main__":
     # Initialize the application with the status bar
     app = Application(APPLICATION_NAME, windows=windows)
 
-    helpers.copy_theme(widget_config["theme"]["name"])
+    helpers.copy_theme(theme_config["name"])
 
     # Set custom `-symbolic.svg` icons' dir
     icon_theme = Gtk.IconTheme.get_default()

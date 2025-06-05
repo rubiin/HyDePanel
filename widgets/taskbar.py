@@ -9,7 +9,7 @@ from gi.repository import GdkPixbuf, GLib, Gtk
 from loguru import logger
 
 from shared import ButtonWidget, HoverButton
-from utils import BarConfig, Colors
+from utils import Colors
 
 
 class PagerClient(TypedDict):
@@ -25,10 +25,9 @@ class PagerClient(TypedDict):
 class TaskBarWidget(ButtonWidget):
     """A widget to display the taskbar items."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(
-            widget_config["task_bar"],
-            name="task_bar",
+            name="taskbar",
             visible=False,
             **kwargs,
         )

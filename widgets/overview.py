@@ -14,7 +14,6 @@ from loguru import logger
 
 from shared import ButtonWidget, PopupWindow
 from utils.icon_resolver import IconResolver
-from utils.widget_settings import BarConfig
 from utils.widget_utils import create_surface_from_widget, text_icon
 
 screen = Gdk.Screen.get_default()
@@ -403,9 +402,9 @@ class OverviewMenu(Box):
 class OverviewWidget(ButtonWidget):
     """A widget to show the overview of all workspaces and windows."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
+    def __init__(self, **kwargs):
         # Initialize as a Box instead of a PopupWindow.
-        super().__init__(widget_config["overview"], name="overview1", **kwargs)
+        super().__init__(name="overview1", **kwargs)
 
         if self.config["tooltip"]:
             self.set_tooltip_text("Overview")

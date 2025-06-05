@@ -29,14 +29,14 @@ class WidgetGroup(BoxWidget):
                 self.add(child)
 
     @classmethod
-    def from_config(cls, config, widgets_map, bar=None, widget_config=None):
+    def from_config(cls, config, widgets_map):
         children = []
         for widget_name in config.get("widgets", []):
             if widget_name in widgets_map:
                 # Create widget instance using the constructor from widgets_map
                 # Pass both widget_config and bar to the widget constructor
                 widget = lazy_load_widget(widget_name, widgets_map)
-                children.append(widget(widget_config, bar=bar))
+                children.append(widget())
 
         return cls(
             children=children,

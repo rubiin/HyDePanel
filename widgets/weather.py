@@ -11,7 +11,7 @@ from loguru import logger
 
 from services import WeatherService
 from shared import ButtonWidget, Grid, Popover
-from utils import BarConfig, weather_icons
+from utils import weather_icons
 from utils.widget_utils import (
     setup_cursor_hover,
     text_icon,
@@ -297,12 +297,10 @@ class WeatherWidget(ButtonWidget, BaseWeatherWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config["weather"],
             name="weather",
             **kwargs,
         )

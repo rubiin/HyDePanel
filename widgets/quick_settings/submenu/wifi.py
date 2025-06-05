@@ -12,12 +12,6 @@ from utils import symbolic_icons
 class WifiSubMenu(QuickSubMenu):
     """A submenu to display the Wifi settings."""
 
-    def is_secured(self, ap) -> bool:
-        wpa_flags = ap.get("wpa_flags", 0)
-        rsn_flags = ap.get("rsn_flags", 0)
-        # Both zero means no security
-        return (wpa_flags != 0) or (rsn_flags != 0)
-
     def __init__(self, **kwargs):
         self.client = NetworkService()
 
@@ -75,9 +69,6 @@ class WifiSubMenu(QuickSubMenu):
                 self.available_networks_box.add(btn)
 
     def make_button_from_ap(self, ap) -> Button:
-        def disconnect(*_):
-            self.client.disconnect_wifi_bssid(ap.get("bssid"))  # TODO: Fix this
-
         security_label = ""
 
         ap_container = Box(
@@ -103,25 +94,27 @@ class WifiSubMenu(QuickSubMenu):
 
         ap_button = HoverButton(style_classes="submenu-button", name="wifi-ap-button")
 
-        if self.is_secured(ap):
-            security_label = ""
-
-        if self.wifi_device.state == "activated" and ap.get(
-            "ssid"
-        ) == self.wifi_device.get_property("ssid"):
+        if self.wifi_device.state == "activated" and self.wifi_device.is_active_ap(
+            ap.get("ssid")
+        ):
             security_label = " " + security_label
+
+            if self.wifi_device.get_ap_security(ap.get("active-ap")) != "unsecured":
+                security_label = security_label + ""
 
         ap_container.add(
             Label(
-                label=security_label,
-                style="font-size: 14px;font-weight: bold;",
+                markup=f"<b>{security_label}</b>",
+                style="font-size: 14px",
                 v_align="center",
             )
         )
 
         ap_button.add(ap_container)
 
-        ap_button.connect("clicked", disconnect)
+        ap_button.connect(
+            "clicked", lambda *_: self.wifi_device.disconnect_network(ap.get("ssid"))
+        )
         return ap_button
 
 

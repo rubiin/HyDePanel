@@ -3,9 +3,20 @@ name = "HyDEPanel"
 version = "1.0.0"
 description = "A semi-customizable bar written using the Fabric Widget System"
 readme = "README.md"
-requires-python = ">=3"
+requires-python = ">=3.11"
 authors = [
     { name = "Rubin Bhandari", email = "roobin.bhandari@gmail.com" },
+]
+
+keywords = [
+  "widgets",
+  "gtk",
+  "linux",
+  "pygobject",
+  "bar",
+  "statusbar",
+  "panel",
+  "dock",
 ]
 
 dependencies = [
@@ -104,3 +115,11 @@ skip-magic-trailing-comma = false
 
 # Like Black, automatically detect the appropriate line ending.
 line-ending = "auto"
+
+
+[project.urls]
+"Website" = "https://github.com/rubiin/HyDePanel/wiki"
+"Documentation" = "https://github.com/rubiin/HyDePanel/wiki"
+"Source" = "https://github.com/rubiin/HyDePanel"
+"Bug Tracker" = "https://github.com/rubiin/HyDePanel/issues"
+"Changelog" = "https://github.com/rubiin/HyDePanel/blob/master/CHANGELOG.md"

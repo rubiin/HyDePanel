@@ -464,8 +464,8 @@ Recording = TypedDict(
 ScreenShot = TypedDict("ScreenShot", {"path": str, "icon_size": int, "tooltip": bool})
 
 
-class BarConfig(TypedDict):
-    """Main configuration that includes all other configurations"""
+class Widgets(TypedDict):
+    """Configuration for all widgets in the bar"""
 
     battery: Battery
     bluetooth: BlueTooth
@@ -477,30 +477,27 @@ class BarConfig(TypedDict):
     kanban: Kanban
     date_time: DateTimeMenu
     divider: Divider
-    hypr_idle: HyprIdle
-    hypr_sunset: HyprSunset
-    hypr_picker: HyprPicker
+    hypridle: HyprIdle
+    hyprsunset: HyprSunset
+    hyprpicker: HyprPicker
     keyboard: Keyboard
     language: Language
-    layout: Layout
     memory: Memory
     microphone: MicroPhone
     mpris: Mpris
     network_usage: NetworkUsage
-    general: General
     ocr: OCR
-    modules: Modules
     overview: Overview
     power: PowerButton
     quick_settings: QuickSettings
     recorder: Recording
-    screen_shot: ScreenShot
+    screenshot: ScreenShot
     spacing: Spacing
-    stop_watch: StopWatch
+    stopwatch: StopWatch
     storage: Storage
     system_tray: SystemTray
     submap: Submap
-    task_bar: TaskBar
+    taskbar: TaskBar
     theme: Theme
     theme_switcher: ThemeSwitcher
     updates: Updates
@@ -511,4 +508,12 @@ class BarConfig(TypedDict):
     workspaces: Workspaces
     world_clock: WorldClock
     cliphist: Cliphist
-    radio_player: RadioPlayer
+
+
+class BarConfig(TypedDict):
+    """Main configuration that includes all other configurations"""
+
+    widgets: Widgets
+    layout: Layout
+    modules: Modules
+    general: General

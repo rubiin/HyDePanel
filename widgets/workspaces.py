@@ -2,7 +2,6 @@ from fabric.hyprland.widgets import WorkspaceButton as WsButton
 from fabric.hyprland.widgets import Workspaces
 
 from shared import BoxWidget
-from utils import BarConfig
 from utils.functions import unique_list
 from utils.widget_utils import setup_cursor_hover
 
@@ -20,10 +19,8 @@ class WorkspaceButton(WsButton):
 class WorkSpacesWidget(BoxWidget):
     """A widget to display the current workspaces."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(name="workspaces", **kwargs)
-
-        self.config = widget_config["workspaces"]
 
         # Convert ignored workspace IDs to integers
         ignored_ws = [int(x) for x in unique_list(self.config["ignored"])]

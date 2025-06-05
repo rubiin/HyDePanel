@@ -3,15 +3,15 @@ from fabric.widgets.image import Image
 
 from services import ScreenRecorder
 from shared import ButtonWidget, LottieAnimation, LottieAnimationWidget
-from utils import BarConfig, symbolic_icons
+from utils import symbolic_icons
 from utils.functions import check_executable_exists
 
 
 class RecorderWidget(ButtonWidget):
     """A widget to record the system"""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["recorder"], name="recorder", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="recorder", **kwargs)
 
         check_executable_exists("wf-recorder")
 

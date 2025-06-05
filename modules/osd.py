@@ -21,10 +21,13 @@ class GenericOSDContainer(Box):
     """A generic OSD container to display the OSD for brightness and audio."""
 
     def __init__(self, config, **kwargs):
+        is_vertical = config["orientation"] == "vertical"
+
         super().__init__(
-            orientation="h",
+            orientation=config["orientation"],
             spacing=10,
             name="osd-container",
+            style_classes="vertical" if is_vertical else "",
             **kwargs,
         )
 
@@ -34,6 +37,11 @@ class GenericOSDContainer(Box):
         )
         self.scale = create_scale(
             name="osd-scale",
+            orientation=config["orientation"],
+            h_expand=is_vertical,
+            v_expand=is_vertical,
+            inverted=is_vertical,
+            style="scale {min-height: 150px; min-width: 11px;}" if is_vertical else "",
         )
 
         self.children = (self.icon, self.scale)
@@ -108,24 +116,19 @@ class AudioOSDContainer(GenericOSDContainer):
         if not audio.speaker:
             return
         if audio.speaker.muted:
-            self.update_icon(0)
+            self.update_icon()
             self.emit("volume-changed")
         else:
-            self.update_icon(audio.speaker.volume)
+            self.update_icon(round(self.audio_service.speaker.volume))
 
-    def on_speaker_changed(self, audio, _):
+    def on_speaker_changed(self, *_):
         if speaker := self.audio_service.speaker:
             speaker.connect("notify::volume", self.update_volume)
 
     @cooldown(0.1)
     def update_volume(self, speaker, _):
         speaker.handler_block_by_func(self.update_volume)
-        self.emit(
-            "volume-changed",
-        )
-        if not self.audio_service.speaker:
-            return
-
+        self.emit("volume-changed")
         volume = round(self.audio_service.speaker.volume)
 
         is_over_amplified = volume > 100
@@ -134,16 +137,17 @@ class AudioOSDContainer(GenericOSDContainer):
             "overamplified"
         ) if is_over_amplified else self.scale.remove_style_class("overamplified")
 
+        if not self.audio_service.speaker:
+            return
         if self.audio_service.speaker.muted:
-            self.update_icon(0)
+            self.update_icon()
         else:
             self.update_icon(volume)
-
         self.scale.set_value(volume)
         self.level.set_label(f"{volume}%")
         speaker.handler_unblock_by_func(self.update_volume)
 
-    def update_icon(self, volume):
+    def update_icon(self, volume=0):
         icon_name = get_audio_icon_name(volume, self.audio_service.speaker.muted)[
             "icon"
         ]

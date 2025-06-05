@@ -6,7 +6,7 @@ from gi.repository import GdkPixbuf, Gtk
 
 from services import BatteryService
 from shared import ButtonWidget
-from utils import BarConfig, symbolic_icons
+from utils import symbolic_icons
 from utils.functions import format_time
 
 NOTIFICATION_TIMEOUT = 60 * 5  # 5 minutes
@@ -17,12 +17,10 @@ class BatteryWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config["battery"],
             name="battery",
             **kwargs,
         )

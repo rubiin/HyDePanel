@@ -5,16 +5,15 @@ from fabric.widgets.overlay import Overlay
 
 from services import audio_service
 from shared import EventBoxWidget
-from utils import BarConfig, text_icons
+from utils import text_icons
 from utils.widget_utils import get_audio_icon_name, text_icon
 
 
 class VolumeWidget(EventBoxWidget):
     """a widget that displays and controls the volume."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(
-            widget_config["volume"],
             name="volume",
             events=["scroll", "smooth-scroll", "enter-notify-event"],
             **kwargs,

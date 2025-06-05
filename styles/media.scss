@@ -31,16 +31,26 @@
   $image_size: 115px;
   min-height: $image_size + 4;
 
+  $inner_player_width: math.floor(calc($player_width - $image_size / 2));
+
   #outer-player-box {
     min-width: $player_width;
     min-height: $image_size;
   }
 
+  @include common.slider($min-length: $inner_player_width - 80, $height: 7px, $highlight-color: theme.$text-muted);
+
+  #seek-bar {
+    padding-top: 10px;
+  }
+
+
+
   #inner-player-box {
-    background: linear-gradient(135deg, color.mix(theme.$background-alt, white, 80%), theme.$background-alt, #4b2353);
+    // background: linear-gradient(135deg, color.mix(theme.$background-alt, white, 80%), theme.$background-alt, #4b2353);
     border-radius: 15px;
     margin-left: math.floor(calc($image_size / 2));
-    min-width: math.floor(calc($player_width - $image_size / 2));
+    min-width: $inner_player_width;
     min-height: $player_height;
   }
 
@@ -72,7 +82,7 @@
     color: #7d7178;
   }
 
-  .player-controls {
+  #player-controls {
     margin-top: 5px;
     margin-bottom: 15px;
 
@@ -106,26 +116,4 @@
     }
   }
 
-  scale {
-    margin-top: 10px;
-
-    trough {
-      border-radius: variable.$radius-large;
-      min-height: 8px;
-      background-color: color.mix(theme.$background, black, 55%);
-
-      highlight {
-        border-radius: variable.$radius-large;
-      }
-
-      &:hover {
-        background-color: color.mix(theme.$background, black, 45%);
-      }
-    }
-  }
-
-  highlight,
-  progress {
-    background: theme.$text-muted;
-  }
 }

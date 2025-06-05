@@ -19,21 +19,22 @@ from .widget_settings import BarConfig
 class HydeConfig:
     "A class to read the configuration file and return the default configuration"
 
-    instance = None
+    _instance = None
 
-    @staticmethod
-    def get_default():
-        if HydeConfig.instance is None:
-            HydeConfig.instance = HydeConfig()
-
-        return HydeConfig.instance
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(HydeConfig, cls).__new__(cls)
+        return cls._instance
 
     def __init__(self):
         self.json_config_file = get_relative_path("../config.json")
         self.toml_config_file = get_relative_path("../config.toml")
         self.theme_config_file = get_relative_path("../theme.json")
 
-        self.default_config()
+        self.config = self.default_config()
+
+        self.theme_config = self.read_json(self.theme_config_file)
+
         self.set_css_settings()
 
     def read_json(self, file) -> dict:
@@ -76,11 +77,10 @@ class HydeConfig:
                     parsed_data.get(key, {}), DEFAULT_CONFIG[key]
                 )
 
-        self.config = parsed_data
+        return parsed_data
 
     @run_in_thread
     def set_css_settings(self):
-        self.theme_config = self.read_json(self.theme_config_file)
         logger.info("Applying css settings...")
 
         css_styles = flatten_dict(exclude_keys(self.theme_config, ["name"]))
@@ -99,5 +99,6 @@ class HydeConfig:
             f.write(settings)
 
 
-configuration = HydeConfig.get_default()
+configuration = HydeConfig()
+theme_config = configuration.theme_config
 widget_config = configuration.config

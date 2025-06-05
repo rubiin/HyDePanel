@@ -1,18 +1,16 @@
 # Standard library imports
 import contextlib
 
-# Third-party imports
 import gi
 
 # Fabric imports
 from fabric.core.service import Property, Service, Signal
 from fabric.utils import bulk_connect
-from gi.repository import GLib  # type: ignore
+from gi.repository import GLib
 from loguru import logger
 
 from utils.exceptions import PlayerctlImportError
 
-# Try to import Playerctl, raise custom error if not available
 try:
     gi.require_version("Playerctl", "2.0")
     from gi.repository import Playerctl

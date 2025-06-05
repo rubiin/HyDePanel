@@ -155,5 +155,18 @@ class QSChevronButton(QSToggleButton):
 
         self.reveal_button.connect("clicked", self.do_reveal_toggle)
 
+        self.submenu.revealer.connect(
+            "notify::reveal-child",
+            self.set_chevron_icon,
+        )
+
+    def set_chevron_icon(self, *_):
+        icon_name = (
+            symbolic_icons["ui"]["arrow"]["down"]
+            if self.submenu.revealer.get_reveal_child()
+            else symbolic_icons["ui"]["arrow"]["right"]
+        )
+        self.button_image.set_from_icon_name(icon_name, 20)
+
     def do_reveal_toggle(self, *_):
         self.emit("reveal-clicked")

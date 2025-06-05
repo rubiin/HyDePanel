@@ -22,7 +22,6 @@ class CommandSwitcher(ButtonWidget):
         label=True,
         args: str = "",
         tooltip=True,
-        config=None,
         style_classes: str = "",
         **kwargs,
     ):
@@ -30,7 +29,6 @@ class CommandSwitcher(ButtonWidget):
         self.full_command = f"{command} {args}"
 
         super().__init__(
-            config,
             name=name,
             **kwargs,
         )

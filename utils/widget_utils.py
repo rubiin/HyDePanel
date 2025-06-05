@@ -21,7 +21,7 @@ from .icons import symbolic_icons, text_icons
 
 # Function to get the system stats using psutil
 def stats_poll(fabricator):
-    storage_config = widget_config["storage"]
+    storage_config = widget_config["widgets"]["storage"]
     while True:
         yield {
             "cpu_usage": round(psutil.cpu_percent(), 1),

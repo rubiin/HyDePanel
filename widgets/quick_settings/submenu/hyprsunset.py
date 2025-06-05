@@ -34,9 +34,8 @@ class HyprSunsetSubMenu(QuickSubMenu):
 
         if self.scale:
             self.scale.connect("change-value", self.on_scale_move)
-
-        # reusing the fabricator to call specified intervals
-        util_fabricator.connect("changed", self.update_scale)
+            # reusing the fabricator to call specified intervals
+            util_fabricator.connect("changed", self.update_scale)
 
     @cooldown(0.1)
     def on_scale_move(self, _, __, moved_pos):
@@ -63,11 +62,11 @@ class HyprSunsetSubMenu(QuickSubMenu):
             if isinstance(moved_pos, str)
             else moved_pos
         )
-        adj = self.scale.get_adjustment()
-        print("HyprSunsetSubMenu: Current temperature", sanitized_value)
-        print(f"HyprSunset scale: {self.scale.get_name()}")
-        print("HyprSunsetSubMenu: lower temperature", adj.get_lower())
-        print("HyprSunsetSubMenu: upper temperature", adj.get_upper())
+        # adj = self.scale.get_adjustment()
+        # print("HyprSunsetSubMenu: Current temperature", sanitized_value)
+        # print(f"HyprSunset scale: {self.scale.get_name()}")
+        # print("HyprSunsetSubMenu: lower temperature", adj.get_lower())
+        # print("HyprSunsetSubMenu: upper temperature", adj.get_upper())
         self.scale.set_value(float(sanitized_value))
         self.scale.set_tooltip_text(f"{sanitized_value}K")
 
@@ -90,25 +89,26 @@ class HyprSunsetToggle(QSChevronButton):
         # reusing the fabricator to call specified intervals
         util_fabricator.connect("changed", self.update_action_button)
 
-    def redlight_temperature(self):
-        """Get the redlight temperature from the scale."""
-        return int(self.submenu.scale.get_value())
-
     def on_action(self, *_):
         """Handle the action button click event."""
         toggle_command(
             "hyprsunset",
-            full_command=f"hyprsunset -t {self.redlight_temperature()}",
+            full_command="hyprsunset -t 2600",
         )
         return True
 
     def update_action_button(self, *_):
         self.is_running = is_app_running("hyprsunset")
-        icon = "redshift-status-on" if self.is_running else "redshift-status-off"
 
-        self.action_icon.set_from_icon_name(icon, self.pixel_size)
-        self.set_action_label("Enabled" if self.is_running else "Disabled")
         if self.is_running:
+            self.action_icon.set_from_icon_name(
+                "redshift-status-on-symbolic", self.pixel_size
+            )
+            self.action_label.set_label("Enabled")
             self.set_active_style(True)
         else:
+            self.action_icon.set_from_icon_name(
+                "redshift-status-off-symbolic", self.pixel_size
+            )
+            self.action_label.set_label("Disabled")
             self.set_active_style(False)

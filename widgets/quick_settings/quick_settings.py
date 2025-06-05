@@ -19,7 +19,7 @@ from shared import (
     QSChevronButton,
 )
 from shared.popovev1 import PopupWindowV1
-from utils import BarConfig, symbolic_icons
+from utils import symbolic_icons
 from utils.widget_utils import (
     get_audio_icon_name,
     get_brightness_icon_name,
@@ -84,8 +84,8 @@ class QuickSettingsButtonBox(Box):
 
         self.power_pfl = PowerProfileToggle(submenu=PowerProfileSubMenu())
 
-        self.hypr_sunset = HyprSunsetToggle(submenu=HyprSunsetSubMenu())
-        self.hypr_idle = HyprIdleQuickSetting()
+        self.hyprsunset = HyprSunsetToggle(submenu=HyprSunsetSubMenu())
+        self.hypridle = HyprIdleQuickSetting()
         self.notification_btn = NotificationQuickSetting()
 
         self.grid.attach(self.wifi_toggle, 1, 1, 1, 1)
@@ -99,27 +99,27 @@ class QuickSettingsButtonBox(Box):
         )
 
         self.grid.attach_next_to(
-            self.hypr_sunset, self.bluetooth_toggle, Gtk.PositionType.BOTTOM, 1, 1
+            self.hyprsunset, self.bluetooth_toggle, Gtk.PositionType.BOTTOM, 1, 1
         )
 
         self.grid.attach_next_to(
-            self.hypr_idle, self.power_pfl, Gtk.PositionType.BOTTOM, 1, 1
+            self.hypridle, self.power_pfl, Gtk.PositionType.BOTTOM, 1, 1
         )
 
         self.grid.attach_next_to(
-            self.notification_btn, self.hypr_idle, Gtk.PositionType.RIGHT, 1, 1
+            self.notification_btn, self.hypridle, Gtk.PositionType.RIGHT, 1, 1
         )
 
         self.wifi_toggle.connect("reveal-clicked", self.set_active_submenu)
         self.bluetooth_toggle.connect("reveal-clicked", self.set_active_submenu)
         self.power_pfl.connect("reveal-clicked", self.set_active_submenu)
-        self.hypr_sunset.connect("reveal-clicked", self.set_active_submenu)
+        self.hyprsunset.connect("reveal-clicked", self.set_active_submenu)
 
         self.add(self.grid)
         self.add(self.wifi_toggle.submenu)
         self.add(self.bluetooth_toggle.submenu)
         self.add(self.power_pfl.submenu)
-        self.add(self.hypr_sunset.submenu)
+        self.add(self.hyprsunset.submenu)
 
     def set_active_submenu(self, btn: QSChevronButton):
         if btn.submenu != self.active_submenu and self.active_submenu is not None:
@@ -388,10 +388,8 @@ class QuickSettingsMenu(Box):
 class QuickSettingsButtonWidget(ButtonWidget):
     """A button to display the date and time."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(
-            widget_config["quick_settings"], name="quick_settings", **kwargs
-        )
+    def __init__(self, **kwargs):
+        super().__init__(name="quick_settings", **kwargs)
 
         self._timeout_id = None
         self.panel_icon_size = 16
