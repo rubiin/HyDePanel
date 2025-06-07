@@ -1,4 +1,9 @@
-# ruff: noqa: F403
-from .audio import *
-from .brightness import *
-from .mic import *
+from .audio import AudioSlider
+from .brightness import BrightnessSlider
+from .mic import MicrophoneSlider
+
+__all__ = [
+    "AudioSlider",
+    "BrightnessSlider",
+    "MicrophoneSlider",
+]

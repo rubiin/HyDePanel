@@ -6,9 +6,11 @@
 @use "../variable.scss";
 
 
+
 .flat {
   border-radius: 4px;
 }
+
 
 .shadow {
   @extend .flat;
@@ -19,11 +21,11 @@
   border: 1.5px solid theme.$surface-disabled;
 }
 
-.wave1 {
+.leaf {
   border-radius: 24px 10px;
 }
 
-.wave2 {
+.leaf-inverse {
   border-radius: 10px 24px;
 }
 
@@ -46,9 +48,19 @@
 
   box-shadow: if(variable.$bar-shadow-enabled, $shadow, none);
 
-  @if (variable.$bar-style-panel !=default) {
+  @if (variable.$bar-style-panel ==floating) {
     margin: 1rem 1.5rem 0rem 1.5rem;
     border-color: theme.$surface-disabled;
+  }
+
+  @else if (variable.$bar-style-panel ==scoop) {
+    margin: 0rem 4.5rem;
+    border-radius: 0 0 variable.$radius * 2.2 variable.$radius * 2.2;
+  }
+
+  @else {
+    border: none;
+
   }
 }
 }
@@ -91,7 +103,7 @@
   }
 }
 
-.panel-icon {
+.panel-font-icon {
   margin-left: 2px;
   margin-right: 2px;
   color: theme.$text-main;
@@ -337,9 +349,20 @@ separator {
   background-color: theme.$surface-disabled;
 }
 
-scrollbar {
-  background-color: theme.$text-main;
-  border-radius: variable.$radius;
-  margin-left: 8px;
-  min-width: .3em;
+
+scrolledwindow {
+  scrollbar {
+    background-color: theme.$surface-disabled;
+    border-radius: 10px;
+    padding: 2px;
+    margin-left: 6px;
+  }
+
+  slider {
+    border-radius: 8px;
+    min-width: 6px;
+    min-height: 30px;
+    background-color: theme.$background;
+
+  }
 }

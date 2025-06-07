@@ -3,23 +3,22 @@ from fabric.widgets.label import Label
 from loguru import logger
 
 from shared import ButtonWidget
-from utils import BarConfig
 from utils.widget_utils import text_icon
 
 
 class SubMapWidget(ButtonWidget):
     """A widget to display the current submap."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["submap"], name="submap", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="submap", **kwargs)
 
-        self.submap_label = Label(label="0", style_classes="panel-text")
+        self.submap_label = Label(label="submap", style_classes="panel-text")
 
         if self.config["show_icon"]:
             # Create a TextIcon with the specified icon and size
             self.icon = text_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
             )
             self.box.add(self.icon)
 

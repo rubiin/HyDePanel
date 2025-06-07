@@ -3,10 +3,9 @@ from fabric.widgets.button import Button
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 
-from services import PowerProfiles
-from shared import QSChevronButton, QuickSubMenu
-from shared.widget_container import HoverButton
-from utils.icons import icons
+from services import PowerProfilesService
+from shared import HoverButton, QSChevronButton, QuickSubMenu
+from utils.icons import symbolic_icons
 
 
 class PowerProfileItem(Button):
@@ -40,7 +39,7 @@ class PowerProfileItem(Button):
             ),
         )
 
-        self.power_profile_service = PowerProfiles()
+        self.power_profile_service = PowerProfilesService()
         self.children = (self.box,)
 
         self.connect(
@@ -60,7 +59,7 @@ class PowerProfileSubMenu(QuickSubMenu):
     """A submenu to display power profile options."""
 
     def __init__(self, **kwargs):
-        self.client = PowerProfiles()
+        self.client = PowerProfilesService()
         self.profiles = self.client.power_profiles
         self.active = self.client.get_current_profile()
 
@@ -80,7 +79,7 @@ class PowerProfileSubMenu(QuickSubMenu):
 
         super().__init__(
             title="Power profiles",
-            title_icon=icons["powerprofiles"]["power-saver"],
+            title_icon=symbolic_icons["powerprofiles"]["power-saver"],
             scan_button=self.scan_button,
             child=profile_box,
             **kwargs,
@@ -99,12 +98,12 @@ class PowerProfileToggle(QSChevronButton):
 
     def __init__(self, submenu: QuickSubMenu, **kwargs):
         super().__init__(
-            action_icon=icons["powerprofiles"]["power-saver"],
+            action_icon=symbolic_icons["powerprofiles"]["power-saver"],
             action_label="Power Saver",
             submenu=submenu,
             **kwargs,
         )
-        self.client = PowerProfiles()
+        self.client = PowerProfilesService()
         self.update_action_button()
         self.set_active_style(True)
         self.action_button.set_sensitive(False)
@@ -122,5 +121,5 @@ class PowerProfileToggle(QSChevronButton):
 
         icon = self.client.get_profile_icon(self.active_pfl)
 
-        self.action_icon.set_from_icon_name(icon, 18)
+        self.action_icon.set_from_icon_name(icon, self.pixel_size)
         self.set_action_label(self.unslug(self.active_pfl))

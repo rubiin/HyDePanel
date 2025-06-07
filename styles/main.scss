@@ -4,16 +4,20 @@
 @use "dock.scss";
 @use "power.scss";
 @use "media.scss";
-@use "theme.scss";
+@use "theme";
 @use "taskbar.scss";
 @use "weather.scss";
 @use "overview.scss";
 @use "datemenu.scss";
+@use "cliphist.scss";
 @use "workspace.scss";
 @use "system_tray.scss";
-@use "module_group.scss";
+@use "widget_group.scss";
 @use "notification.scss";
+@use "kanban.scss";
+@use "emoji.scss";
 @use "quicksettings.scss";
+@use "app_launcher.scss";
 
 /* unset so we can style everything from the ground up. */
 

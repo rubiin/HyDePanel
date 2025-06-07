@@ -4,7 +4,7 @@ from fabric import Service, Signal
 from gi.repository import Gio
 from loguru import logger
 
-from shared.dbus_helper import GioDBusHelper
+from utils.dbus_helper import GioDBusHelper
 
 DeviceState = {
     0: "UNKNOWN",
@@ -24,7 +24,7 @@ class BatteryService(Service):
     def changed(self) -> None:
         """Signal emitted when battery changes."""
 
-    _instance = None  # Class-level private instance variable
+    _instance = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -75,7 +75,7 @@ class BatteryService(Service):
             result = self.proxy.get_cached_property(property)
             return result.unpack() if result is not None else None
         except Exception as e:
-            logger.error(f"[Battery] Error retrieving '{property}': {e}")
+            logger.exception(f"[Battery] Error retrieving '{property}': {e}")
             return None
 
     def handle_property_change(self, *_):

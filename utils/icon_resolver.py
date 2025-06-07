@@ -7,7 +7,7 @@ from loguru import logger
 
 from .colors import Colors
 from .constants import APP_CACHE_DIRECTORY
-from .icons import icons
+from .icons import symbolic_icons
 
 ICON_CACHE_FILE = APP_CACHE_DIRECTORY + "/icons.json"
 
@@ -15,7 +15,7 @@ ICON_CACHE_FILE = APP_CACHE_DIRECTORY + "/icons.json"
 class IconResolver:
     """A class to resolve icons for applications."""
 
-    _instance = None  # Class-level private instance variable
+    _instance = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -90,7 +90,7 @@ class IconResolver:
             for line in f.readlines():
                 if "Icon=" in line:
                     return "".join(line[5:].split())
-            return icons["fallback"]["executable"]
+            return symbolic_icons["fallback"]["executable"]
 
     def _get_desktop_file(self, app_id: str) -> str | None:
         data_dirs = GLib.get_system_data_dirs()
@@ -121,5 +121,5 @@ class IconResolver:
         return (
             self._get_icon_from_desktop_file(desktop_file)
             if desktop_file
-            else icons["fallback"]["executable"]
+            else symbolic_icons["fallback"]["executable"]
         )

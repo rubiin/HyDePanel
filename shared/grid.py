@@ -15,6 +15,8 @@ class Grid(Gtk.Grid, Widget):
         all_visible: bool = False,
         row_spacing: int = 0,
         column_spacing: int = 0,
+        column_homogeneous: bool = False,
+        row_homogeneous: bool = False,
         style: str | None = None,
         style_classes: Iterable[str] | str | None = None,
         tooltip_text: str | None = None,
@@ -49,3 +51,5 @@ class Grid(Gtk.Grid, Widget):
         )
         self.set_row_spacing(row_spacing)
         self.set_column_spacing(column_spacing)
+        self.set_column_homogeneous(column_homogeneous)
+        self.set_row_homogeneous(row_homogeneous)

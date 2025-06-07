@@ -1,0 +1,97 @@
+@use "sass:color";
+@use "theme";
+@use "common";
+@use "variable";
+
+#clip-menu {
+  @include common.floating-widget;
+  @include common.spacing;
+
+  #search-entry {
+    font-weight: bold;
+    background-color: theme.$surface-disabled;
+    color: theme.$text-main;
+    border-radius: 16px;
+    padding: 10px;
+
+    selection {
+      color: theme.$background-alt;
+      background-color: theme.$background;
+    }
+  }
+
+  #close-button,
+  #clear-button {
+    padding: 10px;
+
+    &:hover,
+    &:focus {
+      border-radius: variable.$radius-large;
+      background-color: theme.$surface-highlight;
+    }
+
+    &:active {
+      background-color: theme.$accent-red;
+
+      #close-label,
+      #clear-label {
+        color: theme.$shadow-color;
+      }
+    }
+  }
+
+  #close-label,
+  #clear-label {
+    color: theme.$accent-red;
+    font-size: 12px;
+  }
+
+  #scrolled-window {
+    border-radius: 16px;
+    min-height: 300px;
+  }
+
+  #slot-button {
+    border-radius: 16px;
+    padding: 8px;
+    transition: padding 0.1s ease;
+    animation: loadSlot 0.5s ease;
+
+    &:active {
+      background-color: theme.$background;
+    }
+
+    &:hover,
+    &:focus,
+    &:selected,
+    &.selected {
+      background-color: theme.$surface-highlight;
+      padding-left: 10px;
+    }
+  }
+
+  #clip-label {
+    font-weight: bold;
+  }
+
+  @keyframes loadSlot {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+}
+
+#cliphist {
+  border-radius: variable.$bar-widgets-cliphist-border-radius;
+  border: if(variable.$bar-widgets-cliphist-border-enabled, variable.$border, none);
+  border-width: variable.$bar-widgets-cliphist-border-width;
+
+  #nerd-icon.panel-font-icon {
+    font-size: variable.$bar-widgets-cliphist-icon_size;
+    margin-right: variable.$bar-widgets-cliphist-spacing;
+  }
+}

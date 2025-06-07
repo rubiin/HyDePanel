@@ -16,10 +16,12 @@ from loguru import logger
 
 import utils.constants as constants
 import utils.functions as helpers
-import utils.icons as icons
 from services import notification_service
-from shared.circle_image import CircleImage
-from utils import BarConfig, Colors, HyprlandWithMonitors
+from shared import CircleImage, Grid, HoverButton
+from utils.colors import Colors
+from utils.icons import symbolic_icons
+from utils.monitors import HyprlandWithMonitors
+from utils.widget_settings import BarConfig
 from utils.widget_utils import get_icon
 
 
@@ -31,7 +33,7 @@ class NotificationPopup(Window):
 
         self.widget_config = widget_config
 
-        self.config = widget_config["notification"]
+        self.config = widget_config["modules"]["notification"]
 
         self.hyprland_monitor = HyprlandWithMonitors()
 
@@ -128,17 +130,14 @@ class NotificationWidget(EventBox):
             get_icon(notification.app_icon),
             Label(
                 markup=helpers.parse_markup(
-                    str(
-                        self._notification.summary
-                        if self._notification.summary
-                        else notification.app_name,
-                    )
+                    self._notification.summary
+                    if self._notification.summary
+                    else notification.app_name,
                 ),
                 h_align="start",
                 style_classes="summary",
-                line_wrap="word-char",
-                v_align="start",
-                h_expand=True,
+                max_chars_width=16,
+                ellipsization="end",
             ),
         )
 
@@ -149,8 +148,8 @@ class NotificationWidget(EventBox):
                     Button(
                         image=Image(
                             icon_name=helpers.check_icon_exists(
-                                icons.icons["ui"]["close"],
-                                icons.icons["ui"]["window_close"],
+                                symbolic_icons["ui"]["close"],
+                                symbolic_icons["ui"]["window_close"],
                             ),
                             icon_size=16,
                         ),
@@ -192,13 +191,12 @@ class NotificationWidget(EventBox):
         body_container.add(
             Label(
                 markup=helpers.parse_markup(self._notification.body),
-                line_wrap="char",
                 v_align="start",
                 h_expand=True,
                 h_align="start",
                 style_classes="body",
-                chars_width=20,
-                max_chars_width=40,
+                max_chars_width=34,
+                ellipsization="end",
             ),
         )
 
@@ -208,27 +206,24 @@ class NotificationWidget(EventBox):
             else self.config["max_actions"]
         )
 
-        self.actions_container = Revealer(
-            transition_duration=400,
-            transition_type="slide-down",
-            child_revealed=not self.config["display_actions_on_hover"],
-            child=Box(
-                spacing=4,
-                orientation="h",
-                name="notification-action-box",
-                children=[
-                    ActionButton(action, i, actions_count)
-                    for i, action in enumerate(self._notification.actions)
-                ],
-                h_expand=True,
-            ),
+        self.actions_container_grid = Grid(
+            orientation="h",
+            name="notification-action-box",
+            h_expand=True,
+            column_homogeneous=True,
+            row_homogeneous=True,
+            column_spacing=4,
         )
+
+        for i, action in enumerate(notification.actions):
+            action_button = ActionButton(action, i, actions_count)
+            self.actions_container_grid.attach(action_button, i, 0, 1, 1)
 
         # Add the header, body, and actions to the notification box
         self.notification_box.children = (
             header_container,
             body_container,
-            self.actions_container,
+            self.actions_container_grid,
         )
 
         # Add the notification box to the EventBox
@@ -286,18 +281,9 @@ class NotificationWidget(EventBox):
         if self.config["dismiss_on_hover"]:
             self.close_notification()
 
-        if self.config["display_actions_on_hover"]:
-            self.actions_container.set_reveal_child(
-                not self.actions_container.get_child_revealed()
-            )
-
     def on_unhover(self, *_):
         self.resume_timeout()
         self.set_pointer_cursor(self, "arrow")
-        if self.config["display_actions_on_hover"]:
-            self.actions_container.set_reveal_child(
-                not self.actions_container.get_child_revealed()
-            )
 
     @staticmethod
     def set_pointer_cursor(widget, cursor_name):
@@ -319,7 +305,7 @@ class NotificationRevealer(Revealer):
                 style="margin: 12px;",
                 children=[self.notification_box],
             ),
-            transition_duration=500,
+            transition_duration=config["transition_duration"],
             transition_type=config["transition_type"],
             **kwargs,
         )
@@ -337,9 +323,10 @@ class NotificationRevealer(Revealer):
         reason: NotificationCloseReason,
     ):
         self.set_reveal_child(False)
+        self.destroy()
 
 
-class ActionButton(Button):
+class ActionButton(HoverButton):
     """A button widget to represent a notification action."""
 
     def __init__(

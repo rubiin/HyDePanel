@@ -5,7 +5,6 @@ from fabric.widgets.label import Label
 from fabric.widgets.widget import Widget
 
 from shared import ButtonWidget, Dialog, Grid, HoverButton, PopupWindow
-from utils import BarConfig
 from utils.widget_utils import text_icon
 
 
@@ -15,9 +14,9 @@ class PowerMenuPopup(PopupWindow):
     instance = None
 
     @staticmethod
-    def get_default(widget_config):
+    def get_default(config):
         if PowerMenuPopup.instance is None:
-            PowerMenuPopup.instance = PowerMenuPopup(widget_config)
+            PowerMenuPopup.instance = PowerMenuPopup(config)
 
         return PowerMenuPopup.instance
 
@@ -119,28 +118,24 @@ class PowerControlButtons(HoverButton):
 class PowerWidget(ButtonWidget):
     """A widget to power off the system."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["power"], name="power", **kwargs)
-
-        self.power_label = Label(label="power", style_classes="panel-text")
+    def __init__(self, **kwargs):
+        super().__init__(name="power", **kwargs)
 
         if self.config["show_icon"]:
             # Create a TextIcon with the specified icon and size
             self.icon = text_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
             )
             self.box.add(self.icon)
 
         if self.config["label"]:
-            self.box.add(self.power_label)
+            self.box.add(Label(label="power", style_classes="panel-text"))
 
         if self.config["tooltip"]:
             self.set_tooltip_text("Power")
 
         self.connect(
             "clicked",
-            lambda *_: PowerMenuPopup.get_default(
-                widget_config=self.config
-            ).toggle_popup(),
+            lambda *_: PowerMenuPopup.get_default(self.config).toggle_popup(),
         )
