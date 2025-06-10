@@ -1,0 +1,125 @@
+@use "sass:color";
+@use "theme";
+@use "common";
+@use "variable";
+
+
+
+#emoji-menu {
+
+  @include common.floating-widget;
+  @include common.spacing;
+
+  #search-entry {
+    font-weight: bold;
+    background-color: theme.$surface-disabled;
+    color: theme.$text-main;
+    border-radius: 16px;
+    padding: 10px;
+
+
+    selection {
+      color: theme.$background;
+      background-color: theme.$text-main;
+    }
+  }
+
+  #close-button {
+    background-color: theme.$surface-disabled;
+    border-radius: 16px;
+    padding: 10px;
+
+    &:hover,
+    &:focus {
+      background-color: theme.$surface-highlight;
+    }
+
+    &:active {
+      background-color: theme.$accent-red;
+
+      #close-label {
+        color: theme.$shadow-color;
+      }
+    }
+  }
+
+  #close-label {
+    color: theme.$accent-red;
+    font-size: 12px;
+  }
+
+  #emoji-slot-button {
+    border-radius: 16px;
+    padding: 16px;
+    transition: padding 0.1s ease;
+
+    &:hover,
+    &:focus,
+    &:selected,
+    &.selected {
+      background-color: theme.$surface-highlight;
+      text-shadow: 0 0 4px theme.$shadow-color;
+      animation: highlightEmojiSlot 0.25s cubic-bezier(0, 0, 0.5, 1);
+
+      #emoji-name-label {
+        color: theme.$text-main;
+      }
+    }
+
+    &:active {
+      background-color: theme.$text-main;
+
+      #emoji-name-label {
+        color: theme.$shadow-color;
+      }
+    }
+  }
+
+  #emoji-name-label {
+    color: theme.$text-main;
+    font-weight: bold;
+  }
+
+  #emoji-char-label {
+    font-size: 24px;
+  }
+}
+
+// Animations
+@keyframes loadEmojiSlot {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes highlightEmojiSlot {
+  0% {
+    padding: 16px;
+    text-shadow: 0 4px 4px theme.$shadow-color;
+  }
+
+  50% {
+    padding: 8px 16px 24px 16px;
+    text-shadow: 0 12px 4px theme.$shadow-color;
+  }
+
+  100% {
+    padding: 16px;
+    text-shadow: 0 4px 4px theme.$shadow-color;
+  }
+}
+
+#emoji_picker {
+  border-radius: variable.$bar-widgets-emoji_picker-border-radius;
+  border: if(variable.$bar-widgets-emoji_picker-border-enabled, variable.$border, none);
+  border-width: variable.$bar-widgets-emoji_picker-border-width;
+
+  #nerd-icon.panel-font-icon {
+    font-size: variable.$bar-widgets-emoji_picker-icon_size;
+    margin-right: variable.$bar-widgets-emoji_picker-spacing;
+  }
+}

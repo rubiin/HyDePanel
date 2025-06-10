@@ -1,4 +1,4 @@
-<p align="center"><img src="./assets/hydepanel.png" align="centre" width="100" height="130"/></p>
+<p align="center"><img src="assets/images/hydepanel.png" align="centre" width="100" height="130"/></p>
 <h1 align="center"><img src="https://raw.githubusercontent.com/JaKooLit/Telegram-Animated-Emojis/refs/heads/main/Activity/Sparkles.webp"/ height=35> HyDePanel <img src="https://raw.githubusercontent.com/JaKooLit/Telegram-Animated-Emojis/refs/heads/main/Activity/Sparkles.webp"/ height=35></h1>
 <p align="center">
  <a href="https://github.com/rubiin/HyDePanel/blob/master/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/rubiin/HyDePanel"></a>
@@ -8,8 +8,8 @@
   <img alt="discord" src="https://img.shields.io/discord/1200448076620501063" />
 </p>
 
-A semi-customizable bar written using the [Fabric Widget System](https://github.com/Fabric-Development/fabric).
-The panel focuses on providing an all-in-one, fully integrated panel experience, where users don’t have to rely on separate, theme-less third-party tools to manage niche functions like bluetooth, notifications and notification panel,on screen display.
+
+HyDePanel is a modular status bar for the Hyprland Wayland compositor. Built on [Fabric Widget System](https://github.com/Fabric-Development/fabric), it offers a flexible architecture for building custom panels with individual widgets. It’s designed to be lightweight, performant, and user-configurable.
 
 <h2><sub><img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Camera%20with%20Flash.png" alt="Camera with Flash" width="25" height="25" /></sub> Screenshots</h2>
 
@@ -44,6 +44,30 @@ The panel focuses on providing an all-in-one, fully integrated panel experience,
 </table>
 
 ---
+
+## ✨ Features
+
+- 🖥 **Tailored for Hyprland**
+  Built with full support for Hyprland’s ecosystem and event model.
+
+- 🧩 **Modular Widget System**
+  Includes pluggable widgets for Dock, Launcher, CPU, memory, network, media playback, battery, and more.
+
+- 🎨 **Fully Themeable**
+  Customize fonts, colors, layouts, and behavior using the power of Fabric.
+
+- ⚙️ **Highly Configurable**
+  Control the positioning, behavior, and appearance of every widget and element. Tailor the experience to fit your exact needs.
+
+- ⚡ **Lightweight & Fast**
+  Designed with performance in mind — minimal memory and CPU usage.
+
+- 📢 **On-Screen Display (OSD) Support**
+  Display real-time notifications or alerts directly on the screen (e.g., for volume, media, or custom events) in a visually appealing overlay.
+
+- 🛎️ **Notification System**
+  Integrated notification support allows HyDePanel to show alerts from your system, apps, or scripts. Notifications can be styled, timed, and customized based on user preferences.
+
 
 ## Prerequisites
 
@@ -109,6 +133,9 @@ hypridle
 ## To use media module on quick settings
 playerctl
 
+## To use the clipboard module
+cliphist
+
 ```
 
 - Clone this repository:
@@ -154,7 +181,7 @@ If you prefer to have more control over the installation process, you can instal
 Run the following command to install the required system packages:
 
 ```sh
-sudo pacman -S --noconfirm --needed pipewire playerctl dart-sass power-profiles-daemon networkmanager brightnessctl pkgconf wf-recorder kitty python pacman-contrib gtk3 cairo gtk-layer-shell libgirepository gobject-introspection gobject-introspection-runtime python-pip python-gobject python-psutil python-cairo python-loguru python-setproctitle libnotify
+sudo pacman -S --noconfirm --needed pipewire playerctl dart-sass power-profiles-daemon networkmanager brightnessctl pkgconf wf-recorder kitty python pacman-contrib gtk3 cairo gtk-layer-shell libgirepository noto-fonts-emoji gobject-introspection gobject-introspection-runtime python-pip python-gobject python-psutil python-cairo python-loguru python-setproctitle libnotify cliphist python-colorthief
 ```
 
 #### Step 2: Install AUR Packages
@@ -162,7 +189,7 @@ sudo pacman -S --noconfirm --needed pipewire playerctl dart-sass power-profiles-
 Using `yay` to install the required AUR packages:
 
 ```sh
-yay -S --needed gray-git python-fabric gnome-bluetooth-3.0 python-rlottie-python python-pytomlpp slurp imagemagick tesseract tesseract-data-eng python-pyjson5 ttf-jetbrains-mono-nerd grimblast-git
+yay -S --needed gray-git 	python-fabric-git gnome-bluetooth-3.0 python-rlottie-python python-pytomlpp slurp imagemagick tesseract tesseract-data-eng python-pyjson5 ttf-jetbrains-mono-nerd grimblast-git python-ijson
 ```
 
 If you have something else besides `yay`, install with the respective aur helper.
@@ -205,12 +232,14 @@ Updating to latest commit is fairly simple, just git pull the latest changes.
 | **brightness**        | Widget controls the screen brightness level.                                   |
 | **cava**              | An audio visualizer widget.                                                    |
 | **click_counter**     | Widget tracks the number of mouse clicks.                                      |
+| **cliphist**          | Widget for the clipboard history.                                              |
 | **cpu**               | Widget displays CPU usage and performance statistics.                          |
 | **date_time**         | A menu displaying the current date and notifications.                          |
 | **divider (utility)** | Widget separates sections in a user interface for better organization.         |
-| **hypr_idle**         | Widget that tracks idle time or status of the system.                          |
-| **hypr_picker**       | Widget that picks color from images.                                           |
-| **hypr_sunset**       | Widget that adjusts screen settings based on the time of sunset.               |
+| **emoji_picker**      | Widget that allows users to select and insert emojis.                          |
+| **hypridle**         | Widget that tracks idle time or status of the system.                          |
+| **hyprpicker**       | Widget that picks color from images.                                           |
+| **hyprsunset**       | Widget that adjusts screen settings based on the time of sunset.               |
 | **keyboard**          | Widget that manages and manages the keyboard layout or settings.               |
 | **window_count**      | Widget that shows window count on active workspace.                            |
 | **language**          | Widget allows selection of the system's language or locale settings.           |
@@ -218,14 +247,15 @@ Updating to latest commit is fairly simple, just git pull the latest changes.
 | **microphone**        | Widget manages microphone settings and input levels.                           |
 | **network_usage**     | Widget displays the upload/download speeds.                                    |
 | **ocr**               | Widget scans text from an image.                                               |
+| **overview**          | Widget displays running applications in workspaces.                            |
 | **power**             | Widget controls power-related settings, including sleep and shutdown.          |
 | **ram**               | Widget displays information about system RAM usage and performance.            |
 | **recorder**          | Widget for recording video on the system.                                      |
-| **screen_shot**       | Widget for taking screenshot on the system.                                    |
+| **screenshot**       | Widget for taking screenshot on the system.                                    |
 | **spacer (utility)**  | A simple utility for adding space in UI layouts.                               |
 | **storage**           | Widget that displays storage usage and manages disk partitions or drives.      |
 | **submap**            | Widget that displays active submap for hyprland.                               |
-| **stop_watch**        | A utility for tracking elapsed time, like a timer or stopwatch.                |
+| **stopwatch**        | A utility for tracking elapsed time, like a timer or stopwatch.                |
 | **system_tray**       | Widget that displays system tray icons and manages notifications.              |
 | **taskbar**           | A bar at the bottom of the screen for quick access to apps and notifications.  |
 | **updates**           | Widget that manages system updates, patches, and version upgrades.             |
@@ -267,6 +297,14 @@ layerrule = ignorezero ,gtk-layer-shell
 
 ### 5. **No Icons?**
 Make sure your icon theme has the required icons. One of the recommended icon theme is  `Tela Circle`
+
+### 6. **Hide bar on keypress?**
+
+Add this to your `hyprland.conf`
+
+```conf
+bind = SUPER, Q, exec,  fabric-cli ia hydepanel toggle bar
+```
 
 
 ## Contributing

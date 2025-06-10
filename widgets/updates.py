@@ -10,7 +10,7 @@ from fabric.widgets.label import Label
 from loguru import logger
 
 from shared import ButtonWidget
-from utils import BarConfig, Colors, run_in_thread
+from utils.colors import Colors
 from utils.widget_utils import (
     text_icon,
     util_fabricator,
@@ -22,17 +22,14 @@ class UpdatesWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the EventBox with specific name and style
-        super().__init__(widget_config["updates"], name="updates", **kwargs)
+        super().__init__(name="updates", **kwargs)
 
         self.update_time = datetime.now()
 
         script_file = get_relative_path("../assets/scripts/systemupdates.sh")
-
-        self.update_label = Label(label="0", style_classes="panel-text")
 
         self.base_command = f"{script_file} --{self.config['os']}"
 
@@ -48,11 +45,12 @@ class UpdatesWidget(ButtonWidget):
         if self.config["show_icon"]:
             self.icon = text_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
             )
             self.box.add(self.icon)
 
         if self.config["label"]:
+            self.update_label = Label(label="0", style_classes="panel-text")
             self.box.add(self.update_label)
 
         self.connect("button-press-event", self.on_button_press)
@@ -97,7 +95,6 @@ class UpdatesWidget(ButtonWidget):
         return True
 
     @cooldown(1)
-    @run_in_thread
     def check_update(self, update=False):
         # Execute the update script asynchronously and update values
 

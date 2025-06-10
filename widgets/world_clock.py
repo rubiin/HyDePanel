@@ -5,15 +5,14 @@ import loguru
 from fabric.widgets.label import Label
 
 from shared import ButtonWidget
-from utils import BarConfig
 from utils.widget_utils import text_icon, util_fabricator
 
 
 class WorldClockWidget(ButtonWidget):
     """a widget that displays the title of the active window."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["world_clock"], name="world_clock", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="world_clock", **kwargs)
 
         self.clocks = []
         valid_zones = available_timezones()
@@ -22,7 +21,7 @@ class WorldClockWidget(ButtonWidget):
             # Create a TextIcon with the specified icon and size
             self.icon = text_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
             )
             self.box.add(self.icon)
 

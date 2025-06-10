@@ -1,26 +1,25 @@
+import re
+
 from fabric.utils import bulk_connect
 from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 from loguru import logger
 
 from services import MprisPlayer, MprisPlayerManager
-from shared import ButtonWidget
-from shared.pop_over import Popover
-from utils import BarConfig, Colors
+from shared import ButtonWidget, Popover
+from utils.colors import Colors
 from widgets.media import PlayerBoxStack
 
 
-class Mpris(ButtonWidget):
+class MprisWidget(ButtonWidget):
     """A widget to control the MPRIS."""
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the EventBox with specific name and style
         super().__init__(
-            widget_config["mpris"],
             name="mpris",
             **kwargs,
         )
@@ -55,7 +54,7 @@ class Mpris(ButtonWidget):
         }
 
         popup = Popover(
-            content_factory=lambda: Box(
+            content=Box(
                 style_classes="mpris-box",
                 children=[
                     PlayerBoxStack(self.mpris_manager, config=config),
@@ -73,7 +72,7 @@ class Mpris(ButtonWidget):
         )
 
     def get_current(self):
-        bar_label = self.player.title
+        bar_label = re.sub(r"\r?\n", " ", self.player.title)
 
         truncated_info = (
             bar_label

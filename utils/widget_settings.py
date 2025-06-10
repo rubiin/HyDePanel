@@ -1,6 +1,6 @@
 from typing import Dict, List, Literal, TypedDict
 
-from .types import Anchor, Layer, Temperature_Unit
+from .types import Anchor, Layer, Temperature_Unit, Wind_Speed_Unit
 
 # Common configuration fields that will be reused
 BaseConfig = TypedDict("BaseConfig", {"label": bool, "tooltip": bool})
@@ -101,6 +101,25 @@ StopWatch = TypedDict(
 )
 
 
+# Notification configuration
+Notification = TypedDict(
+    "Notification",
+    {
+        "enabled": bool,
+        "ignored": List[str],
+        "timeout": int,
+        "anchor": Anchor,
+        "auto_dismiss": bool,
+        "play_sound": bool,
+        "sound_file": str,
+        "max_count": int,
+        "dismiss_on_hover": bool,
+        "max_actions": int,
+        "per_app_limits": Dict[str, int],
+    },
+)
+
+# DesktopClock configuration
 DesktopClock = TypedDict(
     "DesktopClock",
     {
@@ -111,13 +130,27 @@ DesktopClock = TypedDict(
     },
 )
 
-
+# ScreenCorners configuration
 ScreenCorners = TypedDict(
     "ScreenCorners",
     {"enabled": bool, "size": int},
 )
 
+# OSD configuration
+OSD = TypedDict(
+    "Osd",
+    {
+        "enabled": bool,
+        "timeout": int,
+        "anchor": Anchor,
+        "percentage": bool,
+        "icon_size": int,
+        "play_sound": bool,
+    },
+)
 
+
+# Dock configuration
 Dock = TypedDict(
     "Dock",
     {
@@ -131,18 +164,46 @@ Dock = TypedDict(
 )
 
 
-# Bar configuration
-General = TypedDict(
-    "General",
+# Dock configuration
+AppLauncher = TypedDict(
+    "AppLauncher",
+    {
+        "enabled": bool,
+        "icon_size": int,
+        "ignored_apps": List[str],
+    },
+)
+
+
+Bar = TypedDict(
+    "Bar",
+    {
+        "location": str,
+        "layer": Layer,
+        "auto_hide": bool,
+    },
+)
+
+
+# Modules configuration
+Modules = TypedDict(
+    "Modules",
     {
         "screen_corners": ScreenCorners,
         "dock": Dock,
+        "bar": Bar,
         "desktop_clock": DesktopClock,
-        "check_updates": bool,
-        "debug": bool,
-        "location": str,
-        "layer": Layer,
+        "notification": Notification,
+        "osd": OSD,
+        "app_launcher": AppLauncher,
     },
+)
+
+
+# Bar configuration
+General = TypedDict(
+    "General",
+    {"check_updates": bool, "debug": bool, "monitor_styles": bool},
 )
 
 # Cpu configuration
@@ -153,7 +214,7 @@ Cpu = TypedDict(
         "tooltip": bool,
         "show_icon": bool,
         "sensor": str,
-        "unit": Temperature_Unit,
+        "temperature_unit": Temperature_Unit,
         "show_unit": bool,
         "round": bool,
         "graph_length": int,
@@ -252,6 +313,7 @@ Weather = TypedDict(
         "label": bool,
         "expanded": bool,
         "temperature_unit": Temperature_Unit,
+        "wind_speed_unit": Wind_Speed_Unit,
     },
 )
 
@@ -265,9 +327,20 @@ MicroPhone = TypedDict("MicroPhone", {**BaseConfig.__annotations__})
 Cava = TypedDict("Cava", {"bars": int, "color": str})
 
 # Overview configuration
-Overview = TypedDict("Overview", {})
+Overview = TypedDict("Overview", {"icon": str, **BaseConfig.__annotations__})
 
 
+Cliphist = TypedDict("Cliphist", {"icon": str, **BaseConfig.__annotations__})
+
+Kanban = TypedDict("kanban", {"icon": str, **BaseConfig.__annotations__})
+
+EmojiPicker = TypedDict(
+    "emoji_picker",
+    {"icon": str, **BaseConfig.__annotations__, "per_row": int, "per_column": int},
+)
+
+
+# DateTime configuration
 DateTimeNotification = TypedDict(
     "DateTimeNotification",
     {
@@ -292,7 +365,7 @@ DateTimeMenu = TypedDict(
     },
 )
 
-
+# World clock configuration
 WorldClock = TypedDict(
     "WorldClock",
     {
@@ -310,6 +383,7 @@ HyprPicker = TypedDict("HyprPicker", {**BaseConfig.__annotations__, "icon": str}
 
 # OCR configuration
 OCR = TypedDict("OCR", {**BaseConfig.__annotations__, "icon": str})
+
 
 # Media configuration
 Media = TypedDict(
@@ -380,48 +454,17 @@ Volume = TypedDict("Volume", {**BaseConfig.__annotations__, "step_size": int})
 Brightness = TypedDict("Brightness", {**BaseConfig.__annotations__, "step_size": int})
 
 
-# Notification configuration
-Notification = TypedDict(
-    "Notification",
-    {
-        "enabled": bool,
-        "ignored": List[str],
-        "timeout": int,
-        "anchor": Anchor,
-        "auto_dismiss": bool,
-        "play_sound": bool,
-        "sound_file": str,
-        "max_count": int,
-        "dismiss_on_hover": bool,
-        "max_actions": int,
-        "display_actions_on_hover": bool,
-        "per_app_limits": Dict[str, int],
-    },
-)
-
 # Recording configuration
 Recording = TypedDict(
     "Recording", {"path": str, "icon_size": int, "tooltip": bool, "audio": bool}
 )
 
+# ScreenShot configuration
 ScreenShot = TypedDict("ScreenShot", {"path": str, "icon_size": int, "tooltip": bool})
 
 
-# OSD configuration
-OSD = TypedDict(
-    "Osd",
-    {
-        "enabled": bool,
-        "timeout": int,
-        "anchor": Anchor,
-        "percentage": bool,
-        "icon_size": int,
-    },
-)
-
-
-class BarConfig(TypedDict):
-    """Main configuration that includes all other configurations"""
+class Widgets(TypedDict):
+    """Configuration for all widgets in the bar"""
 
     battery: Battery
     bluetooth: BlueTooth
@@ -429,33 +472,31 @@ class BarConfig(TypedDict):
     cava: Cava
     click_counter: ClickCounter
     cpu: Cpu
+    emoji_picker: EmojiPicker
+    kanban: Kanban
     date_time: DateTimeMenu
     divider: Divider
-    hypr_idle: HyprIdle
-    hypr_sunset: HyprSunset
-    hypr_picker: HyprPicker
+    hypridle: HyprIdle
+    hyprsunset: HyprSunset
+    hyprpicker: HyprPicker
     keyboard: Keyboard
     language: Language
-    layout: Layout
     memory: Memory
     microphone: MicroPhone
     mpris: Mpris
     network_usage: NetworkUsage
-    notification: Notification
-    general: General
     ocr: OCR
-    osd: OSD
     overview: Overview
     power: PowerButton
     quick_settings: QuickSettings
     recorder: Recording
-    screen_shot: ScreenShot
+    screenshot: ScreenShot
     spacing: Spacing
-    stop_watch: StopWatch
+    stopwatch: StopWatch
     storage: Storage
     system_tray: SystemTray
     submap: Submap
-    task_bar: TaskBar
+    taskbar: TaskBar
     theme: Theme
     theme_switcher: ThemeSwitcher
     updates: Updates
@@ -465,3 +506,13 @@ class BarConfig(TypedDict):
     window_count: WindowCount
     workspaces: Workspaces
     world_clock: WorldClock
+    cliphist: Cliphist
+
+
+class BarConfig(TypedDict):
+    """Main configuration that includes all other configurations"""
+
+    widgets: Widgets
+    layout: Layout
+    modules: Modules
+    general: General

@@ -2,23 +2,23 @@ from fabric import Service, Signal
 from gi.repository import Gio, GLib
 from loguru import logger
 
-from shared.dbus_helper import GioDBusHelper
-from utils import Colors
-from utils.icons import icons
+from utils.colors import Colors
+from utils.dbus_helper import GioDBusHelper
+from utils.icons import symbolic_icons
 
 
-class PowerProfiles(Service):
+class PowerProfilesService(Service):
     """Service to interact with the PowerProfiles service via GIO."""
 
     @Signal
     def profile(self, value: str) -> None:
         """Signal emitted when profile changes."""
 
-    _instance = None  # Class-level private instance variable
+    _instance = None
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(PowerProfiles, cls).__new__(cls)
+            cls._instance = super(PowerProfilesService, cls).__new__(cls)
         return cls._instance
 
     def __init__(self, **kwargs):
@@ -31,15 +31,15 @@ class PowerProfiles(Service):
         self.power_profiles = {
             "power-saver": {
                 "name": "Power Saver",
-                "icon_name": icons["powerprofiles"]["power-saver"],
+                "icon_name": symbolic_icons["powerprofiles"]["power-saver"],
             },
             "balanced": {
                 "name": "Balanced",
-                "icon_name": icons["powerprofiles"]["balanced"],
+                "icon_name": symbolic_icons["powerprofiles"]["balanced"],
             },
             "performance": {
                 "name": "Performance",
-                "icon_name": icons["powerprofiles"]["performance"],
+                "icon_name": symbolic_icons["powerprofiles"]["performance"],
             },
         }
 
@@ -67,7 +67,9 @@ class PowerProfiles(Service):
             value = self.proxy.get_cached_property("ActiveProfile")
             return value.unpack().strip() if value else "balanced"
         except Exception as e:
-            logger.error(f"[PowerProfile] Error retrieving current power profile: {e}")
+            logger.exception(
+                f"[PowerProfile] Error retrieving current power profile: {e}"
+            )
             return "balanced"
 
     def set_power_profile(self, profile: str):
@@ -81,7 +83,7 @@ class PowerProfiles(Service):
             )
             logger.info(f"[PowerProfile] Power profile set to {profile}")
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"[PowerProfile] Could not change power level to {profile}: {e}"
             )
 

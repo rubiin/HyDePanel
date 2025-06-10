@@ -6,7 +6,7 @@ from fabric.utils import exec_shell_command
 class NetworkSpeed:
     """A service to monitor network speed."""
 
-    _instance = None  # Class-level private instance variable
+    _instance = None
 
     def __new__(cls):
         if cls._instance is None:

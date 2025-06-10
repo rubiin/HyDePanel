@@ -2,13 +2,12 @@ from datetime import datetime
 
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
-from gi.repository import GdkPixbuf, GLib, Gtk
+from gi.repository import GdkPixbuf, Gtk
 
 from services import BatteryService
 from shared import ButtonWidget
-from utils import BarConfig
-from utils.functions import format_time, send_notification
-from utils.icons import icons
+from utils.functions import format_time
+from utils.icons import symbolic_icons
 
 NOTIFICATION_TIMEOUT = 60 * 5  # 5 minutes
 
@@ -18,25 +17,26 @@ class BatteryWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config["battery"],
             name="battery",
             **kwargs,
         )
+
         self.full_battery_level = self.config["full_battery_level"]
 
-        self.battery_label = Label(
-            label="100%", style_classes="panel-text", visible=False
-        )
-
         self.battery_icon = Image(
-            icon_name=icons["battery"]["full"],
+            icon_name=symbolic_icons["battery"]["full"],
             icon_size=self.config["icon_size"],
         )
+
+        self.box.add(self.battery_icon)
+
+        if self.config["label"]:
+            self.battery_label = Label(label="100%", style_classes="panel-text")
+            self.box.add(self.battery_label)
 
         self.client = BatteryService()
 
@@ -61,43 +61,6 @@ class BatteryWidget(ButtonWidget):
 
         is_charging = battery_state == 1 if is_present else False
 
-        time_since_last_notification = (
-            datetime.now() - self.time_since_last_notification
-        ).total_seconds()
-        # Check if the notification time has passed
-
-        # print(f"Time since last notification: {time_since_last_notification} seconds")
-        # print(time_since_last_notification > NOTIFICATION_TIMEOUT)
-
-        # print(
-        #     time_since_last_notification > NOTIFICATION_TIMEOUT
-        #     and battery_percent == self.full_battery_level
-        #     and self.config["notifications"]["full_battery"]
-        # )
-
-        if (
-            time_since_last_notification > NOTIFICATION_TIMEOUT
-            and battery_percent == self.full_battery_level
-            and self.config["notifications"]["full_battery"]
-        ):
-            print("Battery is full and notification is enabled")
-            # Create and store the timeout_id
-            timeout_id = GLib.timeout_add(
-                5000,
-                lambda: (
-                    send_notification(
-                        title="Battery Full",
-                        body="Battery is fully charged.",
-                        urgency="normal",
-                        icon=icons["battery"]["full-charging"],
-                        app_name="Battery",
-                    ),
-                    # remove the timeout after sending the notification
-                    GLib.source_remove(timeout_id),
-                ),
-            )
-            self.time_since_last_notification = datetime.now()
-
         temperature = self.client.get_property("Temperature")
         energy = self.client.get_property("Energy")
 
@@ -106,8 +69,6 @@ class BatteryWidget(ButtonWidget):
             if is_charging
             else self.client.get_property("TimeToEmpty")
         )
-
-        self.battery_label.set_text(f"{battery_percent}%")
 
         self.battery_icon.set_from_icon_name(
             self.client.get_property("IconName"), self.config["icon_size"]
@@ -124,11 +85,9 @@ class BatteryWidget(ButtonWidget):
             rotated_pixbuf = pixbuf.rotate_simple(GdkPixbuf.PixbufRotation.CLOCKWISE)
             self.battery_icon.set_from_pixbuf(rotated_pixbuf)
 
-        self.box.children = (self.battery_icon, self.battery_label)
-
         # Update the label with the battery percentage if enabled
         if self.config["label"]:
-            self.battery_label.set_visible(True)
+            self.battery_label.set_text(f"{battery_percent}%")
 
             ## Hide the label when the battery is full
             if (

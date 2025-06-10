@@ -1,7 +1,6 @@
 from fabric.widgets.label import Label
 
 from shared import ButtonWidget
-from utils import BarConfig
 from utils.widget_utils import text_icon
 
 MIC_ON_ICON = "󰍬"
@@ -11,24 +10,25 @@ MIC_OFF_ICON = "󰍭"
 class MicrophoneIndicatorWidget(ButtonWidget):
     """A widget to display the current microphone status."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["microphone"], name="microphone", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="microphone", **kwargs)
 
         self.icon = text_icon(
             icon=MIC_OFF_ICON,
-            props={"style_classes": "panel-icon"},
+            props={"style_classes": "panel-font-icon"},
         )
 
-        self.mic_label = Label(
-            label="",
-            style_classes="panel-text",
-            visible=False,
-        )
+        self.box.add(self.icon)
+
+        if self.config["label"]:
+            self.mic_label = Label(
+                label="",
+                style_classes="panel-text",
+            )
+            self.box.add(self.mic_label)
 
         self.audio_service.connect("microphone_changed", self.update_status)
         self.update_status()
-
-        self.box.children = (self.icon, self.mic_label)
 
     def update_status(self, *_):
         current_microphone = self.audio_service.microphone
@@ -40,7 +40,6 @@ class MicrophoneIndicatorWidget(ButtonWidget):
             # Update the label  if enabled
             if self.config["label"]:
                 self.mic_label.set_label("Off" if is_muted else "On")
-                self.mic_label.set_visible(True)
 
             if self.config["tooltip"]:
                 self.set_tooltip_text(

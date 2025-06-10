@@ -2,7 +2,7 @@ import threading
 import time
 from datetime import datetime
 
-from fabric.utils import get_relative_path
+from fabric.utils import cooldown, get_relative_path
 from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 from fabric.widgets.svg import Svg
@@ -10,10 +10,10 @@ from gi.repository import GLib, Gtk
 from loguru import logger
 
 from services import WeatherService
-from shared import ButtonWidget, Grid, Popover, ScanButton
-from utils import BarConfig
+from shared import ButtonWidget, Grid, Popover
 from utils.icons import weather_icons
 from utils.widget_utils import (
+    setup_cursor_hover,
     text_icon,
     util_fabricator,
 )
@@ -24,6 +24,9 @@ weather_service = WeatherService()
 class BaseWeatherWidget:
     """Base class for weather widgets."""
 
+    def get_description(self):
+        return self.current_weather["weatherDesc"][0]["value"]
+
     def sunrise_sunset_time(self) -> str:
         return f" {self.sunrise_time}  {self.sunset_time}"
 
@@ -33,12 +36,27 @@ class BaseWeatherWidget:
         self.sunset_time = data["astronomy"]["sunset"]
         return True
 
-    def temperature(self, value) -> str:
-        celsius = self.config["temperature_unit"] == "celsius"
-        if celsius:
-            return f"{value}°C"
-        else:
-            return f"{int(int(value) * 9 / 5 + 32)}°F"
+    def get_wind_speed(self):
+        if self.config["wind_speed_unit"] == "kmh":
+            return self.current_weather["windspeedKmph"] + " Km/h"
+
+        return self.current_weather["windspeedMiles"] + " Mph"
+
+    def get_temperature(self):
+        """Get the current temperature in the specified unit."""
+
+        if self.config["temperature_unit"] == "celsius":
+            return self.current_weather["temp_C"] + "°C"
+
+        return self.current_weather["temp_F"] + "°F"
+
+    def get_temperature_hour(self, index):
+        """Get the temperature for a specific hour in the specified unit."""
+
+        if self.config["temperature_unit"] == "celsius":
+            return self.hourly_forecast[index]["tempC"] + "°C"
+
+        return self.hourly_forecast[index]["tempF"] + "°F"
 
     def check_if_day(self, current_time: str | None = None) -> str:
         time_format = "%I:%M %p"
@@ -90,7 +108,6 @@ class WeatherMenu(Box, BaseWeatherWidget):
             spacing=5,
             **kwargs,
         )
-        self.scan_btn = ScanButton(h_align="start", visible=False)
 
         self.config = config
 
@@ -140,7 +157,7 @@ class WeatherMenu(Box, BaseWeatherWidget):
             Label(
                 name="condition",
                 h_align="start",
-                label=f"{self.current_weather['weatherDesc'][0]['value']}",
+                label=f"{self.get_description()}",
             ),
             2,
             1,
@@ -165,7 +182,7 @@ class WeatherMenu(Box, BaseWeatherWidget):
             Label(
                 style_classes="stats",
                 h_align="center",
-                label=f" {self.temperature(value=self.current_weather['temp_C'])}",
+                label=f" {self.get_temperature()}",
             ),
             3,
             0,
@@ -189,7 +206,7 @@ class WeatherMenu(Box, BaseWeatherWidget):
             Label(
                 style_classes="stats",
                 h_align="center",
-                label=f" {self.current_weather['windspeedKmph']} mph",
+                label=f" {self.get_wind_speed()}",
             ),
             3,
             2,
@@ -211,16 +228,20 @@ class WeatherMenu(Box, BaseWeatherWidget):
             expanded=self.config["expanded"],
         )
 
-        self.children = (self.scan_btn, self.title_box, expander)
+        setup_cursor_hover(expander)
 
-        self.update_widget(initial=True)
+        self.children = (self.title_box, expander)
+
+        self.update_widget(forced=True)
 
         # reusing the fabricator to call specified intervals
-        util_fabricator.connect("changed", lambda *_: self.update_widget())
+        util_fabricator.connect("changed", self.update_widget)
 
-    def update_widget(self, initial=False):
+    def update_widget(self, *args, **kwargs):
+        forced = kwargs.get("forced", False)
+
         # Check if the update time is more than 1 minute ago
-        if (datetime.now() - self.update_time).total_seconds() < 60 and not initial:
+        if (datetime.now() - self.update_time).total_seconds() < 60 and not forced:
             return
 
         logger.debug("[Weather] Updating weather widget")
@@ -256,7 +277,7 @@ class WeatherMenu(Box, BaseWeatherWidget):
 
             temp = Label(
                 style_classes="weather-forecast-temp",
-                label=self.temperature(column_data["tempC"]),
+                label=self.get_temperature_hour(col),
                 h_align="center",
             )
             self.forecast_box.attach(hour, col, 0, 1, 1)
@@ -276,12 +297,10 @@ class WeatherWidget(ButtonWidget, BaseWeatherWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config["weather"],
             name="weather",
             **kwargs,
         )
@@ -289,11 +308,13 @@ class WeatherWidget(ButtonWidget, BaseWeatherWidget):
         self.weather_icon = text_icon(
             icon="",
             props={
-                "style_classes": "panel-icon",
+                "style_classes": "panel-font-icon",
             },
         )
 
         self.popover = None
+
+        self.connect("button-press-event", self.on_button_press)
 
         self.update_time = datetime.now()
 
@@ -303,10 +324,10 @@ class WeatherWidget(ButtonWidget, BaseWeatherWidget):
         )
         self.box.children = (self.weather_icon, self.weather_label)
 
-        self.update_ui(initial=True)
+        self.update_ui(forced=True)
 
         # Set up a fabricator to call the update_label method at specified intervals
-        util_fabricator.connect("changed", lambda *_: self.update_ui())
+        util_fabricator.connect("changed", self.update_ui)
 
     def fetch_data_from_url(self):
         data = weather_service.get_weather(
@@ -321,9 +342,9 @@ class WeatherWidget(ButtonWidget, BaseWeatherWidget):
 
         if data is None:
             self.weather_label.set_label("")
-            self.weather_icon.set_label("")
+            self.weather_icon.set_label("")
             if self.config["tooltip"]:
-                self.set_tooltip_text("Error fetching weather data")
+                self.set_tooltip_text("Error fetching weather data, try again later.")
             return
 
         # Get the current weather
@@ -331,35 +352,29 @@ class WeatherWidget(ButtonWidget, BaseWeatherWidget):
 
         self.update_sunrise_sunset(data)
 
+        weather_icon = weather_icons[self.current_weather["weatherCode"]]
+
         text_icon = (
-            weather_icons[self.current_weather["weatherCode"]]["icon"]
-            if self.check_if_day()
-            else weather_icons[self.current_weather["weatherCode"]]["icon-night"]
+            weather_icon["icon"] if self.check_if_day() else weather_icon["icon-night"]
         )
 
         self.weather_icon.set_label(text_icon)
 
-        self.weather_label.set_label(
-            self.temperature(value=self.current_weather["temp_C"])
-        )
+        self.weather_label.set_label(self.get_temperature())
 
         # Update the tooltip with the city and weather condition if enabled
         if self.config["tooltip"]:
-            self.set_tooltip_text(
-                f"{data['location']}, {self.current_weather['weatherDesc'][0]['value']}"
-            )
+            tool_tip = f"{self.get_temperature()} {self.get_description()}"
+            tool_tip += f"\n\n{weather_icon['quote']}"
+
+            self.set_tooltip_text(tool_tip)
 
         # Create popover only once
 
         if self.popover is None:
             self.popover = Popover(
-                content_factory=lambda: WeatherMenu(data=data, config=self.config),
+                content=WeatherMenu(data=data, config=self.config),
                 point_to=self,
-            )
-
-            self._clicked_signal_id = self.connect(
-                "clicked",
-                self.popover.open,
             )
         else:
             # Just update content_factory with latest data
@@ -369,7 +384,17 @@ class WeatherWidget(ButtonWidget, BaseWeatherWidget):
 
         return False
 
-    def update_ui(self, initial=False):
+    @cooldown(1)
+    def on_button_press(self, _, event):
+        if event.button == 1:
+            self.popover.open() if self.popover else None
+            return
+        else:
+            self.update_ui(forced=True)
+
+    def update_ui(self, *args, **kwargs):
+        forced = kwargs.get("forced", False)
+
         # Check if the update time is more than 5 minutes ago, update the icon
         if (datetime.now() - self.update_time).total_seconds() > 300:
             text_icon = (
@@ -382,7 +407,7 @@ class WeatherWidget(ButtonWidget, BaseWeatherWidget):
 
         if (datetime.now() - self.update_time).total_seconds() < self.config[
             "interval"
-        ] and not initial:
+        ] and not forced:
             # Check if the update time is more than interval seconds ago
             return
 

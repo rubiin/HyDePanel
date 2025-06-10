@@ -1,5 +1,6 @@
-@use "theme.scss";
-@use "variable.scss";
+@use "sass:color";
+@use "theme";
+@use "variable";
 @use "common";
 
 $base_margin: common.toEm(4);
@@ -9,7 +10,7 @@ $base_margin: common.toEm(4);
   border: if(variable.$bar-widgets-weather-border-enabled, variable.$border, none);
   border-width: variable.$bar-widgets-weather-border-width;
 
-  #nerd-icon.panel-icon {
+  #nerd-icon.panel-font-icon {
     font-size: variable.$bar-widgets-weather-icon_size;
     margin-right: variable.$bar-widgets-weather-spacing;
   }
@@ -18,7 +19,7 @@ $base_margin: common.toEm(4);
 .weather-box {
   @include common.floating-widget;
 
-  #weather-expander{
+  #weather-expander {
     arrow {
       color: theme.$text-main;
     }
@@ -36,22 +37,20 @@ $base_margin: common.toEm(4);
       font-size: 0.87em;
     }
 
-    #condition{
+    #condition {
       font-size: 1.6em;
       font-weight: 600;
     }
 
-
     .header-label#sunrise-sunset {
       font-size: 0.8em;
       font-weight: 500;
-      color: darken(theme.$text-main,10%);
+      color: color.mix(theme.$text-main, black, 80%);
     }
 
-    .stats{
+    .stats {
       @extend .header-label;
       margin: 0 10px 0 30px;
-
 
     }
   }
