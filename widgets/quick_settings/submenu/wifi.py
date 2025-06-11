@@ -4,6 +4,7 @@ from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 from fabric.widgets.scrolledwindow import ScrolledWindow
 from gi.repository import Gtk
+from loguru import logger
 
 from services.network import NetworkService, Wifi
 from shared.buttons import QSChevronButton, ScanButton
@@ -18,11 +19,10 @@ class WifiSubMenu(QuickSubMenu):
     def __init__(self, **kwargs):
         self.client = NetworkService()
 
-        self.client.connect("device-ready", self.on_device_ready)
-
         self.available_networks_listbox = ListBox(
             visible=True, name="available-networks-listbox"
         )
+        self.client.connect("device-ready", self.on_device_ready)
 
         self.scan_button = ScanButton()
 
@@ -35,6 +35,9 @@ class WifiSubMenu(QuickSubMenu):
             max_content_size=(-1, 190),
             propagate_width=True,
             propagate_height=True,
+            v_expand=True,
+            v_scrollbar_policy="automatic",
+            h_scrollbar_policy="never",
             child=self.available_networks_listbox,
         )
 
@@ -46,32 +49,74 @@ class WifiSubMenu(QuickSubMenu):
             **kwargs,
         )
 
+        if self.child:
+            adjustment = self.child.get_vadjustment()
+
+            adjustment.connect("value-changed", self.on_scroll)
+
+        self.revealer.connect(
+            "notify::child-revealed",
+            self.start_new_scan,
+        )
+
+    def on_child_revealed(self, *_):
+        self.scan_button.set_sensitive(False)
+        self.start_new_scan()
+        self.scan_button.set_sensitive(True)
+
+    def load_more_items(self, aps):
+        if self.loading or self.items_loaded >= self.max_items:
+            return
+        self.loading = True
+
+        items_to_add = min(self.batch_size, self.max_items - self.items_loaded)
+
+        for i in range(self.items_loaded, self.items_loaded + items_to_add):
+            notification_item = self.make_button_from_ap(aps[i])
+            self.available_networks_listbox.add(notification_item)
+
+        self.items_loaded += items_to_add
+        self.loading = False
+
+    def on_scroll(self, adjustment):
+        value = adjustment.get_value()
+        upper = adjustment.get_upper()
+        page_size = adjustment.get_page_size()
+
+        if value + page_size >= upper - 50:
+            self.load_more_items(self.wifi_device.access_points)
+
     def on_scan(self, _, value, *args):
         """Called when the scan is complete."""
 
         if value:
-            self.scan_button.play_animation()
-        else:
-            self.scan_button.stop_animation()
+            logger.info("[WifiService]Scan complete, updating available networks...")
+
+            # Pagination state, reset for new scan
+            self.items_loaded = 0
+            self.batch_size = 7
+            self.loading = False
+            self.max_items = 0  # ← LIMIT HERE
+
+            self.build_wifi_options()
+            self.scan_button.set_sensitive(True)
 
     def start_new_scan(self, *_):
         self.wifi_device.scan()
-        self.build_wifi_options()
         self.scan_button.play_animation()
 
     def on_device_ready(self, client: NetworkService):
         self.wifi_device = client.wifi_device
+
         if self.wifi_device:
-            self.scan_button.set_sensitive(True)
-            self.start_new_scan(None)
-            self.wifi_device.connect("changed", self.start_new_scan)
+            self.wifi_device.connect("scanning", self.on_scan)
 
     def build_wifi_options(self):
         self.available_networks_listbox.remove_all()
-        for ap in self.wifi_device.access_points:
-            if ap.get("ssid") != "Unknown":
-                wifi_item = self.make_button_from_ap(ap)
-                self.available_networks_listbox.add(wifi_item)
+
+        self.max_items = len(self.wifi_device.access_points)
+
+        self.load_more_items(self.wifi_device.access_points)
 
     def make_button_from_ap(self, ap) -> Button:
         security_label = ""
