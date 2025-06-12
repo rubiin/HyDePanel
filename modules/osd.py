@@ -51,9 +51,20 @@ class GenericOSDContainer(Box):
 
         self.children = (self.icon, self.scale)
 
-        if config["percentage"]:
+        self.show_level = config["percentage"]
+
+        if self.show_level:
             self.level = Label(name="osd-level", h_align="center", h_expand=True)
             self.add(self.level)
+
+    def update_values(self, value):
+        """Update the value."""
+        round_value = round(value)
+        self.scale.set_value(round_value)
+
+        if self.show_level:
+            self.level.set_label(f"{round_value}%")
+        self.scale.animate_value(round_value)
 
 
 class BrightnessOSDContainer(GenericOSDContainer):
@@ -79,9 +90,7 @@ class BrightnessOSDContainer(GenericOSDContainer):
     @cooldown(0.1)
     def update_brightness(self):
         brightness_percent = self.brightness_service.screen_brightness_percentage
-        self.scale.animate_value(brightness_percent)
-        self.level.set_label(f"{round(brightness_percent)}%")
-        self.scale.set_value(round(brightness_percent))
+        self.update_values(brightness_percent)
         self.update_icon(int(brightness_percent))
 
     def update_icon(self, current_brightness):
@@ -149,9 +158,7 @@ class AudioOSDContainer(GenericOSDContainer):
             self.update_icon()
         else:
             self.update_icon(volume)
-        self.scale.set_value(volume)
-        self.level.set_label(f"{volume}%")
-        self.scale.animate_value(volume)
+        self.update_values(volume)
         speaker.handler_unblock_by_func(self.update_volume)
 
     def update_icon(self, volume=0):
