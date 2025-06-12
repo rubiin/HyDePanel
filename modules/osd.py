@@ -60,11 +60,11 @@ class GenericOSDContainer(Box):
     def update_values(self, value):
         """Update the value."""
         round_value = round(value)
+        self.scale.animate_value(round_value)
         self.scale.set_value(round_value)
 
         if self.show_level:
             self.level.set_label(f"{round_value}%")
-        self.scale.animate_value(round_value)
 
 
 class BrightnessOSDContainer(GenericOSDContainer):
