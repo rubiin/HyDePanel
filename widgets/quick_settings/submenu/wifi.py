@@ -1,6 +1,5 @@
 from fabric.widgets.box import Box
 from fabric.widgets.button import Button
-from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 from fabric.widgets.scrolledwindow import ScrolledWindow
 from gi.repository import Gtk
@@ -11,6 +10,7 @@ from shared.buttons import QSChevronButton, ScanButton
 from shared.list import ListBox
 from shared.submenu import QuickSubMenu
 from utils.icons import symbolic_icons, text_icons
+from utils.widget_utils import nerd_font_icon
 
 
 class WifiSubMenu(QuickSubMenu):
@@ -29,6 +29,16 @@ class WifiSubMenu(QuickSubMenu):
         self.scan_button.set_sensitive(False)
 
         self.scan_button.connect("clicked", self.start_new_scan)
+
+        self.icon_to_text_icons = {
+            "network-wireless-signal-excellent-symbolic": text_icons["wifi"][
+                "strength_4"
+            ],
+            "network-wireless-signal-good-symbolic": text_icons["wifi"]["strength_3"],
+            "network-wireless-signal-ok-symbolic": text_icons["wifi"]["strength_2"],
+            "network-wireless-signal-weak-symbolic": text_icons["wifi"]["strength_1"],
+            "network-wireless-signal-none-symbolic": text_icons["wifi"]["strength_0"],
+        }
 
         self.child = ScrolledWindow(
             min_content_size=(-1, 190),
@@ -127,9 +137,15 @@ class WifiSubMenu(QuickSubMenu):
             spacing=4,
             tooltip_markup=ap.get("ssid"),
             children=[
-                Image(
-                    icon_name=ap.get("icon-name"),
-                    icon_size=18,
+                nerd_font_icon(
+                    icon=self.icon_to_text_icons.get(
+                        ap.get("icon-name"),
+                        text_icons["wifi"]["generic"],
+                    ),
+                    props={
+                        "style_classes": ["panel-font-icon"],
+                        "style": "font-size: 16px;",
+                    },
                 ),
                 Label(
                     label=ap.get("ssid"),

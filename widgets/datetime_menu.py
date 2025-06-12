@@ -184,7 +184,7 @@ class DateNotificationMenu(Box):
                 visible=len(notifications) == 0,  # visible if no notifications
                 children=(
                     nerd_font_icon(
-                        icon="󱇥",
+                        icon=text_icons["notifications"]["checked"],
                         props={
                             "style_classes": ["panel-font-icon", "placeholder-icon"],
                         },
