@@ -85,7 +85,7 @@ class HyprSunsetToggle(QSChevronButton):
 
     def __init__(self, submenu: QuickSubMenu, **kwargs):
         super().__init__(
-            action_icon="redshift-status-off",
+            action_icon=text_icons["nightlight"]["disabled"],
             pixel_size=20,
             action_label="Enabled",
             submenu=submenu,
@@ -110,14 +110,10 @@ class HyprSunsetToggle(QSChevronButton):
         self.is_running = is_app_running("hyprsunset")
 
         if self.is_running:
-            self.action_icon.set_from_icon_name(
-                "redshift-status-on-symbolic", self.pixel_size
-            )
+            self.action_icon.set_label(text_icons["nightlight"]["enabled"])
             self.action_label.set_label("Enabled")
             self.set_active_style(True)
         else:
-            self.action_icon.set_from_icon_name(
-                "redshift-status-off-symbolic", self.pixel_size
-            )
+            self.action_icon.set_label(text_icons["nightlight"]["disabled"])
             self.action_label.set_label("Disabled")
             self.set_active_style(False)

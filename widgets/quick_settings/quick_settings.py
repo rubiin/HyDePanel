@@ -484,10 +484,10 @@ class QuickSettingsButtonWidget(ButtonWidget):
         """Update the brightness icon."""
         try:
             normalized_brightness = self.brightness_service.screen_brightness_percentage
-            icon_info = get_brightness_icon_name(normalized_brightness)
+            icon_info = get_brightness_icon_name(normalized_brightness)["icon"]
             if icon_info:
                 self.brightness_icon.set_from_icon_name(
-                    icon_info["icon"],
+                    icon_info,
                     self.panel_icon_size,
                 )
             else:

@@ -137,5 +137,5 @@ class PowerProfileToggle(QSChevronButton):
 
         icon = self.client.get_profile_icon(self.active_pfl)
 
-        self.action_icon.set_from_icon_name(icon, self.pixel_size)
+        self.action_icon.set_label(icon)
         self.set_action_label(self.unslug(self.active_pfl))

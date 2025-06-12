@@ -43,6 +43,8 @@ class GenericOSDContainer(Box):
             orientation=config["orientation"],
             h_expand=is_vertical,
             v_expand=is_vertical,
+            duration=0.8,
+            curve=(0.25, 0.1, 0.25, 1.0),
             inverted=is_vertical,
             style="scale {min-height: 150px; min-width: 11px;}" if is_vertical else "",
         )
@@ -77,6 +79,7 @@ class BrightnessOSDContainer(GenericOSDContainer):
     @cooldown(0.1)
     def update_brightness(self):
         brightness_percent = self.brightness_service.screen_brightness_percentage
+        self.scale.animate_value(brightness_percent)
         self.level.set_label(f"{round(brightness_percent)}%")
         self.scale.set_value(round(brightness_percent))
         self.update_icon(int(brightness_percent))
@@ -148,6 +151,7 @@ class AudioOSDContainer(GenericOSDContainer):
             self.update_icon(volume)
         self.scale.set_value(volume)
         self.level.set_label(f"{volume}%")
+        self.scale.animate_value(volume)
         speaker.handler_unblock_by_func(self.update_volume)
 
     def update_icon(self, volume=0):

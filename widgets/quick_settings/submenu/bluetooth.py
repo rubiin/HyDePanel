@@ -215,15 +215,11 @@ class BluetoothToggle(QSChevronButton):
     def toggle_bluetooth(self, client: BluetoothClient, *_):
         if client.enabled:
             self.set_active_style(True)
-            self.action_icon.set_from_icon_name(
-                symbolic_icons["bluetooth"]["enabled"], self.pixel_size
-            )
+            self.action_icon.set_label(text_icons["bluetooth"]["enabled"])
             self.action_label.set_label("Enabled")
         else:
             self.set_active_style(False)
-            self.action_icon.set_from_icon_name(
-                symbolic_icons["bluetooth"]["disabled"], self.pixel_size
-            )
+            self.action_icon.set_label(text_icons["bluetooth"]["disabled"])
             self.action_label.set_label("Disabled")
 
     def new_device(self, client: BluetoothClient, address):

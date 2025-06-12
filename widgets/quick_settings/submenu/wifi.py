@@ -12,6 +12,14 @@ from shared.submenu import QuickSubMenu
 from utils.icons import symbolic_icons, text_icons
 from utils.widget_utils import nerd_font_icon
 
+icon_to_text_icons = {
+    "network-wireless-signal-excellent-symbolic": text_icons["wifi"]["strength_4"],
+    "network-wireless-signal-good-symbolic": text_icons["wifi"]["strength_3"],
+    "network-wireless-signal-ok-symbolic": text_icons["wifi"]["strength_2"],
+    "network-wireless-signal-weak-symbolic": text_icons["wifi"]["strength_1"],
+    "network-wireless-signal-none-symbolic": text_icons["wifi"]["strength_0"],
+}
+
 
 class WifiSubMenu(QuickSubMenu):
     """A submenu to display the Wifi settings."""
@@ -29,16 +37,6 @@ class WifiSubMenu(QuickSubMenu):
         self.scan_button.set_sensitive(False)
 
         self.scan_button.connect("clicked", self.start_new_scan)
-
-        self.icon_to_text_icons = {
-            "network-wireless-signal-excellent-symbolic": text_icons["wifi"][
-                "strength_4"
-            ],
-            "network-wireless-signal-good-symbolic": text_icons["wifi"]["strength_3"],
-            "network-wireless-signal-ok-symbolic": text_icons["wifi"]["strength_2"],
-            "network-wireless-signal-weak-symbolic": text_icons["wifi"]["strength_1"],
-            "network-wireless-signal-none-symbolic": text_icons["wifi"]["strength_0"],
-        }
 
         self.child = ScrolledWindow(
             min_content_size=(-1, 190),
@@ -138,7 +136,7 @@ class WifiSubMenu(QuickSubMenu):
             tooltip_markup=ap.get("ssid"),
             children=[
                 nerd_font_icon(
-                    icon=self.icon_to_text_icons.get(
+                    icon=icon_to_text_icons.get(
                         ap.get("icon-name"),
                         text_icons["wifi"]["generic"],
                     ),
@@ -205,10 +203,17 @@ class WifiToggle(QSChevronButton):
             )
             wifi.connect("changed", self.update_status)
 
-            self.action_icon.set_from_icon_name(
-                wifi.get_property("icon-name") + "-symbolic", self.pixel_size
+            print(f"WifiToggle: {wifi.get_property('icon-name')=}")
+
+            self.action_icon.set_label(
+                icon_to_text_icons.get(
+                    wifi.get_property("icon-name"),
+                    text_icons["wifi"]["generic"],
+                ),
             )
-            wifi.bind_property("icon-name", self.action_icon, "icon-name")
+
+            # TODO: Fix this binding
+            # wifi.bind_property("icon-name", self.action_icon, "icon-name")
 
             self.action_label.set_label(wifi.get_property("ssid"))
             wifi.bind_property("ssid", self.action_label, "label")
@@ -223,7 +228,9 @@ class WifiToggle(QSChevronButton):
             wifi.toggle_wifi()
 
     def update_status(self, wifi: Wifi):
-        self.action_icon.set_from_icon_name(
-            wifi.icon_name,
-            self.pixel_size,
+        self.action_icon.set_label(
+            icon_to_text_icons.get(
+                wifi.get_property("icon-name"),
+                text_icons["wifi"]["generic"],
+            ),
         )
