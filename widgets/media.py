@@ -487,23 +487,44 @@ class PlayerBox(Box):
             self.update_colors(self.fallback_cover_path)
 
     def update_colors(self, image_path):
-        colors = (255, 255, 255)  # Default color if no accent is found
+
+        def mix_colors(color1, color2, ratio=0.5):
+            r = int(color1[0] * (1 - ratio) + color2[0] * ratio)
+            g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
+            b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
+            return (r, g, b)
+
+        def tint_color(color, tint_factor=1):
+            # tint_factor: 0 means original color, 1 means full white
+            white = (255, 255, 255)
+            return mix_colors(color, white, tint_factor)
 
         def on_accent_color(palette):
-            color = palette[0] if palette else colors
-            color = f"mix(rgb{color}, #F7EFD1, 0.5)"
-            bg = f"background-color: {color};"
-            border = f"border-color: {color};"
-            self.seek_bar.set_style(
-                f" trough highlight{{ {bg} {border} }} slider {{ {bg} }}"
-            )
-            # Convert RGB tuples to CSS color strings
-            css_colors = [rgb_to_css(color) for color in palette]
+            default_color = (255, 0, 0)  # fallback color
 
-            # Join into linear-gradient syntax
-            gradient = f"linear-gradient(135deg, {', '.join(css_colors)});"
+            base_color = palette[0] if palette else default_color
+            mix_target = (247, 239, 209)  # #F7EFD1
+
+            # Mix base color with the target color
+            mixed_color = mix_colors(base_color, mix_target, 0.5)
+            # Then apply a tint to lighten it a bit more (e.g., 20%)
+            tinted_color = tint_color(mixed_color, 0.2)
+
+            mixed_css_color = rgb_to_css(tinted_color)
+
+            bg = f"background-color: {mixed_css_color};"
+            border = f"border-color: {mixed_css_color};"
+
+            self.seek_bar.set_style(
+                f"trough highlight {{ {bg} {border} }} slider {{ {bg} }}"
+            )
+
+            css_colors = [rgb_to_css(color) for color in palette]
+            gradient = f"linear-gradient(135deg, {', '.join(css_colors)})"
 
             self.inner_box.set_style(f"background: {gradient};")
+
+
 
         get_simple_palette_threaded(
             image_path=image_path, color_count=5, callback=on_accent_color

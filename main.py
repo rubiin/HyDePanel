@@ -1,3 +1,4 @@
+import sys
 import tracemalloc
 
 import setproctitle
@@ -29,12 +30,26 @@ baseline_snapshot = None
 
 def print_gtk_object_growth():
     gc.collect()
-    print("GTK widgets count:")
-    objgraph.show_most_common_types(limit=10)
 
-    # If you want to see a specific type:
-    objgraph.show_growth(limit=10)
-    objgraph.show_refs([Gtk.Widget], filename="gtk_widget_refs.png")
+    all_objects = gc.get_objects()
+    gtk_widgets = [obj for obj in all_objects if isinstance(obj, Gtk.Widget)]
+    print(f"Found {len(gtk_widgets)} GTK widgets in memory")
+
+    print(f"Found {len(gtk_widgets)} GTK widgets:")
+
+    total_size = 0
+    for i, w in enumerate(gtk_widgets, 1):
+        size = sys.getsizeof(w)
+        total_size += size
+        try:
+            name = w.get_name() if hasattr(w, 'get_name') else 'N/A'
+        except Exception:
+            name = 'N/A'
+        print(f"{i}: Type={type(w).__name__}, Name={name}, Approx size={size} bytes")
+
+    print(f"Total approx size of GTK widgets: {total_size} bytes ({total_size / (1024 * 1024):.2f} MB)")
+
+
     return True  # Schedule to repeat every 60s
 
 
