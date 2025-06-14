@@ -3,7 +3,7 @@ import tracemalloc
 import setproctitle
 from fabric import Application
 from fabric.utils import exec_shell_command, get_relative_path
-from gi.repository import GLib
+from gi.repository import GLib,Gtk
 from loguru import logger
 
 import utils.functions as helpers
@@ -11,6 +11,9 @@ from modules.bar import StatusBar
 from utils.colors import Colors
 from utils.config import theme_config, widget_config
 from utils.constants import APP_CACHE_DIRECTORY, APPLICATION_NAME
+import objgraph
+import gc
+
 
 tracemalloc.start(10)  # Track 10 frames for better traces
 
@@ -23,6 +26,16 @@ def is_relevant_frame(frame):
 
 
 baseline_snapshot = None
+
+def print_gtk_object_growth():
+    gc.collect()
+    print("GTK widgets count:")
+    objgraph.show_most_common_types(limit=10)
+
+    # If you want to see a specific type:
+    objgraph.show_growth(limit=10)
+    objgraph.show_refs([Gtk.Widget], filename="gtk_widget_refs.png")
+    return True  # Schedule to repeat every 60s
 
 
 def take_baseline_snapshot():
@@ -132,10 +145,10 @@ if __name__ == "__main__":
     setproctitle.setproctitle(APPLICATION_NAME)
     process_and_apply_css(app)
 
-    # Take baseline snapshot shortly after startup
-    GLib.timeout_add_seconds(5, take_baseline_snapshot)
-    # Schedule filtered snapshot comparison every 5 seconds
-    GLib.timeout_add_seconds(10, compare_to_baseline)
+    # # Take baseline snapshot shortly after startup
+    # GLib.timeout_add_seconds(5, take_baseline_snapshot)
+    # # Schedule filtered snapshot comparison every 5 seconds
+    GLib.timeout_add_seconds(10, print_gtk_object_growth)
 
     # Run the application
     app.run()

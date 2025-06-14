@@ -543,10 +543,6 @@ class PlayerBox(Box):
         if self.player is None or self.exit:
             return False
 
-        # If the player is not playing, we don't update the seek bar
-        if self.player.playback_status != "playing":
-            return
-
         self.position_label.set_label(self.length_str(self.player.position))
         self.seek_bar.set_value(self.player.position)
 
