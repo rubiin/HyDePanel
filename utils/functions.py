@@ -4,6 +4,7 @@ import shutil
 import subprocess
 import threading
 import time
+from collections import Counter
 from datetime import datetime
 from functools import lru_cache
 from io import BytesIO
@@ -11,7 +12,6 @@ from typing import Callable, Dict, List, Literal, Optional
 
 import psutil
 import qrcode
-from colorthief import ColorThief
 from fabric.utils import (
     cooldown,
     exec_shell_command,
@@ -20,6 +20,7 @@ from fabric.utils import (
 )
 from gi.repository import Gdk, GdkPixbuf, Gio, GLib, Gtk
 from loguru import logger
+from PIL import Image
 
 from .colors import Colors
 from .constants import NAMED_COLORS
@@ -36,26 +37,28 @@ def rgb_to_css(rgb):
     return f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
 
 
-def grab_accent_color(
+def get_simple_palette_threaded(
     image_path: str,
-    callback: Callable,
-    quantity: int = 4,
-    quality: int = 10,
+    callback: Callable[[Optional[list[tuple[int, int, int]]]], None],
+    color_count: int = 4,
+    resize: int = 64,
 ):
-    def thread_function():
+    def worker():
         try:
-            ct = ColorThief(file=image_path).get_palette(
-                quality=quality, color_count=quantity
-            )
-            GLib.idle_add(callback, ct)
-        except Exception:
-            logger.error("[COLORS] Failed to grab an accent color")
-            GLib.idle_add(callback, None)
-        finally:
-            GLib.idle_add(thread.join)
+            with Image.open(image_path) as img:
+                img = img.convert("RGB")
+                img.thumbnail((resize, resize), Image.LANCZOS)  # Fast, in-place resize
+                pixels = img.getdata()
 
-    thread = threading.Thread(target=thread_function)
-    thread.start()
+                most_common = Counter(pixels).most_common(color_count)
+                palette = [color for color, _ in most_common]
+
+                GLib.idle_add(callback, palette)
+        except Exception as e:
+            print(f"[ColorExtractor] Failed: {e}")
+            GLib.idle_add(callback, None)
+
+    threading.Thread(target=worker, daemon=True).start()
 
 
 # Function to escape the markup

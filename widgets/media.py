@@ -30,7 +30,11 @@ from shared.buttons import HoverButton
 from shared.circle_image import CircleImage
 from utils.bezier import cubic_bezier
 from utils.constants import APP_CACHE_DIRECTORY
-from utils.functions import ensure_directory, grab_accent_color, rgb_to_css
+from utils.functions import (
+    ensure_directory,
+    get_simple_palette_threaded,
+    rgb_to_css,
+)
 from utils.icons import text_icons
 from utils.widget_utils import (
     create_scale,
@@ -213,7 +217,6 @@ class PlayerBox(Box):
             min_value=0,
             max_value=360,
             tick_widget=self,
-            repeat=True,
             notify_value=self._set_notify_value,
         )
 
@@ -429,7 +432,7 @@ class PlayerBox(Box):
         invoke_repeater(1000, self._move_seekbar)
 
     def _set_notify_value(self, p, *_):
-        self.image_box.set_angle(p.value)
+        self.image_box.angle = self.angle_direction * p.value
 
     def _on_player_exit(self, _, value):
         self.exit = value
@@ -437,12 +440,12 @@ class PlayerBox(Box):
 
     def _on_player_next(self, *_):
         self.angle_direction = 1
-        self.art_animator.pause()
+        self.art_animator.play()
         self.player.next()
 
     def _on_player_prev(self, *_):
         self.angle_direction = -1
-        self.art_animator.pause()
+        self.art_animator.play()
         self.player.previous()
 
     def _on_shuffle_update(self, _, __):
@@ -465,19 +468,15 @@ class PlayerBox(Box):
     def _on_playback_change(self, player, status):
         status = player.get_property("playback-status")
 
-        if status == "stopped":
-            self.art_animator.stop()
-
         if status == "paused":
             self.play_pause_icon.set_label(
                 text_icons["mpris"]["playing"],
             )
-            self.art_animator.pause()
+
         if status == "playing":
             self.play_pause_icon.set_label(
                 text_icons["mpris"]["paused"],
             )
-            self.art_animator.play()
 
     def _update_image(self, image_path):
         if image_path and os.path.isfile(image_path):
@@ -506,7 +505,9 @@ class PlayerBox(Box):
 
             self.inner_box.set_style(f"background: {gradient};")
 
-        grab_accent_color(image_path=image_path, quantity=5, callback=on_accent_color)
+        get_simple_palette_threaded(
+            image_path=image_path, color_count=5, callback=on_accent_color
+        )
 
     def _set_image(self, *_):
         art_url = self.player.arturl
@@ -541,6 +542,10 @@ class PlayerBox(Box):
     def _move_seekbar(self, *_):
         if self.player is None or self.exit:
             return False
+
+        # If the player is not playing, we don't update the seek bar
+        if self.player.playback_status != "playing":
+            return
 
         self.position_label.set_label(self.length_str(self.player.position))
         self.seek_bar.set_value(self.player.position)
