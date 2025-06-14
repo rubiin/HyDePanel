@@ -33,7 +33,9 @@ from utils.constants import APP_CACHE_DIRECTORY
 from utils.functions import (
     ensure_directory,
     get_simple_palette_threaded,
+    mix_colors,
     rgb_to_css,
+    tint_color,
 )
 from utils.icons import text_icons
 from utils.widget_utils import (
@@ -487,18 +489,6 @@ class PlayerBox(Box):
             self.update_colors(self.fallback_cover_path)
 
     def update_colors(self, image_path):
-
-        def mix_colors(color1, color2, ratio=0.5):
-            r = int(color1[0] * (1 - ratio) + color2[0] * ratio)
-            g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
-            b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
-            return (r, g, b)
-
-        def tint_color(color, tint_factor=1):
-            # tint_factor: 0 means original color, 1 means full white
-            white = (255, 255, 255)
-            return mix_colors(color, white, tint_factor)
-
         def on_accent_color(palette):
             default_color = (255, 0, 0)  # fallback color
 
@@ -523,8 +513,6 @@ class PlayerBox(Box):
             gradient = f"linear-gradient(135deg, {', '.join(css_colors)})"
 
             self.inner_box.set_style(f"background: {gradient};")
-
-
 
         get_simple_palette_threaded(
             image_path=image_path, color_count=5, callback=on_accent_color

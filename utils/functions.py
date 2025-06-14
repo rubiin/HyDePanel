@@ -37,6 +37,19 @@ def rgb_to_css(rgb):
     return f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
 
 
+def mix_colors(color1, color2, ratio=0.5):
+    r = int(color1[0] * (1 - ratio) + color2[0] * ratio)
+    g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
+    b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
+    return (r, g, b)
+
+
+def tint_color(color, tint_factor=1):
+    # tint_factor: 0 means original color, 1 means full white
+    white = (255, 255, 255)
+    return mix_colors(color, white, tint_factor)
+
+
 def get_simple_palette_threaded(
     image_path: str,
     callback: Callable[[Optional[list[tuple[int, int, int]]]], None],
