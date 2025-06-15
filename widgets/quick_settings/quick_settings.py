@@ -239,6 +239,15 @@ class QuickSettingsMenu(Box):
             4,
         )
 
+        # TODO: check gtk_adjustment_set_value: assertion 'GTK_IS_ADJUSTMENT, microphone
+
+        # TODO: add the submenu on slider add
+
+        # Create center box with sliders and shortcuts if configured
+        center_box = Box(
+            orientation="v", spacing=10, style_classes="section-box", h_expand=True
+        )
+
         # Create sliders grid
         sliders_grid = Grid(
             row_spacing=10,
@@ -250,39 +259,14 @@ class QuickSettingsMenu(Box):
             v_expand=True,
         )
 
-        # TODO: check gtk_adjustment_set_value: assertion 'GTK_IS_ADJUSTMENT, microphone
-
-        # TODO: add the submenu on slider add
-
-        # Create center box with sliders and shortcuts if configured
-        center_box = Box(
-            orientation="h", spacing=10, style_classes="section-box", h_expand=True
-        )
-
-        main_grid = Grid(column_spacing=10, h_expand=True, column_homogeneous=False)
-        center_box.add(main_grid)
-
-        # Set up grid columns
-        for i in range(3):
-            main_grid.insert_column(i)
-
-        # Determine slider box class based on number of shortcuts
-        if self.config.get("shortcuts"):
-            num_shortcuts = len(self.config["shortcuts"])
-            if num_shortcuts > 2:
-                slider_class = "slider-box-shorter"
-            else:
-                slider_class = "slider-box-short"
-        else:
-            slider_class = "slider-box-long"
-
         sliders_box = Box(
             orientation="v",
             spacing=10,
-            style_classes=[slider_class],
-            children=(sliders_grid),
+            style_classes=["slider-box-long"],
+            children=(sliders_grid,),
             h_expand=True,
         )
+        center_box.add(sliders_box)
 
         for index, slider in enumerate(self.config["controls"]["sliders"]):
             if slider == "brightness":
@@ -322,11 +306,7 @@ class QuickSettingsMenu(Box):
                 h_expand=False,
                 v_expand=True,
             )
-
-            main_grid.attach(sliders_box, 0, 0, 2, 1)
-            main_grid.attach(shortcuts_box, 2, 0, 1, 1)
-        else:
-            main_grid.attach(sliders_box, 0, 0, 3, 1)
+            center_box.add(shortcuts_box)
 
         # Create main layout box
         box = CenterBox(

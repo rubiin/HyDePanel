@@ -144,6 +144,7 @@ $slider-height: 12px;
       border-radius: variable.$radius;
       margin: 0;
       padding: 0;
+      background-color: theme.$background;
 
       button {
         padding: common.toEm(5);

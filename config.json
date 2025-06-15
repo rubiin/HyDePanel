@@ -96,6 +96,48 @@
 						"command": "firefox",
 						"tooltip": "Launch Firefox",
 						"icon_size": 18
+					},
+					{
+						"icon": "",
+						"label": "Terminal",
+						"command": "kitty",
+						"tooltip": "Open terminal",
+						"icon_size": 18
+					},
+					{
+						"icon": "",
+						"label": "Browser",
+						"command": "firefox",
+						"tooltip": "Launch Firefox",
+						"icon_size": 18
+					},
+					{
+						"icon": "",
+						"label": "Terminal",
+						"command": "kitty",
+						"tooltip": "Open terminal",
+						"icon_size": 18
+					},
+					{
+						"icon": "",
+						"label": "Browser",
+						"command": "firefox",
+						"tooltip": "Launch Firefox",
+						"icon_size": 18
+					},
+					{
+						"icon": "",
+						"label": "Terminal",
+						"command": "kitty",
+						"tooltip": "Open terminal",
+						"icon_size": 18
+					},
+					{
+						"icon": "",
+						"label": "Browser",
+						"command": "firefox",
+						"tooltip": "Launch Firefox",
+						"icon_size": 18
 					}
 				]
 			}
@@ -395,5 +437,4 @@
 		"monitor_styles": true,
 		"location": "top"
 	}
-
 }
