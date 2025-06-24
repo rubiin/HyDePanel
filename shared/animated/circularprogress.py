@@ -1,4 +1,8 @@
+from functools import partial
+
 from fabric.widgets.circularprogressbar import CircularProgressBar
+
+from utils.bezier import cubic_bezier
 
 from ..animator import Animator
 
@@ -6,13 +10,13 @@ from ..animator import Animator
 class AnimatedCircularProgressBar(CircularProgressBar):
     """A circular progress bar widget with animation support."""
 
-    def __init__(self, duration=0.6, bezier_curve=(0.34, 1.56, 0.64, 1.0), **kwargs):
+    def __init__(self, duration=0.6, curve=(0.34, 1.56, 0.64, 1.0), **kwargs):
         super().__init__(**kwargs)
 
         self.animator = (
             Animator(
                 # edit the following parameters to customize the animation
-                bezier_curve=bezier_curve,
+                timing_function=partial(cubic_bezier, *curve),
                 duration=duration,
                 min_value=self.min_value,
                 max_value=self.value,
@@ -25,6 +29,8 @@ class AnimatedCircularProgressBar(CircularProgressBar):
         )
 
     def set_notify_value(self, p, *_):
+        if p.value == self.value:
+            return
         self.set_value(p.value)
 
     def animate_value(self, value: float):

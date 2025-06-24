@@ -100,10 +100,10 @@ The layout configuration defines the sections of the bar and the components disp
 
 # Component Configurations
 
-Each component, such as hypr_sunset, battery, cpu, memory, etc., has its own configuration with customizable options. Here's an example for the battery component:
+Each component, such as hyprsunset, battery, cpu, memory, etc., has its own configuration with customizable options. Here's an example for the battery component:
 
 ```json
-"hypr_sunset": {
+"hyprsunset": {
     "temperature": "2800k",
     "enabled_icon": "󱩌",
     "disabled_icon": "󰛨",
@@ -123,7 +123,6 @@ Other components follow a similar structure, where each configuration defines th
     "tooltip": true,
     "hide_label_when_full": true,
     "full_battery_level": 100,
-    "orientation": "vertical",
     "icon_size": 22,
 }
 ```
@@ -140,8 +139,6 @@ Other components follow a similar structure, where each configuration defines th
 - **full_battery_level** (integer):
   Defines the battery level percentage at which the system is considered to be fully charged. The default is 100.
 
-- **orientation** (string; enum: "horizontal", "vertical"):
-  Specifies the orientation of the battery display. It can be either horizontal or vertical.
 
 ## Bluetooth
 
@@ -223,7 +220,7 @@ Other components follow a similar structure, where each configuration defines th
 ## HyprIdle
 
 ```json
-"hypr_idle": {
+"hypridle": {
     "enabled_icon": "",
     "disabled_icon": "",
     "label": true,
@@ -246,7 +243,7 @@ Other components follow a similar structure, where each configuration defines th
 ## HyprSunset
 
 ```json
-"hypr_sunset": {
+"hyprsunset": {
     "temperature": "2800k",
     "enabled_icon": "󱩌",
     "disabled_icon": "󰛨",
@@ -273,7 +270,7 @@ Other components follow a similar structure, where each configuration defines th
 ## Hyprpicker
 
 ```json
-"hypr_picker": {
+"hyprpicker": {
     "icon": "",
     "label": true,
     "tooltip": true,
@@ -479,7 +476,7 @@ Other components follow a similar structure, where each configuration defines th
 ## TaskBar and System Tray
 
 ```json
-"task_bar": {"icon_size": 22, "ignored": ["firefox"]},
+"taskbar": {"icon_size": 22, "ignored": ["firefox"]},
 "system_tray": {"icon_size": 22, "ignored": ["firefox"]},
 ```
 

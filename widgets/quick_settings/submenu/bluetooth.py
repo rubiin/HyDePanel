@@ -3,16 +3,19 @@ from fabric.utils import bulk_connect
 from fabric.widgets.box import Box
 from fabric.widgets.button import Button
 from fabric.widgets.centerbox import CenterBox
-from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 from fabric.widgets.scrolledwindow import ScrolledWindow
+from gi.repository import Gtk
 
 from services import bluetooth_service
-from shared import HoverButton, QSChevronButton, QuickSubMenu
-from shared.buttons import ScanButton
-from utils.icons import icons
+from shared.buttons import HoverButton, QSChevronButton, ScanButton
+from shared.list import ListBox
+from shared.submenu import QuickSubMenu
+from utils.icons import text_icons
+from utils.widget_utils import nerd_font_icon
 
 
+# TODO: finalize the bluetooth submenu
 class BluetoothDeviceBox(CenterBox):
     """A widget to display a Bluetooth device in a box."""
 
@@ -25,6 +28,19 @@ class BluetoothDeviceBox(CenterBox):
             **kwargs,
         )
         self.device: BluetoothDevice = device
+
+        self.icon_to_text_icon = {
+            "audio-headset": text_icons["ui"]["headset"],
+            "phone": text_icons["ui"]["phone"],
+            "audio-headphones": text_icons["ui"]["headphones"],
+            "keyboard": text_icons["ui"]["keyboard"],
+            "mouse": text_icons["ui"]["mouse"],
+            "audio-speakers": text_icons["ui"]["speakers"],
+            "camera": text_icons["ui"]["camera"],
+            "printer": text_icons["ui"]["printer"],
+            "tv": text_icons["ui"]["tv"],
+            "watch": text_icons["ui"]["watch"],
+        }
 
         self.connect_button = HoverButton(style_classes="submenu-button")
         self.connect_button.connect(
@@ -41,10 +57,15 @@ class BluetoothDeviceBox(CenterBox):
         )
 
         self.add_start(
-            Image(
-                icon_name=device.icon_name + "-symbolic",
-                icon_size=18,
-            )
+            nerd_font_icon(
+                icon=self.icon_to_text_icon.get(
+                    device.icon_name, text_icons["ui"]["question"]
+                ),
+                props={
+                    "style_classes": ["panel-font-icon"],
+                    "style": "font-size: 16px;",
+                },
+            ),
         )
         self.add_start(
             Label(
@@ -52,7 +73,8 @@ class BluetoothDeviceBox(CenterBox):
                 style_classes="submenu-item-label",
                 ellipsization="end",
             )
-        )  # type: ignore
+        )
+
         self.add_end(self.connect_button)
 
         self.on_device_connect()
@@ -76,31 +98,41 @@ class BluetoothSubMenu(QuickSubMenu):
         self.client = bluetooth_service
         self.client.connect("device-added", self.populate_new_device)
 
-        self.paired_devices = Box(
+        self.paired_devices_listbox = ListBox(
+            visible=True, name="paired-devices-listbox"
+        )
+
+        self.paired_devices_container = Box(
             orientation="v",
             spacing=10,
             h_expand=True,
-            children=Label(
-                "Paired Devices",
-                h_align="start",
-                style_classes="panel-text",
-            ),
+            children=[
+                Label(
+                    "Paired Devices",
+                    h_align="start",
+                    style_classes="panel-text",
+                ),
+                self.paired_devices_listbox,
+            ],
         )
 
-        for device in self.client.devices:
-            if device.paired:
-                self.paired_devices.add(BluetoothDeviceBox(device))
+        self.available_devices_listbox = ListBox(
+            visible=True, name="available-devices-listbox"
+        )
 
-        self.available_devices = Box(
+        self.available_devices_container = Box(
             orientation="v",
             spacing=4,
             h_expand=True,
-            children=Label(
-                "Available Devices",
-                h_align="start",
-                style="margin:12px 0;",
-                style_classes="panel-text",
-            ),
+            children=[
+                Label(
+                    "Available Devices",
+                    h_align="start",
+                    style="margin:12px 0;",
+                    style_classes="panel-text",
+                ),
+                self.available_devices_listbox,
+            ],
         )
 
         self.scan_button = ScanButton()
@@ -113,13 +145,16 @@ class BluetoothSubMenu(QuickSubMenu):
             propagate_height=True,
             child=Box(
                 orientation="v",
-                children=[self.paired_devices, self.available_devices],
+                children=[
+                    self.paired_devices_container,
+                    self.available_devices_container,
+                ],
             ),
         )
 
         super().__init__(
             title="Bluetooth",
-            title_icon=icons["bluetooth"]["enabled"],
+            title_icon=text_icons["bluetooth"]["enabled"],
             scan_button=self.scan_button,
             child=self.child,
             **kwargs,
@@ -131,17 +166,18 @@ class BluetoothSubMenu(QuickSubMenu):
             ["active"]
         ) if self.client.scanning else btn.set_style_classes([""])
 
-        if self.client.scanning:
-            self.scan_button.play_animation()
-        else:
-            self.scan_button.stop_animation()
+        self.scan_button.play_animation()
 
     def populate_new_device(self, client: BluetoothClient, address: str):
         device: BluetoothDevice = client.get_device(address)
+        bt_item = Gtk.ListBoxRow(visible=True, name="bluetooth-device-row")
+
         if device.paired:
-            self.paired_devices.add(BluetoothDeviceBox(device))
+            bt_item.add(BluetoothDeviceBox(device))
+            self.paired_devices_listbox.add(bt_item)
         else:
-            self.available_devices.add(BluetoothDeviceBox(device))
+            bt_item.add(BluetoothDeviceBox(device))
+            self.available_devices_listbox.add(bt_item)
 
 
 class BluetoothToggle(QSChevronButton):
@@ -150,7 +186,7 @@ class BluetoothToggle(QSChevronButton):
     def __init__(self, submenu: QuickSubMenu, **kwargs):
         super().__init__(
             action_label="Enabled",
-            action_icon=icons["bluetooth"]["enabled"],
+            action_icon=text_icons["bluetooth"]["enabled"],
             submenu=submenu,
             **kwargs,
         )
@@ -177,11 +213,11 @@ class BluetoothToggle(QSChevronButton):
     def toggle_bluetooth(self, client: BluetoothClient, *_):
         if client.enabled:
             self.set_active_style(True)
-            self.action_icon.set_from_icon_name(icons["bluetooth"]["enabled"], 18)
+            self.action_icon.set_label(text_icons["bluetooth"]["enabled"])
             self.action_label.set_label("Enabled")
         else:
             self.set_active_style(False)
-            self.action_icon.set_from_icon_name(icons["bluetooth"]["disabled"], 18)
+            self.action_icon.set_label(text_icons["bluetooth"]["disabled"])
             self.action_label.set_label("Disabled")
 
     def new_device(self, client: BluetoothClient, address):

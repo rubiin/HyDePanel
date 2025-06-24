@@ -3,11 +3,18 @@ from fabric.widgets.box import Box
 from fabric.widgets.button import Button
 from fabric.widgets.label import Label
 
-from .pop_up import PopupWindow
+from .popup import PopupWindow
 
 
 class Dialog(PopupWindow):
     """A dialog box to display a message."""
+
+    _instance = None
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Dialog, cls).__new__(cls)
+        return cls._instance
 
     def __init__(
         self,

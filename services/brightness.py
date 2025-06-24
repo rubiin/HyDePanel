@@ -6,10 +6,9 @@ from gi.repository import GLib
 from loguru import logger
 
 import utils.functions as helpers
-from utils import Colors
+from utils.colors import Colors
 
 
-@helpers.run_in_thread
 def exec_brightnessctl_async(args: str):
     exec_shell_command_async(f"brightnessctl {args}", lambda _: None)
 
@@ -19,7 +18,7 @@ try:
     screen_device = os.listdir("/sys/class/backlight")
     screen_device = screen_device[0] if screen_device else ""
 except FileNotFoundError:
-    logger.error(f"{Colors.ERROR}No backlight devices found")
+    logger.exception(f"{Colors.ERROR}No backlight devices found")
     screen_device = ""
 
 # Discover keyboard backlight device
@@ -28,18 +27,18 @@ try:
     kbd = [x for x in kbd if "kbd_backlight" in x]
     kbd = kbd[0] if kbd else ""
 except FileNotFoundError:
-    logger.error(f"{Colors.ERROR}No keyboard backlight devices found")
+    logger.exception(f"{Colors.ERROR}No keyboard backlight devices found")
     kbd = ""
 
 
-class Brightness(Service):
+class BrightnessService(Service):
     """Service to manage screen brightness levels."""
 
-    _instance = None  # Class-level private instance variable
+    _instance = None
 
     def __new__(cls):
         if cls._instance is None:
-            cls._instance = super(Brightness, cls).__new__(cls)
+            cls._instance = super(BrightnessService, cls).__new__(cls)
         return cls._instance
 
     @Signal
@@ -50,8 +49,7 @@ class Brightness(Service):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        if not helpers.executable_exists("brightnessctl"):
-            logger.error(f"{Colors.ERROR}Command brightnessctl not found")
+        helpers.check_executable_exists("brightnessctl")
 
         # Path for screen backlight control
         self.screen_backlight_path = f"/sys/class/backlight/{screen_device}"
@@ -63,7 +61,9 @@ class Brightness(Service):
             return
 
         # Monitor screen brightness file
-        self.screen_monitor = monitor_file(f"{self.screen_backlight_path}/brightness")
+        self.screen_monitor = monitor_file(
+            f"{self.screen_backlight_path}/brightness", initial_call=True
+        )
 
         self.screen_monitor.connect(
             "changed",
@@ -112,7 +112,9 @@ class Brightness(Service):
                 f"(out of {self.max_screen})"
             )
         except GLib.Error as e:
-            logger.error(f"{Colors.ERROR}Error setting screen brightness: {e.message}")
+            logger.exception(
+                f"{Colors.ERROR}Error setting screen brightness: {e.message}"
+            )
         except Exception as e:
             logger.exception(f"Unexpected error setting screen brightness: {e}")
 
@@ -130,3 +132,12 @@ class Brightness(Service):
             exec_brightnessctl_async(f"--device '{kbd}' set {value}")
         except GLib.Error as e:
             logger.exception(e.message)
+
+    @Property(int, "readable")
+    def screen_brightness_percentage(self):
+        max_brightness = self.max_screen
+        current_brightness = self.screen_brightness
+
+        if max_brightness <= 0:
+            return 0
+        return int((current_brightness / max_brightness) * 100)

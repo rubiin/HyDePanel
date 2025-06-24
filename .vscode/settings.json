@@ -2,11 +2,13 @@
 	"cSpell.words": [
 		"brightnessctl",
 		"ellipsization",
+		"gsignals",
 		"Interp",
 		"Jost",
 		"pkill",
 		"psutil",
 		"pycairo",
 		"rlottie"
-	]
+	],
+	"python-envs.pythonProjects": []
 }

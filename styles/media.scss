@@ -1,8 +1,15 @@
 @use "sass:color";
 @use "sass:math";
-@use "theme.scss";
-@use "variable.scss";
+@use "theme";
+@use "variable";
 @use "common";
+
+
+%player_text {
+  color: theme.$text-main;
+  background-color: transparent;
+  text-shadow: 1px 1px 3px black;
+}
 
 #player-stack-button {
   @extend %dots_dots;
@@ -26,20 +33,30 @@
 #player-box {
   $player_width: variable.$quicksettings-width + 40;
 
-  $player_height: 125px;
-  $image_size: 115px;
+  $player_height: 130px;
+  $image_size: 120px;
   min-height: $image_size + 4;
+
+  $inner_player_width: math.floor(calc($player_width - $image_size / 2));
 
   #outer-player-box {
     min-width: $player_width;
     min-height: $image_size;
   }
 
+  @include common.slider($min-length: $inner_player_width - 80, $height: 7px, $highlight-color: theme.$text-muted, $slider: true);
+
+  #seek-bar {
+    padding-top: 10px;
+  }
+
+
+
   #inner-player-box {
-    background-color: theme.$background;
-    border-radius: 15px;
+    // background: linear-gradient(135deg, color.mix(theme.$background-alt, white, 80%), theme.$background-alt, #4b2353);
+    border-radius: 19px;
     margin-left: math.floor(calc($image_size / 2));
-    min-width: math.floor(calc($player_width - $image_size / 2));
+    min-width: $inner_player_width;
     min-height: $player_height;
   }
 
@@ -62,28 +79,36 @@
     font-weight: 700;
     color: theme.$text-main;
     font-size: 1rem;
+    color: theme.$text-main;
+    @extend %player_text;
   }
 
   #player-artist,
   #player-album {
     font-weight: 500;
     font-size: 12px;
-    color: #7d7178;
+    color: theme.$text-main;
+    @extend %player_text;
   }
 
-  .player-controls {
+  #player-controls {
     margin-top: 5px;
     margin-bottom: 15px;
 
     .time-label {
-      @extend %caption_heading;
-      color: #7d7178;
+      @extend %caption;
+      @extend %player_text;
+      font-weight: 600;
     }
 
     #button-box {
       margin: 0 common.toEm(10);
 
-      #player-button {
+      .player-icon {
+        font-size: 1.3rem;
+      }
+
+      .player-button {
         min-width: 20px;
         min-height: 20px;
         padding: common.toEm(5);
@@ -105,26 +130,4 @@
     }
   }
 
-  scale {
-    margin-top: 10px;
-
-    trough {
-      border-radius: variable.$radius-large;
-      min-height: 8px;
-      background-color: color.mix(theme.$background, black, 55%);
-
-      highlight {
-        border-radius: variable.$radius-large;
-      }
-
-      &:hover {
-        background-color: color.mix(theme.$background, black, 45%);
-      }
-    }
-  }
-
-  highlight,
-  progress {
-    background: theme.$text-muted;
-  }
 }

@@ -4,20 +4,18 @@ from fabric.widgets.box import Box
 from fabric.widgets.label import Label
 
 import utils.functions as helpers
-from shared import ButtonWidget
-from utils import BarConfig, ExecutableNotFoundError
+from shared.widget_container import ButtonWidget
 
 
 class CavaWidget(ButtonWidget):
     """A widget to display the Cava audio visualizer."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["cava"], name="cava", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="cava", **kwargs)
 
         cava_command = "cava"
 
-        if not helpers.executable_exists(cava_command):
-            raise ExecutableNotFoundError(cava_command)
+        helpers.check_executable_exists(cava_command)
 
         if not helpers.is_valid_gjs_color(self.config["color"]):
             raise ValueError("Invalid color supplied for cava widget")

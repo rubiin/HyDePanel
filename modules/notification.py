@@ -7,7 +7,7 @@ from fabric.utils import bulk_connect, get_relative_path
 from fabric.widgets.box import Box
 from fabric.widgets.button import Button
 from fabric.widgets.eventbox import EventBox
-from fabric.widgets.image import Image
+from fabric.widgets.grid import Grid
 from fabric.widgets.label import Label
 from fabric.widgets.revealer import Revealer
 from fabric.widgets.wayland import WaylandWindow as Window
@@ -16,11 +16,13 @@ from loguru import logger
 
 import utils.constants as constants
 import utils.functions as helpers
-import utils.icons as icons
 from services import notification_service
+from shared.buttons import HoverButton
 from shared.circle_image import CircleImage
-from utils import BarConfig, Colors, HyprlandWithMonitors
-from utils.widget_utils import get_icon
+from utils.colors import Colors
+from utils.icons import text_icons
+from utils.widget_settings import BarConfig
+from utils.widget_utils import get_icon, nerd_font_icon
 
 
 class NotificationPopup(Window):
@@ -31,9 +33,7 @@ class NotificationPopup(Window):
 
         self.widget_config = widget_config
 
-        self.config = widget_config["notification"]
-
-        self.hyprland_monitor = HyprlandWithMonitors()
+        self.config = widget_config["modules"]["notification"]
 
         self.ignored_apps = helpers.unique_list(self.config["ignored"])
 
@@ -50,7 +50,6 @@ class NotificationPopup(Window):
             anchor=self.config["anchor"],
             layer="overlay",
             all_visible=True,
-            monitor=HyprlandWithMonitors().get_current_gdk_monitor_id(),
             visible=True,
             exclusive=False,
             child=self.notifications,
@@ -128,39 +127,30 @@ class NotificationWidget(EventBox):
             get_icon(notification.app_icon),
             Label(
                 markup=helpers.parse_markup(
-                    str(
-                        self._notification.summary
-                        if self._notification.summary
-                        else notification.app_name,
-                    )
+                    self._notification.summary
+                    if self._notification.summary
+                    else notification.app_name,
                 ),
                 h_align="start",
                 style_classes="summary",
-                line_wrap="word-char",
-                v_align="start",
-                h_expand=True,
+                max_chars_width=16,
+                ellipsization="end",
             ),
         )
 
-        header_container.pack_end(
-            Box(
-                v_align="start",
-                children=(
-                    Button(
-                        image=Image(
-                            icon_name=helpers.check_icon_exists(
-                                icons.icons["ui"]["close"],
-                                icons.icons["ui"]["window_close"],
-                            ),
-                            icon_size=16,
-                        ),
-                        style_classes="close-button",
-                        on_clicked=lambda *_: self._notification.close(
-                            "dismissed-by-user"
-                        ),
-                    ),
-                ),
+        close_button = Button(
+            style_classes="close-button",
+            child=nerd_font_icon(
+                icon=text_icons["ui"]["window_close"],
+                props={
+                    "style_classes": ["panel-font-icon", "close-icon"],
+                },
             ),
+            on_clicked=self.on_close_button_clicked,
+        )
+
+        header_container.pack_end(
+            close_button,
             False,
             False,
             0,
@@ -180,11 +170,11 @@ class NotificationWidget(EventBox):
                             constants.NOTIFICATION_IMAGE_SIZE,
                             GdkPixbuf.InterpType.BILINEAR,
                         ),
-                        size=constants.NOTIFICATION_IMAGE_SIZE,
                         h_expand=True,
                         v_expand=True,
                     ),
                 )
+                del image_pixbuf
         except GLib.GError:
             # If the image is not available, use the symbolic icon
             logger.warning(f"{Colors.WARNING}[Notification] Image not available.")
@@ -192,43 +182,40 @@ class NotificationWidget(EventBox):
         body_container.add(
             Label(
                 markup=helpers.parse_markup(self._notification.body),
-                line_wrap="char",
                 v_align="start",
                 h_expand=True,
                 h_align="start",
                 style_classes="body",
-                chars_width=20,
-                max_chars_width=40,
+                max_chars_width=34,
+                ellipsization="end",
             ),
         )
 
-        actions_count = (
-            len(self._notification.actions)
-            if len(self._notification.actions) <= self.config["max_actions"]
-            else self.config["max_actions"]
+        actions_len = len(self._notification.actions)
+        actions_count = min(actions_len, self.config["max_actions"])
+
+        self.actions_container_grid = Grid(
+            orientation="h",
+            name="notification-action-box",
+            h_expand=True,
+            column_homogeneous=True,
+            row_homogeneous=True,
+            column_spacing=4,
         )
 
-        self.actions_container = Revealer(
-            transition_duration=400,
-            transition_type="slide-down",
-            child_revealed=not self.config["display_actions_on_hover"],
-            child=Box(
-                spacing=4,
-                orientation="h",
-                name="notification-action-box",
-                children=[
-                    ActionButton(action, i, actions_count)
-                    for i, action in enumerate(self._notification.actions)
-                ],
-                h_expand=True,
-            ),
+        self.actions_container_grid.attach_flow(
+            [
+                ActionButton(action, i, actions_count)
+                for i, action in enumerate(notification.actions)
+            ],
+            3,  # Number of columns for actions
         )
 
         # Add the header, body, and actions to the notification box
         self.notification_box.children = (
             header_container,
             body_container,
-            self.actions_container,
+            self.actions_container_grid,
         )
 
         # Add the notification box to the EventBox
@@ -246,6 +233,10 @@ class NotificationWidget(EventBox):
 
         if self.config["auto_dismiss"]:
             self.start_timeout()
+
+    def on_close_button_clicked(self, *_):
+        self._notification.close("dismissed-by-user")
+        self.stop_timeout()
 
     def start_timeout(self):
         self.stop_timeout()
@@ -286,18 +277,9 @@ class NotificationWidget(EventBox):
         if self.config["dismiss_on_hover"]:
             self.close_notification()
 
-        if self.config["display_actions_on_hover"]:
-            self.actions_container.set_reveal_child(
-                not self.actions_container.get_child_revealed()
-            )
-
     def on_unhover(self, *_):
         self.resume_timeout()
         self.set_pointer_cursor(self, "arrow")
-        if self.config["display_actions_on_hover"]:
-            self.actions_container.set_reveal_child(
-                not self.actions_container.get_child_revealed()
-            )
 
     @staticmethod
     def set_pointer_cursor(widget, cursor_name):
@@ -319,7 +301,7 @@ class NotificationRevealer(Revealer):
                 style="margin: 12px;",
                 children=[self.notification_box],
             ),
-            transition_duration=500,
+            transition_duration=config["transition_duration"],
             transition_type=config["transition_type"],
             **kwargs,
         )
@@ -337,9 +319,10 @@ class NotificationRevealer(Revealer):
         reason: NotificationCloseReason,
     ):
         self.set_reveal_child(False)
+        self.destroy()
 
 
-class ActionButton(Button):
+class ActionButton(HoverButton):
     """A button widget to represent a notification action."""
 
     def __init__(

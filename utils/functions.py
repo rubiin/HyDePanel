@@ -1,30 +1,84 @@
+import json
 import os
 import re
 import shutil
+import subprocess
+import threading
 import time
+from collections import Counter
 from datetime import datetime
 from functools import lru_cache
-from typing import Dict, List, Literal, Optional
+from io import BytesIO
+from typing import Callable, Dict, List, Literal, Optional
 
 import psutil
+import qrcode
+from fabric import Application
 from fabric.utils import (
     cooldown,
     exec_shell_command,
     exec_shell_command_async,
     get_relative_path,
 )
-from gi.repository import Gdk, Gio, GLib, Gtk
+from gi.repository import Gdk, GdkPixbuf, Gio, GLib, Gtk
 from loguru import logger
+from PIL import Image
 
 from .colors import Colors
-from .constants import named_colors
+from .constants import NAMED_COLORS
+from .exceptions import ExecutableNotFoundError
 from .icons import text_icons
-from .thread import run_in_thread
+from .thread import run_in_thread, thread
+
+
+def rgb_to_hex(rgb):
+    return "#{:02x}{:02x}{:02x}".format(*rgb)
+
+
+def rgb_to_css(rgb):
+    return f"rgb({rgb[0]}, {rgb[1]}, {rgb[2]})"
+
+
+def mix_colors(color1, color2, ratio=0.5):
+    r = int(color1[0] * (1 - ratio) + color2[0] * ratio)
+    g = int(color1[1] * (1 - ratio) + color2[1] * ratio)
+    b = int(color1[2] * (1 - ratio) + color2[2] * ratio)
+    return (r, g, b)
+
+
+def tint_color(color, tint_factor=1):
+    # tint_factor: 0 means original color, 1 means full white
+    white = (255, 255, 255)
+    return mix_colors(color, white, tint_factor)
+
+
+def get_simple_palette_threaded(
+    image_path: str,
+    callback: Callable[[Optional[list[tuple[int, int, int]]]], None],
+    color_count: int = 4,
+    resize: int = 64,
+):
+    def worker():
+        try:
+            with Image.open(image_path) as img:
+                img = img.convert("RGB")
+                img.thumbnail((resize, resize), Image.LANCZOS)  # Fast, in-place resize
+                pixels = img.getdata()
+
+                most_common = Counter(pixels).most_common(color_count)
+                palette = [color for color, _ in most_common]
+
+                GLib.idle_add(callback, palette)
+        except Exception as e:
+            print(f"[ColorExtractor] Failed: {e}")
+            GLib.idle_add(callback, None)
+
+    threading.Thread(target=worker, daemon=True).start()
 
 
 # Function to escape the markup
 def parse_markup(text):
-    return text
+    return text.replace("\n", " ")
 
 
 # support for multiple monitors
@@ -62,10 +116,64 @@ def copy_theme(theme: str):
         shutil.copyfile(source_file, destination_file)
 
     except FileNotFoundError:
-        logger.error(
+        logger.exception(
             f"{Colors.ERROR}Error: The theme file '{source_file}' was not found."
         )
         exit(1)
+
+
+def update_theme_config(theme_name: str):
+    """Update the theme.json file with the new theme name."""
+    try:
+        theme_config_file = get_relative_path("../theme.json")
+
+        # Read current theme config
+        with open(theme_config_file, 'r') as f:
+            config = json.load(f)
+
+        # Update the theme name
+        config["name"] = theme_name
+
+        # Write back to file
+        with open(theme_config_file, 'w') as f:
+            json.dump(config, f, indent=2)
+
+        logger.info(f"{Colors.INFO}[Theme] Updated theme config to {theme_name}")
+    except Exception as e:
+        logger.exception(f"{Colors.ERROR}[Theme] Error updating theme config: {e}")
+
+
+def recompile_and_apply_css():
+    """Recompile SCSS and apply the new CSS to the application."""
+    def _apply_css_to_app():
+        try:
+            app = Application.get_default()
+            if app:
+                app.set_stylesheet_from_file(get_relative_path("../dist/main.css"))
+                logger.info(f"{Colors.INFO}[Theme] CSS applied to application")
+        except Exception as e:
+            logger.exception(f"{Colors.ERROR}[Theme] Error applying CSS to app: {e}")
+
+    def _compile_css():
+        """Compile SCSS in background thread."""
+        try:
+            check_executable_exists("sass")
+            logger.info(f"{Colors.INFO}[Theme] Recompiling CSS")
+            output = exec_shell_command(
+                "sass styles/main.scss dist/main.css --no-source-map"
+            )
+
+            if output == "":
+                logger.info(f"{Colors.INFO}[Theme] CSS recompiled successfully")
+                GLib.idle_add(_apply_css_to_app)
+            else:
+                logger.exception(f"{Colors.ERROR}[Theme] Failed to compile sass!")
+                logger.exception(f"{Colors.ERROR}[Theme] {output}")
+        except Exception as e:
+            logger.exception(f"{Colors.ERROR}[Theme] Error recompiling CSS: {e}")
+
+    # Run compilation in background thread
+    thread(_compile_css)
 
 
 # Function to convert celsius to fahrenheit
@@ -75,8 +183,52 @@ def celsius_to_fahrenheit(celsius):
 
 
 # Merge the parsed data with the default configuration
-def merge_defaults(data: dict, defaults: dict):
-    return {**defaults, **data}
+def deep_merge(data, target):
+    """
+    Recursively update a nested dictionary with values from another dictionary.
+    """
+    merged = target.copy()
+    for key, user_value in data.items():
+        if (
+            key in merged
+            and isinstance(merged[key], dict)
+            and isinstance(user_value, dict)
+        ):
+            merged[key] = deep_merge(user_value, merged[key])
+        else:
+            merged[key] = user_value
+    return merged
+
+
+# Set the scale's adjustment
+def set_scale_adjustment(
+    scale, min_value: float = 0, max_value: float = 100, steps: float = 1
+):
+    adj = scale.get_adjustment()
+    if adj.get_upper() == adj.get_lower():
+        scale.set_adjustment(
+            Gtk.Adjustment(
+                lower=min_value,
+                upper=max_value,
+                step_increment=steps,
+                page_increment=0,
+                page_size=0,
+            )
+        )
+
+
+# Function to toggle a shell command
+def toggle_command(command: str, full_command: str):
+    if is_app_running(command):
+        kill_process(command)
+    else:
+        subprocess.Popen(
+            full_command.split(" "),
+            stdin=subprocess.DEVNULL,  # No input stream
+            stdout=subprocess.DEVNULL,  # Optionally discard the output
+            stderr=subprocess.DEVNULL,  # Optionally discard the error output
+            start_new_session=True,  # This prevents the process from being killed
+        )
 
 
 ## Function to execute a shell command asynchronously
@@ -113,45 +265,65 @@ def validate_widgets(parsed_data, default_config):
     for section in layout:
         for widget in layout[section]:
             if widget.startswith("@group:"):
-                # Handle module groups
+                # Handle widget groups
                 group_idx = widget.replace("@group:", "", 1)
                 if not group_idx.isdigit():
                     raise ValueError(
-                        "Invalid module group index "
+                        "Invalid widget group index "
                         f"'{group_idx}' in section {section}. Must be a number."
                     )
                 idx = int(group_idx)
-                groups = parsed_data.get("module_groups", [])
+                groups = parsed_data.get("widget_groups", [])
                 if not isinstance(groups, list):
                     raise ValueError(
-                        "module_groups must be an array when using @group references"
+                        "widget_groups must be an array when using @group references"
                     )
                 if not (0 <= idx < len(groups)):
                     raise ValueError(
-                        "Module group index "
+                        "Widget group index "
                         f"{idx} is out of range. Available indices: 0-{len(groups) - 1}"
                     )
                 # Validate widgets inside the group
                 group = groups[idx]
                 if not isinstance(group, dict) or "widgets" not in group:
                     raise ValueError(
-                        f"Invalid module group at index {idx}. "
+                        f"Invalid widget group at index {idx}. "
                         "Must be an object with 'widgets' array."
                     )
                 for group_widget in group["widgets"]:
-                    if group_widget not in default_config:
+                    if group_widget not in default_config["widgets"]:
                         raise ValueError(
                             f"Invalid widget '{group_widget}' found in "
-                            f"module group {idx}. Please check the widget name."
+                            f"widget group {idx}. Please check the widget name."
                         )
-            elif widget not in default_config:
+            elif widget not in default_config["widgets"]:
                 raise ValueError(
                     f"Invalid widget '{widget}' found in section {section}. "
                     "Please check the widget name."
                 )
 
 
-# Function to exclude keys from a dictionary        )
+@ttl_lru_cache(3600, 10)
+def make_qrcode(text: str, size: int = 200) -> GdkPixbuf.Pixbuf:
+    # Generate QR Code image
+    qr = qrcode.make(text)
+    buffer = BytesIO()
+    qr.save(buffer, format="PNG")
+    buffer.seek(0)
+
+    # Load into GTK Pixbuf
+    loader = GdkPixbuf.PixbufLoader.new_with_type("png")
+    loader.write(buffer.read())
+    loader.close()
+    pixbuf = loader.get_pixbuf()
+
+    # Scale Pixbuf to the desired size
+    scaled_pixbuf = pixbuf.scale_simple(size, size, GdkPixbuf.InterpType.BILINEAR)
+
+    return scaled_pixbuf
+
+
+# Function to exclude keys from a dictionary
 def exclude_keys(d: Dict, keys_to_exclude: List[str]) -> Dict:
     return {k: v for k, v in d.items() if k not in keys_to_exclude}
 
@@ -188,9 +360,8 @@ def check_if_day(sunrise_time, sunset_time, current_time: str | None = None) -> 
     # Compare current time with sunrise and sunset
     return sunrise_time_obj <= current_time_obj < sunset_time_obj
 
-    # wttr.in time are in 300,400...2100 format , we need to convert it to 4:00...21:00
 
-
+# wttr.in time are in 300,400...2100 format , we need to convert it to 4:00...21:00
 def convert_to_12hr_format(time: str) -> str:
     time = int(time)
     hour = time // 100  # Get the hour (e.g., 1200 -> 12)
@@ -237,7 +408,6 @@ def check_icon_exists(icon_name: str, fallback_icon: str) -> str:
 
 # Function to play sound
 @cooldown(1)
-@run_in_thread
 def play_sound(file: str):
     exec_shell_command_async(f"pw-play {file}", lambda *_: None)
     return True
@@ -254,9 +424,12 @@ def get_distro_icon():
 
 # Function to check if an executable exists
 @ttl_lru_cache(600, 10)
-def executable_exists(executable_name):
-    executable_path = shutil.which(executable_name)
-    return bool(executable_path)
+def check_executable_exists(executable_name):
+    executable_path = GLib.find_program_in_path(executable_name)
+    if not executable_path:
+        raise ExecutableNotFoundError(
+            executable_name
+        )  # Raise an error if the executable is not found and exit the application
 
 
 # Function to send a notification
@@ -314,10 +487,21 @@ def get_relative_time(mins: int) -> str:
 def convert_to_percent(
     current: int | float, max: int | float, is_int=True
 ) -> int | float:
+    if max == 0:
+        return 0
     if is_int:
         return int((current / max) * 100)
     else:
         return (current / max) * 100
+
+
+@run_in_thread
+def write_json_file(data: Dict, path: str):
+    try:
+        with open(path, "w") as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
+    except Exception as e:
+        logger.warning(f"Failed to write json: {e}")
 
 
 # Function to ensure the file exists
@@ -352,7 +536,7 @@ def is_app_running(app_name: str) -> bool:
 def is_valid_gjs_color(color: str) -> bool:
     color_lower = color.strip().lower()
 
-    if color_lower in named_colors:
+    if color_lower in NAMED_COLORS:
         return True
 
     hex_color_regex = r"^#(?:[a-fA-F0-9]{3,4}|[a-fA-F0-9]{6,8})$"

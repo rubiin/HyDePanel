@@ -5,9 +5,11 @@ import re
 from gi.repository import GdkPixbuf, GLib, Gtk
 from loguru import logger
 
+from utils.thread import run_in_thread
+
 from .colors import Colors
 from .constants import APP_CACHE_DIRECTORY
-from .icons import icons
+from .icons import symbolic_icons
 
 ICON_CACHE_FILE = APP_CACHE_DIRECTORY + "/icons.json"
 
@@ -15,7 +17,7 @@ ICON_CACHE_FILE = APP_CACHE_DIRECTORY + "/icons.json"
 class IconResolver:
     """A class to resolve icons for applications."""
 
-    _instance = None  # Class-level private instance variable
+    _instance = None
 
     def __new__(cls):
         if cls._instance is None:
@@ -44,7 +46,7 @@ class IconResolver:
         self._store_new_icon(app_id, new_icon)
         return new_icon
 
-    def resolve_icon(self, pixmap, icon_name, app_id: str, icon_size: int = 16):
+    def resolve_icon(self, pixmap, icon_name: str, app_id: str, icon_size: int = 16):
         try:
             return (
                 pixmap.as_pixbuf(icon_size, GdkPixbuf.InterpType.HYPER)
@@ -79,6 +81,7 @@ class IconResolver:
                 )
             )
 
+    @run_in_thread
     def _store_new_icon(self, app_id: str, icon: str):
         self._icon_dict[app_id] = icon
         with open(ICON_CACHE_FILE, "w") as f:
@@ -90,7 +93,7 @@ class IconResolver:
             for line in f.readlines():
                 if "Icon=" in line:
                     return "".join(line[5:].split())
-            return icons["fallback"]["executable"]
+            return symbolic_icons["fallback"]["executable"]
 
     def _get_desktop_file(self, app_id: str) -> str | None:
         data_dirs = GLib.get_system_data_dirs()
@@ -121,5 +124,5 @@ class IconResolver:
         return (
             self._get_icon_from_desktop_file(desktop_file)
             if desktop_file
-            else icons["fallback"]["executable"]
+            else symbolic_icons["fallback"]["executable"]
         )

@@ -1,17 +1,30 @@
+from functools import partial
+
 from fabric.core.service import Signal
 from fabric.utils import get_relative_path
 from fabric.widgets.box import Box
+from fabric.widgets.button import Button
 from fabric.widgets.image import Image
 from fabric.widgets.label import Label
 
-from utils.icons import icons
-from utils.widget_utils import setup_cursor_hover
+from utils.bezier import cubic_bezier
+from utils.icons import symbolic_icons
+from utils.widget_utils import nerd_font_icon, setup_cursor_hover
 
 from .animator import Animator
 from .circle_image import CircleImage
-from .separator import Separator
 from .submenu import QuickSubMenu
-from .widget_container import HoverButton
+
+
+class HoverButton(Button):
+    """A container for button with hover effects."""
+
+    def __init__(self, **kwargs):
+        super().__init__(
+            **kwargs,
+        )
+
+        setup_cursor_hover(self)
 
 
 class ScanButton(HoverButton):
@@ -21,17 +34,16 @@ class ScanButton(HoverButton):
         super().__init__(name="scan-button", style_classes="submenu-button", **kwargs)
 
         self.scan_image = CircleImage(
-            image_file=get_relative_path("../assets/icons/png/refresh.png"),
+            image_file=get_relative_path("../assets/icons/svg/refresh2.svg"),
             size=20,
         )
 
         self.scan_animator = Animator(
-            bezier_curve=(0, 0, 1, 1),
+            timing_function=partial(cubic_bezier, 0, 0, 1, 1),
             duration=4,
             min_value=0,
             max_value=360,
             tick_widget=self,
-            repeat=False,
             notify_value=self.set_notify_value,
         )
 
@@ -56,20 +68,24 @@ class QSToggleButton(Box):
     def __init__(
         self,
         action_label: str = "My Label",
-        action_icon: str = icons["fallback"]["package"],
-        pixel_size: int = 20,
+        action_icon: str = symbolic_icons["fallback"]["package"],
+        pixel_size: int = 18,
         **kwargs,
     ):
         self.pixel_size = pixel_size
 
+        # required for chevron button
         self.box = Box()
 
         # Action button can hold an icon and a label NOTHING MORE
-        self.action_icon = Image(
-            style_classes="panel-icon",
-            icon_name=action_icon,
-            icon_size=pixel_size,
+        self.action_icon = nerd_font_icon(
+            icon=action_icon,
+            props={
+                "style_classes": ["panel-font-icon"],
+                "style": f"font-size: {self.pixel_size}px;",
+            },
         )
+
         self.action_label = Label(
             style_classes="panel-text",
             label=action_label,
@@ -101,8 +117,6 @@ class QSToggleButton(Box):
             **kwargs,
         )
 
-        setup_cursor_hover(self)
-
         self.action_button.connect("clicked", self.do_action)
 
     def do_action(self, *_):
@@ -114,8 +128,8 @@ class QSToggleButton(Box):
     def set_action_label(self, label: str):
         self.action_label.set_label(label.strip())
 
-    def set_action_icon(self, icon_name: str):
-        self.action_icon.set_from_icon_name(icon_name, self.pixel_size)
+    def set_action_icon(self, icon: str):
+        self.action_icon.set_label(icon)
 
 
 class QSChevronButton(QSToggleButton):
@@ -127,14 +141,16 @@ class QSChevronButton(QSToggleButton):
     def __init__(
         self,
         action_label: str = "My Label",
-        action_icon: str = icons["fallback"]["package"],
-        pixel_size: int = 20,
+        action_icon: str = symbolic_icons["fallback"]["package"],
+        pixel_size: int = 18,
         submenu: QuickSubMenu | None = None,
         **kwargs,
     ):
         self.submenu = submenu
 
-        self.button_image = Image(icon_name=icons["ui"]["arrow"]["right"], icon_size=20)
+        self.button_image = Image(
+            icon_name=symbolic_icons["ui"]["arrow"]["right"], icon_size=20
+        )
 
         self.reveal_button = HoverButton(
             style_classes="toggle-revealer", image=self.button_image, h_expand=True
@@ -146,11 +162,22 @@ class QSChevronButton(QSToggleButton):
             pixel_size,
             **kwargs,
         )
-
-        self.box.add(Separator())
         self.box.add(self.reveal_button)
 
         self.reveal_button.connect("clicked", self.do_reveal_toggle)
+
+        self.submenu.revealer.connect(
+            "notify::reveal-child",
+            self.set_chevron_icon,
+        )
+
+    def set_chevron_icon(self, *_):
+        icon_name = (
+            symbolic_icons["ui"]["arrow"]["down"]
+            if self.submenu.revealer.get_reveal_child()
+            else symbolic_icons["ui"]["arrow"]["right"]
+        )
+        self.button_image.set_from_icon_name(icon_name, 20)
 
     def do_reveal_toggle(self, *_):
         self.emit("reveal-clicked")

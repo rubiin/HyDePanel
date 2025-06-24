@@ -1,12 +1,9 @@
-import subprocess
-
 from fabric.widgets.label import Label
 
 import utils.functions as helpers
-from utils import ExecutableNotFoundError
 from utils.widget_utils import (
-    text_icon,
-    util_fabricator,
+    nerd_font_icon,
+    reusable_fabricator,
 )
 
 from .widget_container import ButtonWidget
@@ -25,7 +22,6 @@ class CommandSwitcher(ButtonWidget):
         label=True,
         args: str = "",
         tooltip=True,
-        config=None,
         style_classes: str = "",
         **kwargs,
     ):
@@ -33,13 +29,11 @@ class CommandSwitcher(ButtonWidget):
         self.full_command = f"{command} {args}"
 
         super().__init__(
-            config,
             name=name,
             **kwargs,
         )
 
-        if not helpers.executable_exists(self.command):
-            raise ExecutableNotFoundError(self.command)
+        helpers.check_executable_exists(self.command)
 
         self.add_style_class(style_classes)
 
@@ -48,39 +42,33 @@ class CommandSwitcher(ButtonWidget):
         self.label = label
         self.tooltip = tooltip
 
-        self.icon = text_icon(
+        self.icon = nerd_font_icon(
             icon=enabled_icon,
-            props={"style_classes": "panel-icon"},
+            props={"style_classes": "panel-font-icon"},
         )
 
-        self.label_text = Label(
-            visible=False,
-            label="Enabled",
-            style_classes="panel-text",
+        self.box.add(
+            self.icon,
         )
 
-        self.box.children = (self.icon, self.label_text)
+        if self.label:
+            self.label_text = Label(
+                label="Enabled",
+                style_classes="panel-text",
+            )
+            self.box.add(self.label_text)
 
         self.connect("clicked", self.handle_click)
 
         # reusing the fabricator to call specified intervals
-        util_fabricator.connect("changed", self.update_ui)
+        reusable_fabricator.connect("changed", self.update_ui)
 
     # toggle the command on click
     def handle_click(self, *_):
-        is_app_running = helpers.is_app_running(self.command)
-
-        if is_app_running:
-            helpers.kill_process(self.command)
-        else:
-            subprocess.Popen(
-                self.full_command.split(" "),
-                stdin=subprocess.DEVNULL,  # No input stream
-                stdout=subprocess.DEVNULL,  # Optionally discard the output
-                stderr=subprocess.DEVNULL,  # Optionally discard the error output
-                start_new_session=True,  # This prevents the process from being killed
-            )
-
+        helpers.toggle_command(
+            self.command,
+            full_command=self.full_command,
+        )
         self.update_ui()
         return True
 
@@ -93,7 +81,6 @@ class CommandSwitcher(ButtonWidget):
             self.remove_style_class("active")
 
         if self.label:
-            self.label_text.set_visible(True)
             self.label_text.set_label("Enabled" if is_app_running else "Disabled")
 
         self.icon.set_label(self.enabled_icon if is_app_running else self.disabled_icon)

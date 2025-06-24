@@ -1,23 +1,46 @@
-import math
-from typing import cast
+from typing import Protocol, cast
 
 from fabric import Property, Service, Signal
+from fabric.utils import clamp
 from gi.repository import GLib, Gtk
+
+from utils.bezier import ease_linear, lerp
+
+
+class TimingFunctionCallback(Protocol):
+    """A callback that takes a progress value and returns a float."""
+
+    def __call__(self, progress: float, *args, **kwargs) -> float: ...
 
 
 class Animator(Service):
-    """A service to animate a value."""
+    """
+    An animator is a simple way for animating a value on
+    a set timeline based on a given timing function
+    """
 
     @Signal
     def finished(self) -> None: ...
 
-    @Property(tuple[float, float, float, float], "read-write")
-    def bezier_curve(self) -> tuple[float, float, float, float]:
-        return self._bezier_curve
+    @Property(TimingFunctionCallback, "read-write")
+    def timing_function(self) -> TimingFunctionCallback:
+        return self._timing_function
 
-    @bezier_curve.setter
-    def bezier_curve(self, value: tuple[float, float, float, float]):
-        self._bezier_curve = value
+    @timing_function.setter
+    def timing_function(self, value: TimingFunctionCallback):
+        self._timing_function = value
+        return
+
+    @Property(float, "read-write")
+    def duration(self):
+        return self._duration
+
+    @duration.setter
+    def duration(self, value: float):
+        if value <= 0.0:
+            raise ValueError("duration can't be smaller than or equal to 0.0")
+
+        self._duration = value
         return
 
     @Property(float, "read-write")
@@ -26,7 +49,11 @@ class Animator(Service):
 
     @value.setter
     def value(self, value: float):
-        self._value = value
+        self._value = clamp(
+            value,
+            min(self._min_value, self._max_value),
+            max(self._min_value, self._max_value),
+        )
         return
 
     @Property(float, "read-write")
@@ -52,7 +79,7 @@ class Animator(Service):
         return self._playing
 
     @playing.setter
-    def playing(self, value: bool):
+    def playing(self, value: bool):  # this setter is intended for internal usage only
         self._playing = value
         return
 
@@ -67,86 +94,68 @@ class Animator(Service):
 
     def __init__(
         self,
-        bezier_curve: tuple[float, float, float, float],
-        duration: float,
+        duration: float = 0.8,
+        timing_function: TimingFunctionCallback = ease_linear,
+        value: float = 0.0,
         min_value: float = 0.0,
         max_value: float = 1.0,
         repeat: bool = False,
         tick_widget: Gtk.Widget | None = None,
-        custom_curve: bool = False,
+        tick_interval: int = 16,
         **kwargs,
     ):
         super().__init__(**kwargs)
-        self._bezier_curve = (1, 0, 1, 1)
-        self._duration = 5
-        self._value = 0.0
+        self._playing = False
+        self._value = value
         self._min_value = 0.0
         self._max_value = 1.0
         self._repeat = False
+        self._duration = 0.8
+        self._timing_function = timing_function
+        self._tick_widget = tick_widget
+        self._tick_interval = tick_interval
 
-        self.custom_curve = custom_curve
-        self.bezier_curve = bezier_curve
+        self.timing_function = timing_function
+        self.repeat = repeat
         self.duration = duration
-        self.value = min_value
         self.min_value = min_value
         self.max_value = max_value
-        self.repeat = repeat
-
+        self.value = value
         self.playing = False
+
         self._start_time = None
         self._tick_handler = None
-        self._timeline_pos = 0
-        self._tick_widget = tick_widget
+        self._timeline_pos = 0.0
 
     def do_get_time_now(self):
         return GLib.get_monotonic_time() / 1_000_000
 
-    def do_lerp(self, start: float, end: float, time: float) -> float:
-        return start + (end - start) * time
-
-    def do_interpolate_cubic_bezier(self, time: float) -> float:
-        y_points = (0, self.bezier_curve[1], self.bezier_curve[3], 1)
-        return (
-            (1 - time) ** 3 * y_points[0]
-            + 3 * (1 - time) ** 2 * time * y_points[1]
-            + 3 * (1 - time) * time**2 * y_points[2]
-            + time**3 * y_points[3]
-        )
-
-    def do_ease_out_elastic(self, t: float) -> float:
-        c4 = (2 * math.pi) / 3
-        return math.sin((t * 10 - 0.75) * c4) * math.pow(2, -10 * t) + 1
-
-    def do_ease(self, time: float) -> float:
-        if self.custom_curve:
-            return self.do_lerp(
-                self.min_value, self.max_value, self.do_ease_out_elastic(time)
-            )
-        return self.do_lerp(
-            self.min_value, self.max_value, self.do_interpolate_cubic_bezier(time)
-        )
-
     def do_update_value(self, delta_time: float):
-        if not self.playing:
+        if not self._playing:
             return
 
         elapsed_time = delta_time - cast(float, self._start_time)
 
-        self._timeline_pos = min(1, elapsed_time / self.duration)
+        self._timeline_pos = min(1.0, elapsed_time / self._duration)
 
-        self.value = self.do_ease(self._timeline_pos)
+        self.value = lerp(
+            self._min_value,
+            self._max_value,
+            self._timing_function(progress=self._timeline_pos),
+        )
 
-        if not self._timeline_pos >= 1:
+        if not self._timeline_pos >= 1.0:
             return
 
-        if not self.repeat:
-            self.value = self.max_value
+        if not self._repeat:
+            # all done..
+            self.value = self._max_value
             self.finished()
             self.pause()
             return
 
         self._start_time = delta_time
-        self._timeline_pos = 0
+        self._timeline_pos = 0.0
         return
 
     def do_handle_tick(self, *_):
@@ -155,29 +164,33 @@ class Animator(Service):
         return True
 
     def do_remove_tick_handlers(self):
-        if self._tick_handler:
-            if self._tick_widget:
-                self._tick_widget.remove_tick_callback(self._tick_handler)
-            else:
-                GLib.source_remove(self._tick_handler)
+        if not self._tick_handler:
+            return
+
+        if self._tick_widget:
+            self._tick_widget.remove_tick_callback(self._tick_handler)
+        else:
+            GLib.source_remove(self._tick_handler)
         self._tick_handler = None
         return
 
     def play(self):
-        if self.playing:
+        if self._playing:
             return
 
+        self.playing = True
         self._start_time = self.do_get_time_now()
 
-        if not self._tick_handler:
-            if self._tick_widget:
-                self._tick_handler = self._tick_widget.add_tick_callback(
-                    self.do_handle_tick
-                )
-            else:
-                self._tick_handler = GLib.timeout_add(16, self.do_handle_tick)
+        if self._tick_handler:
+            return
 
-        self.playing = True
+        if self._tick_widget:
+            self._tick_handler = self._tick_widget.add_tick_callback(
+                self.do_handle_tick
+            )
+            return
+
+        self._tick_handler = GLib.timeout_add(self._tick_interval, self.do_handle_tick)
         return
 
     def pause(self):
@@ -190,3 +203,10 @@ class Animator(Service):
             self.playing = False
             return
         return self.do_remove_tick_handlers()
+
+    def play_pause(self):
+        if self._playing:
+            self.pause()
+        else:
+            self.play()
+        return

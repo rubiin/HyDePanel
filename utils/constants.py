@@ -3,8 +3,7 @@ from gi.repository import GLib
 # constants
 
 NOTIFICATION_WIDTH = 400
-NOTIFICATION_IMAGE_SIZE = 64
-NOTIFICATION_ACTION_NUMBER = 3
+NOTIFICATION_IMAGE_SIZE = 48
 HIGH_POLL_INTERVAL = 3600  # 1 hour in seconds
 
 APPLICATION_NAME = "hydepanel"
@@ -15,189 +14,337 @@ APP_CACHE_DIRECTORY = f"{SYSTEM_CACHE_DIR}/{APPLICATION_NAME}"
 NOTIFICATION_CACHE_FILE = f"{APP_CACHE_DIRECTORY}/notifications.json"
 WEATHER_CACHE_FILE = f"{APP_CACHE_DIRECTORY}/weather.json"
 
+LOG_DIR = f"{GLib.get_user_state_dir()}/{APPLICATION_NAME}"
+LOG_FILE = f"{LOG_DIR}/{APPLICATION_NAME}.log"
+LOG_FORMAT = "{time:YYYY-MM-DD HH:mm:ss} [<level>{level}</level>] {message}"
 
 # Default configuration values
 DEFAULT_CONFIG = {
     "$schema": "./hydepanel.schema.json",
-    "battery": {
-        "full_battery_level": 100,
-        "hide_label_when_full": True,
-        "label": True,
-        "tooltip": True,
-        "orientation": "vertical",
-        "icon_size": 14,
-        "notifications": {
-            "enabled": True,
-            "discharging": {
-                "title": "Charger Unplugged!",
-                "body": "Battery is at _LEVEL_%",
+    "widgets": {
+        "cliphist": {
+            "icon": "",
+            "label": False,
+            "tooltip": True,
+        },
+        "emoji_picker": {
+            "icon": "",
+            "label": False,
+            "tooltip": True,
+            "per_row": 9,
+            "per_column": 4,
+        },
+        "kanban": {
+            "icon": "󱞁",
+            "label": True,
+            "tooltip": True,
+        },
+        "battery": {
+            "full_battery_level": 100,
+            "hide_label_when_full": True,
+            "label": True,
+            "tooltip": True,
+            "icon_size": 14,
+            "notifications": {
+                "enabled": True,
+                "discharging": {
+                    "title": "Charger Unplugged!",
+                    "body": "Battery is at _LEVEL_%",
+                },
+                "charging": {
+                    "title": "Charger Plugged In",
+                    "body": "Battery is at _LEVEL_%",
+                },
             },
-            "charging": {
-                "title": "Charger Plugged In",
-                "body": "Battery is at _LEVEL_%",
+        },
+        "quick_settings": {
+            "hover_reveal": False,
+            "user": {"avatar": "~/.face", "name": "system", "distro_icon": True},
+            "controls": {
+                "sliders": ["brightness", "volume"],
+            },
+            "media": {
+                "ignore": [],
+                "truncation_size": 26,
+                "show_album": True,
+                "show_artist": True,
+                "show_time": True,
+                "show_time_tooltip": True,
+            },
+            "shortcuts": {
+                "enabled": True,
+                "items": [],
+            },  # Empty list by default - shortcuts are optional
+        },
+        "bluetooth": {
+            "icon_size": 14,
+            "label": True,
+            "tooltip": True,
+        },
+        "brightness": {
+            "label": True,
+            "tooltip": True,
+            "step_size": 5,
+        },
+        "cava": {"bars": 10, "color": "#89b4fa"},
+        "overview": {
+            "icon": "󰡃",
+            "label": False,
+            "tooltip": True,
+        },
+        "click_counter": {"count": 0},
+        "cpu": {
+            "show_icon": True,
+            "icon": "",
+            "tooltip": True,
+            "round": True,
+            "temperature_unit": "celsius",
+            "show_unit": True,
+            "sensor": "",
+            "mode": "circular",
+            "graph_length": 4,
+        },
+        "gpu": {
+            "show_icon": True,
+            "icon": "",
+            "tooltip": True,
+            "mode": "circular",
+            "graph_length": 4,
+        },
+        "date_time": {
+            "format": "%b %d %H:%M",
+            "calendar": True,
+            "clock_format": "12h",
+            "hover_reveal": False,
+            "notification": {
+                "enabled": True,
+                "count": True,
+                "hide_count_on_zero": False,
             },
         },
-    },
-    "quick_settings": {
-        "hover_reveal": False,
-        "user": {"avatar": "~/.face", "name": "system", "distro_icon": True},
-        "controls": {
-            "sliders": ["brightness", "volume"],
+        "divider": {"size": 2},
+        "hypridle": {
+            "enabled_icon": "",
+            "disabled_icon": "",
+            "label": True,
+            "tooltip": True,
         },
-        "media": {
-            "ignore": [],
-            "truncation_size": 26,
-            "show_album": True,
-            "show_artist": True,
-            "show_time": True,
-            "show_time_tooltip": True,
+        "hyprpicker": {
+            "icon": "",
+            "tooltip": True,
+            "label": False,
+            "show_icon": True,
         },
-        "shortcuts": {
-            "enabled": True,
-            "items": [],
-        },  # Empty list by default - shortcuts are optional
-    },
-    "bluetooth": {
-        "icon_size": 14,
-        "label": True,
-        "tooltip": True,
-    },
-    "brightness": {
-        "label": True,
-        "tooltip": True,
-        "step_size": 5,
-    },
-    "cava": {"bars": 10, "color": "#89b4fa"},
-    "overview": {},
-    "click_counter": {"count": 0},
-    "cpu": {
-        "show_icon": True,
-        "icon": "",
-        "tooltip": True,
-        "round": True,
-        "unit": "celsius",
-        "show_unit": True,
-        "sensor": "",
-        "mode": "circular",
-        "graph_length": 4,
-    },
-    "date_time": {
-        "format": "%b %d %H:%M",
-        "calendar": True,
-        "clock_format": "12h",
-        "uptime": True,
-        "hover_reveal": False,
-        "notification": {"enabled": True, "count": True, "hide_count_on_zero": False},
-    },
-    "divider": {"size": 2},
-    "hypr_idle": {
-        "enabled_icon": "",
-        "disabled_icon": "",
-        "label": True,
-        "tooltip": True,
-    },
-    "hypr_picker": {
-        "icon": "",
-        "tooltip": True,
-        "label": False,
-        "show_icon": True,
-    },
-    "hypr_sunset": {
-        "temperature": "2800k",
-        "enabled_icon": "󱩌",
-        "disabled_icon": "󰛨",
-        "label": True,
-        "tooltip": True,
-    },
-    "keyboard": {
-        "icon": "󰌌",
-        "label": True,
-        "tooltip": True,
-        "show_icon": True,
-    },
-    "window_count": {
-        "icon": "",
-        "label_format": "[{count}]",
-        "hide_when_zero": False,
-        "tooltip": True,
-        "show_icon": False,
-    },
-    "language": {
-        "icon": "",
-        "tooltip": True,
-        "truncation_size": 2,
-        "show_icon": True,
-    },
-    "module_groups": [
-        {
-            "widgets": ["updates", "battery"],
-            "spacing": 4,
-            "style_classes": ["bordered"],
+        "hyprsunset": {
+            "temperature": "2800k",
+            "enabled_icon": "󱩌",
+            "disabled_icon": "󰛨",
+            "label": True,
+            "tooltip": True,
         },
-        {
-            "widgets": ["quick_settings", "cpu"],
-            "spacing": 0,
-            "style_classes": ["compact"],
+        "keyboard": {
+            "icon": "󰌌",
+            "label": True,
+            "tooltip": True,
+            "show_icon": True,
         },
-    ],
+        "window_count": {
+            "icon": "",
+            "label_format": "[{count}]",
+            "hide_when_zero": True,
+            "tooltip": True,
+            "show_icon": False,
+        },
+        "language": {
+            "icon": "",
+            "tooltip": True,
+            "truncation_size": 2,
+            "show_icon": True,
+        },
+        "widget_groups": [
+            {
+                "widgets": ["updates", "battery"],
+                "spacing": 4,
+                "style_classes": ["bordered"],
+            },
+            {
+                "widgets": ["quick_settings", "cpu"],
+                "spacing": 0,
+                "style_classes": ["compact"],
+            },
+        ],
+        "memory": {
+            "show_icon": True,
+            "icon": "",
+            "tooltip": True,
+            "mode": "circular",
+            "graph_length": 4,
+        },
+        "network_usage": {
+            "upload_icon": "",
+            "download_icon": "",
+            "tooltip": True,
+            "download": True,
+            "upload": True,
+        },
+        "microphone": {
+            "label": False,
+            "tooltip": True,
+            "show_icon": True,
+        },
+        "mpris": {
+            "truncation_size": 30,
+            "tooltip": True,
+        },
+        "ocr": {
+            "icon": "󰐳",
+            "tooltip": True,
+            "label": False,
+            "show_icon": True,
+        },
+        "power": {
+            "icon": "󰐥",
+            "tooltip": True,
+            "items_per_row": 3,
+            "icon_size": 100,
+            "show_icon": True,
+            "label": False,
+            "buttons": {
+                "shutdown": "systemctl poweroff",
+                "reboot": "systemctl reboot",
+                "hibernate": "systemctl hibernate",
+                "suspend": "systemctl suspend",
+                "lock": "loginctl lock-session",
+                "logout": "loginctl terminate-user $USER",
+            },
+        },
+        "recorder": {
+            "path": "Videos/Screencasting",
+            "icon_size": 16,
+            "tooltip": True,
+            "audio": True,
+        },
+        "screenshot": {
+            "path": "Pictures/Screenshots",
+            "icon_size": 16,
+            "tooltip": True,
+            "icon": "󰄀",
+        },
+        "spacing": {"size": 20},
+        "stopwatch": {"stopped_icon": "󱫞", "running_icon": "󱫠"},
+        "storage": {
+            "show_icon": True,
+            "icon": "󰋊",
+            "mode": "circular",
+            "tooltip": True,
+            "path": "/",
+            "graph_length": 4,
+        },
+        "submap": {
+            "icon": "󰌌",
+            "label": True,
+            "tooltip": True,
+            "show_icon": True,
+        },
+        "system_tray": {
+            "icon_size": 16,
+            "ignored": [],
+            "hidden": [],
+            "pinned": [],
+            "visible_count": 3,
+        },
+        "taskbar": {"icon_size": 22, "ignored": [], "tooltip": True},
+        "theme_switcher": {
+            "icon": "",
+            "notify": False,  # Whether to show a notification when the theme is changed
+        },
+        "updates": {
+            "show_icon": True,
+            "icon": "󱧘",
+            "os": "arch",
+            "interval": HIGH_POLL_INTERVAL,
+            "tooltip": True,
+            "label": True,
+            "flatpak": False,
+            "snap": False,
+            "brew": False,
+        },
+        "volume": {
+            "label": True,
+            "tooltip": True,
+            "step_size": 5,
+        },
+        "weather": {
+            "location": "",
+            "label": True,
+            "tooltip": True,
+            "expanded": True,
+            "temperature_unit": "celsius",
+            "wind_speed_unit": "kmh",
+            "interval": HIGH_POLL_INTERVAL,
+        },
+        "window_title": {
+            "icon": True,
+            "truncation": True,
+            "truncation_size": 30,
+            "title_map": [],
+        },
+        "workspaces": {
+            "count": 8,
+            "hide_unoccupied": True,
+            "ignored": [-99],
+            "reverse_scroll": False,
+            "empty_scroll": False,
+            "default_label_format": "{id}",
+            "icon_map": {},
+        },
+        "world_clock": {
+            "icon": "󱉊'",
+            "show_icon": True,
+            "format": "%Y-%m-%d %H:%M:%S",
+            "timezones": ["America/New_York", "Europe/London", "Asia/Tokyo"],
+        },
+    },
     "layout": {
         "left_section": ["workspaces", "window_title"],
         "middle_section": ["date_time"],
-        "right_section": ["@group:0", "@group:1", "system_tray"],
+        "right_section": ["system_tray"],
     },
-    "memory": {
-        "show_icon": True,
-        "icon": "",
-        "tooltip": True,
-        "mode": "circular",
-        "graph_length": 4,
+    "theme": {
+        "name": "catpuccin-mocha",
     },
-    "network_usage": {
-        "upload_icon": "",
-        "download_icon": "",
-        "tooltip": True,
-        "download": True,
-        "upload": True,
-    },
-    "microphone": {
-        "label": False,
-        "tooltip": True,
-        "show_icon": True,
-    },
-    "mpris": {
-        "truncation_size": 30,
-        "tooltip": True,
-    },
-    "notification": {
-        "enabled": True,
-        "anchor": "top-right",
-        "auto_dismiss": True,
-        "ignored": [],
-        "timeout": 3000,
-        "max_count": 200,
-        "transition_type": "slide-left",
-        "transition_duration": 350,
-        "per_app_limits": {},
-        "play_sound": False,
-        "max_actions": 5,
-        "display_actions_on_hover": False,
-        "dismiss_on_hover": False,
-        "sound_file": "notification4",
-    },
-    "osd": {
-        "enabled": True,
-        "timeout": 1500,
-        "anchor": "bottom-center",
-        "percentage": True,
-        "icon_size": 28,
-    },
-    "ocr": {
-        "icon": "󰐳",
-        "tooltip": True,
-        "label": False,
-        "show_icon": True,
-    },
-    "general": {
+    "modules": {
+        "bar": {"layer": "top", "auto_hide": False, "location": "top"},
+        "osd": {
+            "enabled": True,
+            "timeout": 1500,
+            "anchor": "bottom-center",
+            "orientation": "horizontal",
+            "percentage": True,
+            "icon_size": 28,
+            "play_sound": False,
+        },
+        "app_launcher": {
+            "enabled": False,
+            "tooltip": True,
+            "icon_size": 16,
+            "ignored_apps": [],
+        },
+        "notification": {
+            "enabled": True,
+            "anchor": "top-right",
+            "auto_dismiss": True,
+            "ignored": [],
+            "timeout": 3000,
+            "max_count": 200,
+            "transition_type": "slide-left",
+            "transition_duration": 350,
+            "per_app_limits": {},
+            "play_sound": False,
+            "max_actions": 5,
+            "dismiss_on_hover": False,
+            "sound_file": "notification4",
+        },
         "screen_corners": {
             "enabled": False,
             "size": 20,
@@ -215,117 +362,17 @@ DEFAULT_CONFIG = {
             "layer": "bottom",
             "anchor": "center",
             "date_format": "%A, %d %B %Y",
+            "time_format": "%H:%M",
         },
+    },
+    "general": {
         "check_updates": False,
         "layer": "top",
         "auto_hide": False,
         "debug": True,
+        "monitor_styles": True,
         "location": "top",
         "widget_style": "default",
-    },
-    "power": {
-        "icon": "󰐥",
-        "tooltip": True,
-        "items_per_row": 3,
-        "icon_size": 100,
-        "show_icon": True,
-        "label": False,
-        "buttons": {
-            "shutdown": "systemctl poweroff",
-            "reboot": "systemctl reboot",
-            "hibernate": "systemctl hibernate",
-            "suspend": "systemctl suspend",
-            "lock": "loginctl lock-session",
-            "logout": "loginctl terminate-user $USER",
-        },
-    },
-    "recorder": {
-        "path": "Videos/Screencasting",
-        "icon_size": 16,
-        "tooltip": True,
-        "audio": True,
-    },
-    "screen_shot": {
-        "path": "Pictures/Screenshots",
-        "icon_size": 16,
-        "tooltip": True,
-        "icon": "󰄀",
-    },
-    "spacing": {"size": 20},
-    "stop_watch": {"stopped_icon": "󱫞", "running_icon": "󱫠"},
-    "storage": {
-        "show_icon": True,
-        "icon": "󰋊",
-        "mode": "circular",
-        "tooltip": True,
-        "path": "/",
-        "graph_length": 4,
-    },
-    "submap": {
-        "icon": "󰌌",
-        "label": True,
-        "tooltip": True,
-        "show_icon": True,
-    },
-    "system_tray": {
-        "icon_size": 16,
-        "ignored": [],
-        "hidden": [],
-        "pinned": [],
-        "visible_count": 3,
-    },
-    "task_bar": {"icon_size": 22, "ignored": [], "tooltip": True},
-    "theme": {
-        "name": "catpuccin-mocha",
-    },
-    "theme_switcher": {
-        "icon": "",
-        "notify": False,  # Whether to show a notification when the theme is changed
-    },
-    "updates": {
-        "show_icon": True,
-        "icon": "󱧘",
-        "os": "arch",
-        "interval": HIGH_POLL_INTERVAL,
-        "tooltip": True,
-        "label": True,
-        "flatpak": False,
-        "snap": False,
-        "brew": False,
-    },
-    "volume": {
-        "label": True,
-        "tooltip": True,
-        "step_size": 5,
-    },
-    "weather": {
-        "location": "",
-        "label": True,
-        "tooltip": True,
-        "expanded": True,
-        "temperature_unit": "celsius",
-        "interval": HIGH_POLL_INTERVAL,
-    },
-    "window_title": {
-        "icon": True,
-        "truncation": True,
-        "truncation_size": 30,
-        "title_map": [],
-    },
-    "workspaces": {
-        "count": 8,
-        "hide_unoccupied": True,
-        "ignored": [-99],
-        "reverse_scroll": False,
-        "empty_scroll": False,
-        "default_label_format": "{id}",
-        "icon_map": {},
-    },
-    "world_clock": {
-        "icon": "󱉊'",
-        "show_icon": True,
-        "format": "%Y-%m-%d %H:%M:%S",
-        "timezones": ["America/New_York", "Europe/London", "Asia/Tokyo"],
     },
 }
 
@@ -919,8 +966,6 @@ KBLAYOUT_MAP = {
 
 WINDOW_TITLE_MAP = [
     # Original Entries
-    ["firefox", "󰈹", "Firefox"],
-    ["microsoft-edge", "󰇩", "Edge"],
     ["discord", "", "Discord"],
     ["vesktop", "", "Vesktop"],
     ["org.kde.dolphin", "", "Dolphin"],
@@ -933,6 +978,8 @@ WINDOW_TITLE_MAP = [
     # Browsers
     ["google-chrome", "", "Google Chrome"],
     ["brave-browser", "󰖟", "Brave Browser"],
+    ["firefox", "󰈹", "Firefox"],
+    ["microsoft-edge", "󰇩", "Edge"],
     ["chromium", "", "Chromium"],
     ["opera", "", "Opera"],
     ["vivaldi", "󰖟", "Vivaldi"],
@@ -954,15 +1001,18 @@ WINDOW_TITLE_MAP = [
     ["st", "", "st Terminal"],
     ["com.mitchellh.ghostty", "󰊠", "Ghostty"],
     # Development Tools
-    ["code", "󰨞", "Visual Studio Code"],
+    ["cursor", "󰨞", "Cursor"],
     ["vscode", "󰨞", "VS Code"],
+    ["code", "󰨞", "VS Code"],
     ["sublime-text", "", "Sublime Text"],
     ["atom", "", "Atom"],
     ["android-studio", "󰀴", "Android Studio"],
-    ["intellij-idea", "", "IntelliJ IDEA"],
-    ["pycharm", "󱃖", "PyCharm"],
-    ["webstorm", "󱃖", "WebStorm"],
-    ["phpstorm", "󱃖", "PhpStorm"],
+    ["jetbrains-idea", "", "IntelliJ IDEA"],
+    ["jetbrains-pycharm", "󱃖", "PyCharm"],
+    ["jetbrains-webstorm", "󱃖", "WebStorm"],
+    ["zed", "󱃖", "Zed"],
+    ["jetbrains-phpstorm", "󱃖", "PhpStorm"],
+    ["Postman", "󱃖", "Postman"],
     ["eclipse", "", "Eclipse"],
     ["netbeans", "", "NetBeans"],
     ["docker", "", "Docker"],
@@ -1008,13 +1058,16 @@ WINDOW_TITLE_MAP = [
     ["sioyek", "", "Sioyek"],
     # Cloud Services and Sync
     ["dropbox", "󰇣", "Dropbox"],
+    # cleanup and maintenance tools
+    ["org.bleachbit.bleachbit", "", "BleachBit"],
+    ["stacer", "", "Stacer"],
     # Desktop
     ["^$", "󰇄", "Desktop"],
 ]
 
 
 # Updated set of named colors
-named_colors = {
+NAMED_COLORS = {
     "alice blue",
     "antique white",
     "aqua",

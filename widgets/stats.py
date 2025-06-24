@@ -1,16 +1,17 @@
-from fabric.utils import exec_shell_command_async
+import json
+
+from fabric.utils import exec_shell_command, exec_shell_command_async
 from fabric.widgets.circularprogressbar import CircularProgressBar
 from fabric.widgets.label import Label
 from fabric.widgets.overlay import Overlay
 
 import utils.functions as helpers
-from services import NetworkSpeed
-from shared import ButtonWidget
-from utils import BarConfig
-from utils.icons import common_text_icons
+from services.networkspeed import NetworkSpeed
+from shared.widget_container import ButtonWidget
+from utils.icons import text_icons
 from utils.widget_utils import (
     get_bar_graph,
-    text_icon,
+    nerd_font_icon,
     util_fabricator,
 )
 
@@ -20,22 +21,16 @@ class CpuWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config["cpu"],
             name="cpu",
             **kwargs,
         )
 
         # Set the CPU name and mode
         self.current_mode = self.config["mode"]
-
-        self.cpu_level_label = Label(
-            label="0%", style_classes="panel-text", visible=False
-        )
 
         exec_shell_command_async(
             "bash -c \"lscpu | grep 'Model name' | awk -F: '{print $2}'\"",
@@ -44,6 +39,10 @@ class CpuWidget(ButtonWidget):
 
         if self.current_mode == "graph":
             self.graph_values = []
+            self.cpu_level_label = Label(
+                label="0%",
+                style_classes="panel-text",
+            )
             self.box.children = self.cpu_level_label
 
         elif self.current_mode == "progress":
@@ -57,10 +56,10 @@ class CpuWidget(ButtonWidget):
                 end_angle=390,
             )
 
-            self.icon = text_icon(
+            self.icon = nerd_font_icon(
                 icon=self.config["icon"],
                 props={
-                    "style_classes": "panel-icon overlay-icon",
+                    "style_classes": "panel-font-icon overlay-icon",
                 },
             )
 
@@ -71,9 +70,14 @@ class CpuWidget(ButtonWidget):
 
         else:
             # Create a TextIcon with the specified icon and size
-            self.icon = text_icon(
+            self.icon = nerd_font_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
+            )
+
+            self.cpu_level_label = Label(
+                label="0%",
+                style_classes="panel-text",
             )
             self.box.children = (self.icon, self.cpu_level_label)
 
@@ -89,7 +93,6 @@ class CpuWidget(ButtonWidget):
         usage = value.get("cpu_usage")
 
         if self.current_mode == "graph":
-            self.cpu_level_label.set_visible(True)
             self.graph_values.append(get_bar_graph(usage))
 
             if len(self.graph_values) > self.config["graph_length"]:
@@ -101,8 +104,6 @@ class CpuWidget(ButtonWidget):
             self.progress_bar.set_value(usage / 100.0)
 
         else:
-            self.cpu_level_label.set_visible(True)
-
             self.cpu_level_label.set_label(f"{usage}%")
 
         # Update the tooltip with the memory usage details if enabled
@@ -119,20 +120,130 @@ class CpuWidget(ButtonWidget):
 
             temp = round(temp) if self.config["round"] else temp
 
+            is_celsius = self.config["temperature_unit"] == "celsius"
+
             temp = (
-                temp
-                if self.config["unit"] == "celsius"
-                else helpers.celsius_to_fahrenheit(temp)
+                f"{temp} °C"
+                if is_celsius
+                else f"{helpers.celsius_to_fahrenheit(temp)} °F"
             )
 
-            tooltip_text = f"{self.cpu_name}\n"
-            tooltip_text += (
-                f" Temperature: {temp}°C"
-                if self.config["unit"] == "celsius"
-                else f"{temp}°F"
+            tooltip_text = (
+                f"{self.cpu_name}\n"
+                f" Temperature: {temp}\n"
+                f"󰾆 Utilization: {usage}\n"
+                f" Clock Speed: {round(frequency[0], 2)} MHz"
             )
-            tooltip_text += f"\n󰾆 Utilization: {usage}"
-            tooltip_text += f"\n Clock Speed: {round(frequency[0], 2)} MHz"
+
+            self.set_tooltip_text(tooltip_text)
+
+        return True
+
+
+class GpuWidget(ButtonWidget):
+    """A widget to display the current GPU usage."""
+
+    def __init__(
+        self,
+        **kwargs,
+    ):
+        # Initialize the Box with specific name and style
+        super().__init__(
+            name="gpu",
+            **kwargs,
+        )
+
+        # Set the GPU name and mode
+        self.current_mode = self.config["mode"]
+
+        if self.current_mode == "graph":
+            self.graph_values = []
+            self.gpu_level_label = Label(
+                label="0%",
+                style_classes="panel-text",
+            )
+            self.box.children = self.gpu_level_label
+
+        elif self.current_mode == "progress":
+            # Create a circular progress bar to display the volume level
+            self.progress_bar = CircularProgressBar(
+                name="stat-circle",
+                line_style="round",
+                line_width=2,
+                size=28,
+                start_angle=150,
+                end_angle=390,
+            )
+
+            self.icon = nerd_font_icon(
+                icon=self.config["icon"],
+                props={
+                    "style_classes": "panel-font-icon overlay-icon",
+                },
+            )
+
+            # Create an event box to handle scroll events for volume control
+            self.box.children = (
+                Overlay(child=self.progress_bar, overlays=self.icon, name="overlay"),
+            )
+
+        else:
+            # Create a TextIcon with the specified icon and size
+            self.icon = nerd_font_icon(
+                icon=self.config["icon"],
+                props={"style_classes": "panel-font-icon"},
+            )
+
+            self.gpu_level_label = Label(
+                label="0%",
+                style_classes="panel-text",
+            )
+            self.box.children = (self.icon, self.gpu_level_label)
+
+        # Set up a fabricator to call the update_label method when the CPU usage changes
+        util_fabricator.connect("changed", self.update_ui)
+
+    def update_ui(self, *_):
+        # Update the label with the current GPU usage if enabled
+
+        value = exec_shell_command("nvtop -s")
+
+        stats = json.loads(value.strip("\n"))
+
+        if type(stats) is list:
+            stats = stats[0]
+
+        frequency = stats.get("gpu_clock", "0MHz")
+        usage = stats.get("mem_util", "0").strip("%")
+        gpu_name = stats.get("device_name", "N/A")
+
+        if self.current_mode == "graph":
+            self.graph_values.append(get_bar_graph(usage))
+
+            if len(self.graph_values) > self.config["graph_length"]:
+                self.graph_values.pop(0)
+
+            self.gpu_level_label.set_label("".join(self.graph_values))
+
+        elif self.current_mode == "progress":
+            self.progress_bar.set_value(usage)
+
+        else:
+            self.gpu_level_label.set_label(usage)
+
+        # Update the tooltip with the memory usage details if enabled
+        if self.config["tooltip"]:
+            temp = stats.get("temp")
+
+            if temp is None:
+                return "N/A"
+
+            tooltip_text = (
+                f"{gpu_name}\n"
+                f" Temperature: {temp}\n"
+                f"󰾆 Utilization: {usage}\n"
+                f" Clock Speed: {frequency}"
+            )
 
             self.set_tooltip_text(tooltip_text)
 
@@ -144,12 +255,10 @@ class MemoryWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config["memory"],
             name="memory",
             **kwargs,
         )
@@ -157,12 +266,12 @@ class MemoryWidget(ButtonWidget):
         # Set the memory name and mode
         self.current_mode = self.config["mode"]
 
-        self.memory_level_label = Label(
-            label="0%", style_classes="panel-text", visible=False
-        )
-
         if self.current_mode == "graph":
             self.graph_values = []
+            self.memory_level_label = Label(
+                label="0%", style_classes="panel-text", visible=False
+            )
+
             self.box.children = self.memory_level_label
 
         elif self.current_mode == "progress":
@@ -176,10 +285,10 @@ class MemoryWidget(ButtonWidget):
                 end_angle=390,
             )
 
-            self.icon = text_icon(
+            self.icon = nerd_font_icon(
                 icon=self.config["icon"],
                 props={
-                    "style_classes": "panel-icon overlay-icon",
+                    "style_classes": "panel-font-icon overlay-icon",
                 },
             )
 
@@ -190,9 +299,14 @@ class MemoryWidget(ButtonWidget):
 
         else:
             # Create a TextIcon with the specified icon and size
-            self.icon = text_icon(
+            self.icon = nerd_font_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
+            )
+
+            self.memory_level_label = Label(
+                label="0%",
+                style_classes="panel-text",
             )
             self.box.children = (self.icon, self.memory_level_label)
 
@@ -207,7 +321,6 @@ class MemoryWidget(ButtonWidget):
         self.percent_used = memory.percent
 
         if self.current_mode == "graph":
-            self.memory_level_label.set_visible(True)
             self.graph_values.append(get_bar_graph(self.percent_used))
 
             if len(self.graph_values) > self.config["graph_length"]:
@@ -219,14 +332,12 @@ class MemoryWidget(ButtonWidget):
             self.progress_bar.set_value(self.percent_used / 100.0)
 
         else:
-            self.memory_level_label.set_visible(True)
-
             self.memory_level_label.set_label(f"{self.get_used()}")
 
         # Update the tooltip with the memory usage details if enabled
         if self.config["tooltip"]:
             self.set_tooltip_text(
-                f"󰾆 {self.percent_used}%\n{common_text_icons['memory']} {self.ratio()}",
+                f"󰾆 {self.percent_used}%\n{text_icons['memory']} {self.ratio()}",
             )
 
         return True
@@ -246,12 +357,10 @@ class StorageWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         # Initialize the Box with specific name and style
         super().__init__(
-            widget_config["storage"],
             name="storage",
             **kwargs,
         )
@@ -259,12 +368,14 @@ class StorageWidget(ButtonWidget):
         # Set the memory name and mode
         self.current_mode = self.config["mode"]
 
-        self.storage_level_label = Label(
-            label="0", style_classes="panel-text", visible=False
-        )
-
         if self.current_mode == "graph":
             self.graph_values = []
+
+            self.storage_level_label = Label(
+                label="0",
+                style_classes="panel-text",
+            )
+
             self.box.children = self.storage_level_label
 
         elif self.current_mode == "progress":
@@ -278,10 +389,10 @@ class StorageWidget(ButtonWidget):
                 end_angle=390,
             )
 
-            self.icon = text_icon(
+            self.icon = nerd_font_icon(
                 icon=self.config["icon"],
                 props={
-                    "style_classes": "panel-icon overlay-icon",
+                    "style_classes": "panel-font-icon overlay-icon",
                 },
             )
 
@@ -292,10 +403,16 @@ class StorageWidget(ButtonWidget):
 
         else:
             # Create a TextIcon with the specified icon and size
-            self.icon = text_icon(
+            self.icon = nerd_font_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
             )
+
+            self.storage_level_label = Label(
+                label="0",
+                style_classes="panel-text",
+            )
+
             self.box.children = (self.icon, self.storage_level_label)
 
         # Set up a fabricator to call the update_label method at specified intervals
@@ -307,7 +424,6 @@ class StorageWidget(ButtonWidget):
         percent = self.disk.percent
 
         if self.current_mode == "graph":
-            self.storage_level_label.set_visible(True)
             self.graph_values.append(get_bar_graph(percent))
 
             if len(self.graph_values) > self.config["graph_length"]:
@@ -319,14 +435,12 @@ class StorageWidget(ButtonWidget):
             self.progress_bar.set_value(percent / 100.0)
 
         else:
-            self.storage_level_label.set_visible(True)
-
             self.storage_level_label.set_label(f"{self.get_used()}")
 
         # Update the tooltip with the storage usage details if enabled
         if self.config["tooltip"]:
             self.set_tooltip_text(
-                f"󰾆 {percent}%\n{common_text_icons['storage']} {self.ratio()}"
+                f"󰾆 {percent}%\n{text_icons['storage']} {self.ratio()}"
             )
 
         return True
@@ -346,11 +460,9 @@ class NetworkUsageWidget(ButtonWidget):
 
     def __init__(
         self,
-        widget_config: BarConfig,
         **kwargs,
     ):
         super().__init__(
-            widget_config["network_usage"],
             name="network_usage",
             **kwargs,
         )
@@ -359,9 +471,9 @@ class NetworkUsageWidget(ButtonWidget):
         show_upload = self.config["upload"]
 
         # Create a TextIcon with the specified icon and size
-        self.upload_icon = text_icon(
+        self.upload_icon = nerd_font_icon(
             icon=self.config["upload_icon"],
-            props={"style_classes": "panel-icon", "visible": show_upload},
+            props={"style_classes": "panel-font-icon", "visible": show_upload},
         )
 
         self.upload_label = Label(
@@ -372,9 +484,9 @@ class NetworkUsageWidget(ButtonWidget):
             style="margin-right: 10px;",
         )
 
-        self.download_icon = text_icon(
+        self.download_icon = nerd_font_icon(
             icon=self.config["download_icon"],
-            props={"style_classes": "panel-icon", "visible": show_download},
+            props={"style_classes": "panel-font-icon", "visible": show_download},
         )
 
         self.download_label = Label(

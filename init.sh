@@ -116,17 +116,20 @@ install_packages() {
 		python-psutil
 		python-cairo
 		python-loguru
+		python-requests
 		python-setproctitle
+		cliphist
+		noto-fonts-emoji
 	)
 
 		aur_deps=(
 		gray-git
-		python-fabric
+		python-fabric-git
 		gnome-bluetooth-3.0
 		python-rlottie-python
 		python-pytomlpp
 		python-pyjson5
-		fabric-cli-git
+		python-ijson
 		slurp
 		imagemagick
 		tesseract

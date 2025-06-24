@@ -8,8 +8,9 @@ from fabric.widgets.image import Image
 from gi.repository import GdkPixbuf, GLib, Gtk
 from loguru import logger
 
-from shared.widget_container import ButtonWidget, HoverButton
-from utils import BarConfig, Colors
+from shared.buttons import HoverButton
+from shared.widget_container import ButtonWidget
+from utils.colors import Colors
 
 
 class PagerClient(TypedDict):
@@ -25,10 +26,9 @@ class PagerClient(TypedDict):
 class TaskBarWidget(ButtonWidget):
     """A widget to display the taskbar items."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
+    def __init__(self, **kwargs):
         super().__init__(
-            widget_config["task_bar"],
-            name="task_bar",
+            name="taskbar",
             visible=False,
             **kwargs,
         )
@@ -114,7 +114,7 @@ class TaskBarWidget(ButtonWidget):
         else:
             pixbuf = self.load_icon(window_class, fallback_icon)
 
-        return Image(pixbuf=pixbuf, size=self.config["icon_size"])
+        return Image(pixbuf=pixbuf)
 
     def get_icon_from_desktop_entry(self, window_class: str) -> str:
         for data_dir in GLib.get_system_data_dirs():
@@ -136,7 +136,7 @@ class TaskBarWidget(ButtonWidget):
                                         if window_class in app_name:
                                             return icon_name
                         except Exception as e:
-                            logger.error(
+                            logger.exception(
                                 f"{Colors.ERROR}Error reading {file_path}: {e}"
                             )
         return None

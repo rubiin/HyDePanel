@@ -1,121 +1,130 @@
 @use "sass:color";
-@use "theme.scss";
-@use "variable.scss";
+@use "theme";
+@use "variable";
 @use "common";
 
 $hover-transition: background .15s ease-in-out;
 
 /* notification widget*/
 
-#notification-eventbox {
-  #notification {
-    padding:variable.$notification-padding_y variable.$notification-padding_x;
-    opacity: variable.$notification-opacity * .01;
-    color: theme.$text-main;
-    border-radius: variable.$notification-border-radius;
-    background-color: theme.$background-alt;
-    border: if(variable.$notification-border-enabled, variable.$border, none);
-    border-width: variable.$notification-border-width;
-    transition: border 100ms ease-in-out;
+%notification_widget {
+  padding: variable.$modules-notification-padding_y variable.$modules-notification-padding_x;
+  opacity: variable.$modules-notification-opacity * .01;
+  color: theme.$text-main;
+  border-radius: variable.$modules-notification-border-radius;
+  background-color: theme.$background-alt;
+  border: if(variable.$modules-notification-border-enabled, variable.$border, none);
+  border-width: variable.$modules-notification-border-width;
+  transition: border 100ms ease-in-out;
 
 
-$shadow: 0 0 0 variable.$bar-border-width theme.$shadow-color,
-    variable.$notification-shadow-offset variable.$notification-shadow-blur variable.$notification-shadow-spread color.adjust(theme.$shadow-color,
-      $alpha: calc(variable.$notification-shadow-opacity - 1));
+  $shadow: 0 0 0 variable.$bar-border-width theme.$shadow-color,
+    variable.$modules-notification-shadow-offset variable.$modules-notification-shadow-blur variable.$modules-notification-shadow-spread color.adjust(theme.$shadow-color,
+      $alpha: calc(variable.$modules-notification-shadow-opacity - 1));
 
-  box-shadow: if(variable.$notification-shadow-enabled, $shadow, none);
+  box-shadow: if(variable.$modules-notification-shadow-enabled, $shadow, none);
 
-    .notification-header {
+  .notification-header {
+    padding: common.toEm(5);
+
+    .app-icon {
+      /* Notification app icon (only visible when the primary image is set) */
+      -gtk-icon-effect: none;
+      -gtk-icon-shadow: 0 1px 4px black;
+      margin: common.toEm(6);
+    }
+
+    .summary {
+      @extend %heading;
+      text-shadow: none;
+    }
+
+    .timestamp {
+      font-size: 12px;
+      font-weight: 700;
+      text-shadow: none;
+      margin-right: 10px;
+    }
+  }
+
+  .notification-body {
+    .body {
+      @extend %caption_heading;
+      background-color: transparent;
+      text-shadow: none;
       padding: common.toEm(5);
-      .app-icon {
-        /* Notification app icon (only visible when the primary image is set) */
-        -gtk-icon-effect: none;
-        -gtk-icon-shadow: 0 1px 4px black;
-        margin: common.toEm(6);
-      }
-
-      .summary {
-        @extend %heading;
-        text-shadow: none;
-      }
-
-      .timestamp {
-        font-size: 12px;
-        font-weight: 700;
-        text-shadow: none;
-        margin-right: 10px;
-      }
     }
 
-    .notification-body {
-      .body {
-        @extend %caption_heading;
-        background-color: transparent;
-        text-shadow: none;
-        padding: common.toEm(5);
-      }
+    .image {
+      -gtk-icon-effect: none;
+      border-radius: common.toEm(15);
+    }
+  }
 
-      .image {
-        -gtk-icon-effect: none;
-        border-radius: common.toEm(15);
-      }
+  .close-button {
+    border-radius: variable.$radius-large;
+
+
+    .close-icon {
+      font-weight: 900;
+      font-size: 12px;
+      padding: 2px 4px;
     }
 
-    .close-button {
-      border-radius: variable.$radius-large;
+    &:hover {
+      box-shadow: none;
+      border: 0;
+      background-color: color.mix(theme.$text-main, transparent, 20%);
+      transition: $hover-transition;
+      .close-icon {
+        @extend %clear_icon;
+      }
+    }
+  }
+
+  #notification-action-box {
+    button {
+      padding: common.toEm(4);
+      margin: 0;
+      font-weight: 600;
+      border-radius: 3rem;
+      box-shadow: none;
+      background-color: transparent;
+      transition: $hover-transition;
+
+      &.start-action {
+        margin-left: 0;
+      }
+
+      &.end-action {
+        margin-right: 0;
+      }
 
       &:hover {
-        box-shadow: none;
-        border: 0;
-        background-color: color.mix(theme.$text-main, transparent, 20%);
-        transition: $hover-transition;
-
-        #close-icon {
-          @extend %clear_icon;
-        }
+        background-color: theme.$background;
       }
     }
+  }
 
-    #notification-action-box {
-      button {
-        padding: common.toEm(4);
-        margin: 0;
-        font-weight: 600;
-        border-radius: 3rem;
-        box-shadow: none;
-        background-color: transparent;
-        transition: $hover-transition;
+  #notification-circular-progress-bar {
+    border: solid 0 rgb(151, 151, 177);
+    color: transparent;
+  }
 
-        &.start-action {
-          margin-left: 0;
-        }
+  .critical {
+    box-shadow: inset 0 0 .15em 0 theme.$accent-red;
+  }
+}
 
-        &.end-action {
-          margin-right: 0;
-        }
-
-        &:hover {
-          background-color: theme.$background;
-        }
-      }
-    }
-
-    #notification-circular-progress-bar {
-      border: solid 0 rgb(151, 151, 177);
-      color: transparent;
-    }
-
-    .critical {
-      box-shadow: inset 0 0 .15em 0 theme.$accent-red;
-    }
+#notification-eventbox {
+  #notification {
+    @extend %notification_widget;
   }
 }
 
 
-#datemenu-notification-eventbox{
-  @extend #notification-eventbox;
+#datemenu-notification-box {
 
-    #notification {
-      opacity: 1;
-    }
+  @extend %notification_widget;
+
 }

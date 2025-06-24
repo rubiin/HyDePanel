@@ -2,11 +2,9 @@ import json
 import logging
 from typing import ClassVar
 
-import cairo
 from fabric.hyprland.widgets import get_hyprland_connection
 from fabric.utils import (
     bulk_connect,
-    exec_shell_command,
     exec_shell_command_async,
     idle_add,
     remove_handler,
@@ -17,32 +15,15 @@ from fabric.widgets.button import Button
 from fabric.widgets.eventbox import EventBox
 from fabric.widgets.image import Image
 from fabric.widgets.wayland import WaylandWindow as Window
-from gi.repository import Gdk, GLib, Gtk
+from gi.repository import Gdk, GLib
 
+from shared.widget_container import ToggleableWidget
 from utils.icon_resolver import IconResolver
-from utils.icons import icons
-from utils.monitors import HyprlandWithMonitors
-from utils.occulison import check_occlusion
+from utils.icons import symbolic_icons
+from utils.occlusion import check_occlusion
 
 
-# Credit to ax-shell for the dock code
-def create_surface_from_widget(widget: Gtk.Widget) -> cairo.ImageSurface:
-    """Create a cairo surface from a widget."""
-    alloc = widget.get_allocation()
-    surface = cairo.ImageSurface(
-        cairo.Format.ARGB28,
-        alloc.width,
-        alloc.height,
-    )
-    cr = cairo.Context(surface)
-    cr.set_source_rgba(255, 255, 255, 0)
-    cr.rectangle(0, 0, alloc.width, alloc.height)
-    cr.fill()
-    widget.draw(cr)
-    return surface
-
-
-class Dock(Window):
+class Dock(Window, ToggleableWidget):
     """Dock class for managing application buttons and interactions."""
 
     _instances: ClassVar[list] = []
@@ -56,13 +37,12 @@ class Dock(Window):
         return filtered_apps
 
     def __init__(self, config, **kwargs):
-        self.config = config
+        self.config = config["modules"]["dock"]
 
         super().__init__(
             name="dock-window",
             layer=self.config["layer"],
             anchor=self.config["anchor"],
-            monitor=HyprlandWithMonitors().get_current_gdk_monitor_id(),
             margin="-8px 0 -4px 0"
             if self.config["anchor"] == "bottom-center"
             else "0 -4px 0 -8px",
@@ -101,10 +81,8 @@ class Dock(Window):
         bulk_connect(
             self.dock_eventbox,
             {
-                "enter-notify-event",
-                self._on_dock_enter,
-                "leave-notify-event",
-                self._on_dock_leave,
+                "enter-notify-event": self._on_dock_enter,
+                "leave-notify-event": self._on_dock_leave,
             },
         )
 
@@ -115,10 +93,8 @@ class Dock(Window):
         bulk_connect(
             self.hover_activator,
             {
-                "enter-notify-event",
-                self._on_hover_enter,
-                "leave-notify-event",
-                self._on_hover_leave,
+                "enter-notify-event": self._on_hover_enter,
+                "leave-notify-event": self._on_hover_leave,
             },
         )
 
@@ -134,7 +110,7 @@ class Dock(Window):
         else:
             bulk_connect(
                 self.conn,
-                {"event::ready", self.check_hide, "event::ready", self.check_hide},
+                {"event::ready": self.check_hide},
             )
 
         for ev in ("activewindow", "openwindow", "closewindow", "changefloatingmode"):
@@ -329,12 +305,12 @@ class Dock(Window):
         if not icon_img:  # Double check after exec path try
             # Fallback icon if no DesktopApp is found
             icon_img = self.icon.get_icon_pixbuf(
-                icons["fallback"]["executable"], self.config["icon_size"]
+                symbolic_icons["fallback"]["executable"], self.config["icon_size"]
             )
             # Final fallback
             if not icon_img:
                 icon_img = self.icon.get_icon_pixbuf(
-                    icons["fallback"]["image"], self.config["icon_size"]
+                    symbolic_icons["fallback"]["image"], self.config["icon_size"]
                 )
 
         items = [Image(pixbuf=icon_img)]
@@ -425,7 +401,7 @@ class Dock(Window):
                 -1,
             )
             next_inst = instances[(idx + 1) % len(instances)]
-            exec_shell_command(
+            exec_shell_command_async(
                 f"hyprctl dispatch focuswindow address:{next_inst['address']}"
             )
 

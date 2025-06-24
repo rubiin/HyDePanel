@@ -5,24 +5,24 @@ from fabric.hyprland.widgets import HyprlandEvent, get_hyprland_connection
 from fabric.widgets.label import Label
 from loguru import logger
 
-from shared import ButtonWidget
-from utils import KBLAYOUT_MAP, BarConfig
-from utils.widget_utils import text_icon
+from shared.widget_container import ButtonWidget
+from utils.constants import KBLAYOUT_MAP
+from utils.widget_utils import nerd_font_icon
 
 
 class KeyboardLayoutWidget(ButtonWidget):
     """A widget to display the current keyboard layout."""
 
-    def __init__(self, widget_config: BarConfig, **kwargs):
-        super().__init__(widget_config["keyboard"], name="keyboard", **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(name="keyboard", **kwargs)
 
-        self.kb_label = Label(label="0", style_classes="panel-text")
+        self.kb_label = Label(label="keyboard", style_classes="panel-text")
 
         if self.config["show_icon"]:
             # Create a TextIcon with the specified icon and size
-            self.icon = text_icon(
+            self.icon = nerd_font_icon(
                 icon=self.config["icon"],
-                props={"style_classes": "panel-icon"},
+                props={"style_classes": "panel-font-icon"},
             )
             self.box.add(self.icon)
 
@@ -72,7 +72,4 @@ class KeyboardLayoutWidget(ButtonWidget):
                 f"Caps Lock 󰪛: {main_kb['capsLock']} | Num Lock : {main_kb['numLock']}"
             )
 
-        # Update the label with the used storage if enabled
-        if self.config["label"]:
-            self.kb_label.set_label(KBLAYOUT_MAP[layout])
-            self.kb_label.set_visible(True)
+        self.kb_label.set_label(KBLAYOUT_MAP[layout])
