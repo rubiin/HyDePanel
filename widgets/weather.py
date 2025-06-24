@@ -119,6 +119,8 @@ class WeatherMenu(Box, BaseWeatherWidget):
 
         self.config = config
 
+        self.next_values = None
+
         self.update_time = datetime.now()
 
         self.weather_icons_dir = get_relative_path("../assets/icons/svg/weather")
@@ -271,7 +273,6 @@ class WeatherMenu(Box, BaseWeatherWidget):
 
         current_time = int(time.strftime("%H00"))
 
-
         if forced:
             self.current_weather_image.set_from_file(
                 self.get_weather_asset(self.current_weather["weatherCode"]),
@@ -283,43 +284,43 @@ class WeatherMenu(Box, BaseWeatherWidget):
             self.temperature.set_label(f"  {self.get_temperature()}")
             self.wind_speed.set_label(f" {self.get_wind_speed()}")
 
-        next_values = self.hourly_forecast[:4]
+        self.next_values = self.hourly_forecast[:4]
 
         if current_time > 1200:
-            next_values = self.hourly_forecast[4:8]
+            self.next_values = self.hourly_forecast[4:8]
 
             # clear the forecast box
             for child in self.forecast_box.get_children():
                 self.forecast_box.remove(child)
 
-        # show next 4 hours forecast
-        for col in range(4):
-            column_data = next_values[col]
+        # show next 4 hours forecast, run this once on boot and after 1200
 
-            hour = Label(
-                style_classes="weather-forecast-time",
-                label=f"{self.convert_to_12hr_format(column_data['time'])}",
-                h_align="center",
-            )
-            icon = Image(
-                image_file=self.get_weather_asset(
-                    column_data["weatherCode"],
-                    self.convert_to_12hr_format(column_data["time"]),
-                ),
-                size=65,
-                h_align="center",
-                h_expand=True,
-                style_classes="weather-forecast-icon",
-            )
+        if forced or current_time > 1200:
+            for col, value in enumerate(self.next_values):
+                hour = Label(
+                    style_classes="weather-forecast-time",
+                    label=f"{self.convert_to_12hr_format(value['time'])}",
+                    h_align="center",
+                )
+                icon = Image(
+                    image_file=self.get_weather_asset(
+                        value["weatherCode"],
+                        self.convert_to_12hr_format(value["time"]),
+                    ),
+                    size=65,
+                    h_align="center",
+                    h_expand=True,
+                    style_classes="weather-forecast-icon",
+                )
 
-            temp = Label(
-                style_classes="weather-forecast-temp",
-                label=self.get_temperature_hour(col),
-                h_align="center",
-            )
-            self.forecast_box.attach(hour, col, 0, 1, 1)
-            self.forecast_box.attach(icon, col, 1, 1, 1)
-            self.forecast_box.attach(temp, col, 2, 1, 1)
+                temp = Label(
+                    style_classes="weather-forecast-temp",
+                    label=self.get_temperature_hour(col),
+                    h_align="center",
+                )
+                self.forecast_box.attach(hour, col, 0, 1, 1)
+                self.forecast_box.attach(icon, col, 1, 1, 1)
+                self.forecast_box.attach(temp, col, 2, 1, 1)
 
     def get_weather_asset(self, code: int, time_str: str | None = None) -> str:
         is_day = self.check_if_day(
