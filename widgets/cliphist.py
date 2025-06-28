@@ -122,7 +122,7 @@ class ClipHistoryMenu(Box):
         page_size = adjustment.get_page_size()
 
         if value + page_size >= upper - 50:
-            self.load_more_items(self.wifi_device.access_points)
+            self.load_more_items(self.wifi_device.access_points)  # TODO: fix this
 
     def _on_search_text_changed(self, entry, pspec):
         # Remove any existing pending filter operation

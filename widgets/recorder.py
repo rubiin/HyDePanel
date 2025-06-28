@@ -23,13 +23,20 @@ class RecorderWidget(ButtonWidget):
         if self.config.get("tooltip"):
             self.set_tooltip_text("Recording stopped")
 
-        self.recorder_service = ScreenRecorderService()
-        self.recorder_service.connect("recording", self.update_ui)
+        self.recorder_service = None
 
         self.connect("clicked", self.handle_click)
 
         # Internal state
         self._recording_lottie = None
+        self.initialized = False
+
+    def lazy_init(self):
+        """Initialize the recorder service if not already initialized."""
+        if not self.initialized:
+            self.recorder_service = ScreenRecorderService()
+            self.recorder_service.connect("recording", self.update_ui)
+            self.initialized = True
 
     @property
     def recording_ongoing_lottie(self):
@@ -46,6 +53,7 @@ class RecorderWidget(ButtonWidget):
 
     def handle_click(self, *_):
         """Start or stop recording the screen."""
+        self.lazy_init()
         if self.recorder_service.is_recording:
             self.recorder_service.screenrecord_stop()
         else:

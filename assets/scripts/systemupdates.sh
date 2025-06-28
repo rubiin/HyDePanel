@@ -51,9 +51,6 @@ run_brew_update() {
     fi
 }
 
-
-
-
 check_arch_updates() {
     official_updates=0
     aur_updates=0
@@ -95,8 +92,6 @@ check_arch_updates() {
     echo "{\"total\":\"$total_updates\", \"tooltip\":\"$tooltip\"}"
 }
 
-
-
 check_ubuntu_updates() {
     official_updates=$(apt-get -s -o Debug::NoLocking=true upgrade | grep -c ^Inst)
     flatpak_updates=$(check_flatpak_updates)
@@ -130,33 +125,31 @@ check_opensuse_updates() {
     echo "{\"total\":\"$total_updates\", \"tooltip\":\"$tooltip\"}"
 }
 
-
-
 update_arch() {
     if command -v paru &> /dev/null; then
 		aur_helper="paru"
 	else
 		aur_helper="yay"
 	fi
-    command="
-    # Display Arch Linux ASCII Art
-    echo '        _      _   _       __   __     _       '
-    echo '       / \\    / \\  | |     /  \\ /  \\   | |      '
-    echo '      /   \\  /   \\ | |    /    \\    \\ | |       '
-    echo '     /     \\/     \\| |   /      \\    \\| |      '
-    echo '    |  ARCH LINUX   | |  |  LINUX   \\___| '
-    echo '      \\    /  | | /    \\       '
-    echo '                                  '
-    echo '          A R C H LINUX   '
-    echo '                                  '
-    echo '                                  '
-    echo '                                  '
 
+command="
+    # Cute Penguin ASCII Art with tsumiki text
+    echo '      .--.  '
+    echo '     |o_o | '
+    echo '     |:_/ | '
+    echo '    //   \\ \\ '
+    echo '   (|     | )'
+    echo '  /\'\\_   _/\'\\'
+    echo '  \\___)=(___/ '
+    echo ''
+    echo '   tsumiki chan'
+    echo ''\
 
     $aur_helper -Syyu
     flatpak update -y || true
     read -n 1 -p 'Press any key to continue...'
-    "
+"
+
     kitty --title systemupdate sh -c "${command}"
     echo "{\"total\":\"0\", \"tooltip\":\"0\"}"
 }
@@ -192,10 +185,6 @@ update_opensuse() {
     kitty --title systemupdate sh -c "${command}"
     echo "{\"total\":\"0\", \"tooltip\":\"0\"}"
 }
-
-
-
-
 
 for arg in "$@"; do
     case "$arg" in

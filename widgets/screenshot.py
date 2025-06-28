@@ -1,6 +1,6 @@
-from fabric.utils import exec_shell_command_async, get_relative_path
 from fabric.widgets.label import Label
 
+from services.screen_record import ScreenRecorderService
 from shared.widget_container import ButtonWidget
 from utils.widget_utils import nerd_font_icon
 
@@ -11,32 +11,29 @@ class ScreenShotWidget(ButtonWidget):
     def __init__(self, **kwargs):
         super().__init__(name="screenshot", **kwargs)
 
+        self.initialized = False
+
+        self.recorder_service = None
 
         self.box.children = nerd_font_icon(
             self.config["icon"],
             props={"style_classes": "panel-font-icon"},
         )
 
-        if self.config.get("label", True):
+        if self.config["label"]:
             self.box.add(Label(label="screenshot", style_classes="panel-text"))
 
-        if self.config.get("tooltip", False):
+        if self.config["tooltip"]:
             self.set_tooltip_text("Screen Shot")
 
         self.connect("clicked", self.handle_click)
 
-    def lazy_init(self):
+    def lazy_init(self, *_):
         if not self.initialized:
-            self.script_file = get_relative_path("../assets/scripts/screenshot.sh")
+            self.recorder_service = ScreenRecorderService()
             self.initialized = True
 
     def handle_click(self, *_):
-        """Take a screenshot."""
+        """Start recording the screen."""
         self.lazy_init()
-
-        command = f"{self.script_file} area {self.config['path']}"
-
-        if self.config.get("annotation", True):
-            command += " --annotate"
-
-        exec_shell_command_async(command, lambda *_: None)
+        self.recorder_service.screenshot(path=self.config["path"])
